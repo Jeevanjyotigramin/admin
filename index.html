@@ -1,0 +1,2519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/responsive/2.4.0/css/responsive.dataTables.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --success-color: #4cc9f0;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #f5f7fb;
+            min-height: 100vh;
+        }
+        
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+            padding: 20px;
+        }
+        
+        .login-form {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            width: 100vh;
+            max-width: 450px;
+        }
+        
+        .app-container {
+            display: none;
+            min-height: 100vh;
+            flex-direction: row;
+        }
+        
+        .navbar {
+            background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+            color: white;
+            width: 200px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+        }
+        
+        .logo-container {
+            text-align: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo-container img {
+            width: 50px;
+        }
+        
+        .logo-container h4 {
+            margin-top: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+        
+        .nav-links {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .nav-links .nav-item {
+            padding: 0;
+        }
+        
+        .nav-links .nav-link {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 1rem 1.5rem;
+        }
+        
+        .nav-links .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .nav-links .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: white;
+            border-left: 4px solid var(--success-color);
+        }
+        
+        .nav-links .nav-link i {
+            margin-right: 0.75rem;
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            margin-left: 250px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            background: white;
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .action-buttons .btn {
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .table-responsive {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .table th {
+            font-weight: 600;
+            background-color: #f8f9fa;
+            padding: 1rem;
+        }
+        
+        .table td {
+            padding: 0.75rem 1rem;
+            vertical-align: middle;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: 12px;
+            height: 100%;
+        }
+        
+        .stat-card i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            background: rgba(67, 97, 238, 0.1);
+            width: 70px;
+            height: 70px;
+            line-height: 70px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        .stat-card h3 {
+            font-size: 2rem;
+            margin: 0.5rem 0;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+        
+        .stat-card p {
+            color: #6c757d;
+            margin: 0;
+            font-weight: 500;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+        /* Mobile View (≤768px) */
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+            
+            .navbar {
+                width: 100%;
+                height: auto;
+                position: fixed;
+                bottom: 0;
+                top: auto;
+                display: flex;
+                flex-direction: row;
+                z-index: 1000;
+            }
+            
+            .logo-container {
+                display: none;
+            }
+            
+            .nav-links {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                margin: 0;
+            }
+            
+            .nav-links .nav-item {
+                flex: 1;
+            }
+            
+            .nav-links .nav-link {
+                padding: 10px 0;
+                flex-direction: column;
+                font-size: 0.7rem;
+                text-align: center;
+            }
+            
+            .nav-links .nav-link i {
+                margin-right: 0;
+                margin-bottom: 5px;
+                font-size: 1.2rem;
+            }
+            
+            .nav-links .nav-link span {
+                display: block;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+                padding-bottom: 60px;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .action-buttons {
+                margin-top: 1rem;
+                width: 100%;
+            }
+            
+            .mobile-hidden {
+                display: none;
+            }
+            
+            .table td, .table th {
+                padding: 0.5rem;
+                font-size: 0.85rem;
+            }
+            
+            .btn-sm {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.75rem;
+            }
+        }
+        
+        /* Tablet View (769px to 992px) */
+        @media (min-width: 769px) and (max-width: 992px) {
+            .tablet-hidden {
+                display: none;
+            }
+        }
+        
+        .detail-row {
+            display: flex;
+            margin-bottom: 0.5rem;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            min-width: 180px;
+        }
+        
+        .detail-value {
+            flex: 1;
+        }
+        
+        .form-section {
+            display: none;
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .form-row {
+            margin-bottom: 1rem;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .filter-item {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .table-container {
+            position: relative;
+        }
+        
+        .table-scroll {
+            overflow-x: auto;
+        }
+        
+        .btn-group-sm {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .btn-group-sm .btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+        
+        .field-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .field-group h5 {
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+
+        /* Print styles */
+
+        /* Reset default print styles and ensure visibility */
+        @media screen {
+            #printArea {
+                display: block !important; /* Ensure print area is visible on screen */
+                width: 100%;
+                max-width: 100vh; /* Constrain width for better preview on screen */
+                margin: 0 auto; /* Center on screen */
+                padding: 20px;
+                background: #fff; /* White background for screen preview */
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for visibility */
+            }
+
+            #resultSection {
+                display: block !important; /* Override hidden class for screen view */
+                width: 100%;
+                max-width: 100%; /* Ensure it fits within printArea */
+                padding: 16px;
+                box-sizing: border-box;
+            }
+
+            /* Ensure tables and grids fit within the container */
+            .result-table {
+                width: 100%;
+                font-size: 14px; /* Slightly smaller font for screen preview */
+            }
+
+            .customer-details-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid */
+                gap: 12px;
+            }
+
+            /* Adjust header and logo for screen preview */
+            .result-header {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                align-items: center;
+                padding: 12px;
+            }
+
+            .result-header img {
+                max-width: 80px; /* Constrain logo size */
+                height: auto;
+            }
+
+            .result-header h1 {
+                font-size: 1.5rem; /* Adjust heading size for screen */
+            }
+
+            .result-header p {
+                font-size: 0.9rem;
+            }
+
+            /* Ensure print-only footer is hidden on screen */
+            .print\:block {
+                display: none !important;
+            }
+        }
+
+        @media print {
+            body > * {
+                display: none !important; /* Hide all elements except printArea */
+            }
+
+            #printArea {
+                display: block !important;
+                width: 100%;
+                max-width: none; /* Remove max-width constraints for print */
+                margin: 0;
+                padding: 0;
+                background: none;
+                box-shadow: none;
+            }
+
+            #resultSection {
+                display: block !important;
+                width: 100%;
+                max-width: 100%;
+                padding: 10mm; /* Standard A4 margins */
+                box-sizing: border-box;
+                page-break-inside: avoid; /* Prevent breaking inside resultSection */
+            }
+
+            /* Ensure each resultSection starts on a new page */
+            #resultSection + #resultSection {
+                page-break-before: always;
+            }
+
+            /* Adjust table for print */
+            .result-table {
+                width: 100%;
+                font-size: 10pt; /* Standard print font size */
+                border-collapse: collapse;
+            }
+
+            .result-table th,
+            .result-table td {
+                border: 1px solid #ccc;
+                padding: 5mm;
+                text-align: center;
+            }
+
+            /* Adjust grid for customer details */
+            .customer-details-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr; /* Two columns for print */
+                gap: 5mm;
+                font-size: 9pt; /* Smaller font for print */
+            }
+
+            /* Header styling for print */
+            .result-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 5mm;
+                margin-bottom: 5mm;
+            }
+
+            .result-header img {
+                width: 50mm; /* Fixed width for logo in print */
+                height: auto;
+            }
+
+            .result-header h1 {
+                font-size: 14pt;
+            }
+
+            .result-header p {
+                font-size: 10pt;
+            }
+
+            /* Gradient bar */
+            .bg-gradient-to-r {
+                height: 1mm;
+                margin-bottom: 5mm;
+            }
+
+            /* Footer styling */
+            .print\:block {
+                display: block !important;
+                text-align: center;
+                font-size: 8pt;
+                margin-top: 5mm;
+            }
+
+            .print-small-text {
+                font-size: 8pt;
+            }
+
+            .print-compact {
+                margin-bottom: 2mm;
+            }
+
+            /* Avoid widows and orphans */
+            h1, h2, h3, h5 {
+                page-break-after: avoid;
+            }
+
+            table {
+                page-break-inside: avoid;
+            }
+        }
+
+        /* General styles for consistency */
+        .result-table th {
+            background-color: #e0e7ff; /* Indigo-100 equivalent */
+            color: #4f46e5; /* Indigo-800 equivalent */
+            font-weight: 600;
+        }
+
+        .result-table td {
+            background-color: #fff;
+        }
+
+        .bg-indigo-50 {
+            background-color: #eef2ff; /* Indigo-50 equivalent */
+        }
+
+        .bg-indigo-100 {
+            background-color: #e0e7ff;
+        }
+
+        .text-indigo-800 {
+            color: #4f46e5;
+        }
+
+        .border-gray-200 {
+            border-color: #e5e7eb;
+        }
+
+        .border-gray-300 {
+            border-color: #d1d5db;
+        }
+
+        .text-gray-600 {
+            color: #4b5563;
+        }
+
+        .text-gray-700 {
+            color: #374151;
+        }
+
+        .text-gray-800 {
+            color: #1f2937;
+        }
+
+        .font-bold {
+            font-weight: 700;
+        }
+
+        .font-medium {
+            font-weight: 500;
+        }
+
+        .rounded-xl {
+            border-radius: 0.75rem;
+        }
+
+        .shadow-lg {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .dataTables_wrapper { margin-bottom: 20px; }
+        @media (max-width: 768px) { table { font-size: 12px; } th, td { padding: 2px; } }
+        @media (min-width: 769px) and (max-width: 1024px) { table { font-size: 14px; } }
+        @media (min-width: 1025px) { table { font-size: 16px; } }
+        @media print { .no-print, .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_paginate { display: none !important; } body { background: white; } table { width: 100%; border-collapse: collapse; } th, td { border: 1px solid #ddd; padding: 8px; } th { background: #198754; color: white; } .print-header { text-align: center; margin-bottom: 20px; } }
+    </style>
+</head>
+<body>
+    <!-- Login Section -->
+    <div class="login-container">
+        <div class="login-form">
+            <div class="text-center mb-6">
+                <img src="https://drive.google.com/thumbnail?id=1LV7MlBAQgOvdZcAvcftHoEy7gMpvm5BE&sz=w800" alt="Logo" hight="100px" width="80">
+                <h2 class="mt-3">Billing Management</h2>
+                <p class="text-muted">Sign in to your account</p>
+            </div>
+            
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                    <input type="text" class="form-control" id="username" placeholder="Enter your username">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                    <input type="password" class="form-control" id="password" placeholder="Enter your password">
+                </div>
+            </div>
+            <br>
+            <button id="loginBtn" class="btn btn-primary w-100 py-2 fw-bold">
+                <i class="fas fa-sign-in-alt me-2"></i> Login
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="text-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
+            <p class="mt-3">Loading data...</p>
+        </div>
+    </div>
+
+    <!-- Print Area -->
+    <div id="printArea" style="display: none;"></div>
+
+    <!-- Main Application -->
+    <div class="app-container">
+        <nav class="navbar">
+            <div class="logo-container">
+                <img src="https://drive.google.com/thumbnail?id=1LV7MlBAQgOvdZcAvcftHoEy7gMpvm5BE&sz=w800" alt="Logo">
+                <h4>Billing System</h4>
+            </div>
+            <ul class="nav-links">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" data-section="dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-section="billing">
+                        <i class="fas fa-file-invoice"></i>
+                        <span>Billing</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-section="payment">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Payments</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <div class="main-content">
+            <!-- Dashboard Section -->
+            <div class="content-section" id="dashboard">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Dashboard</h2>
+                    <div>
+                        <select id="monthSelect" class="form-select d-inline-block w-auto">
+                            <option value="1">Poush</option>
+                            <option value="2">Magh</option>
+                            <option value="3">Falgun</option>
+                            <option value="4">Chaitra</option>
+                            <option value="5">Baishakh</option>
+                            <option value="6">Jestha</option>
+                            <option value="7">Ashad</option>
+                            <option value="8" selected>Shrawan</option>
+                            <option value="9">Bhadra</option>
+                            <option value="10">Aswin</option>
+                            <option value="11">Kartik</option>
+                            <option value="12">Mansir</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="card stat-card">
+                            <i class="fas fa-file-invoice"></i>
+                            <h3 id="totalBills">0</h3>
+                            <p>Total Bills</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="card stat-card">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <h3 id="totalRevenue">₹0</h3>
+                            <p>Total Revenue</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="card stat-card">
+                            <i class="fas fa-users"></i>
+                            <h3 id="activeCustomers">0</h3>
+                            <p>Active Customers</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="card stat-card">
+                            <i class="fas fa-clock"></i>
+                            <h3 id="pendingPayments">0</h3>
+                            <p>Pending Payments</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <span>Recent Bills</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="recentBillsTable" class="table table-hover display responsive nowrap" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th class="mobile-hidden">Meter No</th>
+                                        <th>Name</th>
+                                        <th class="tablet-hidden">Reading Date</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th class="no-print">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Billing Section -->
+            <div class="content-section" id="billing" style="display: none;">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Billing Management</h2>
+                    <div>
+                        <select id="billingMonthSelect" class="form-select d-inline-block w-auto">
+                            <option value="1">Poush</option>
+                            <option value="2">Magh</option>
+                            <option value="3">Falgun</option>
+                            <option value="4">Chaitra</option>
+                            <option value="5">Baishakh</option>
+                            <option value="6">Jestha</option>
+                            <option value="7">Ashad</option>
+                            <option value="8" selected>Shrawan</option>
+                            <option value="9">Bhadra</option>
+                            <option value="10">Aswin</option>
+                            <option value="11">Kartik</option>
+                            <option value="12">Mansir</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="action-buttons mb-3">
+                    <button class="btn btn-primary" onclick="showCreateForm('billing')">
+                        <i class="fas fa-plus-circle me-1"></i> Create New
+                    </button>
+                    <button class="btn btn-success" onclick="printAll('billing')">
+                        <i class="fas fa-print me-1"></i> Print All
+                    </button>
+                    <button class="btn btn-info" onclick="downloadAll('billing')">
+                        <i class="fas fa-download me-1"></i> Download All
+                    </button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <span>Billing Records</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="billingTable" class="table table-striped table-hover display responsive nowrap" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Actions</th>
+                                        <th>ID</th>
+                                        <th class="mobile-hidden">Meter No</th>
+                                        <th>Name</th>
+                                        <th class="tablet-hidden">Propose</th>
+                                        <th class="tablet-hidden">Reading Date</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th class="mobile-hidden">Payment Date</th>
+                                        <th class="tablet-hidden">Method</th>
+                                        <th class="no-print">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Payment Section -->
+            <div class="content-section" id="payment" style="display: none;">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Payment Management</h2>
+                    <div>
+                        <select id="paymentMonthSelect" class="form-select d-inline-block w-auto">
+                            <option value="1">Poush</option>
+                            <option value="2">Magh</option>
+                            <option value="3">Falgun</option>
+                            <option value="4">Chaitra</option>
+                            <option value="5">Baishakh</option>
+                            <option value="6">Jestha</option>
+                            <option value="7">Ashad</option>
+                            <option value="8" selected>Shrawan</option>
+                            <option value="9">Bhadra</option>
+                            <option value="10">Aswin</option>
+                            <option value="11">Kartik</option>
+                            <option value="12">Mansir</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="action-buttons mb-3">
+                    <button class="btn btn-primary" onclick="showCreateForm('payment')">
+                        <i class="fas fa-plus-circle me-1"></i> Create New
+                    </button>
+                    <button class="btn btn-success" onclick="printAll('payment')">
+                        <i class="fas fa-print me-1"></i> Print All
+                    </button>
+                    <button class="btn btn-info" onclick="downloadAll('payment')">
+                        <i class="fas fa-download me-1"></i> Download All
+                    </button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <span>Payment Records</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="paymentTable" class="table table-striped table-hover display responsive nowrap" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>S.N.</th>
+                                        <th class="mobile-hidden">Customer ID</th>
+                                        <th class="tablet-hidden">Receipt No</th>
+                                        <th>Customer Name</th>
+                                        <th>Amount</th>
+                                        <th class="tablet-hidden">Date</th>
+                                        <th class="mobile-hidden">Method</th>
+                                        <th class="tablet-hidden">Description</th>
+                                        <th class="no-print">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Form Templates for Swal -->
+    <div style="display: none;">
+        <!-- Billing Form Template -->
+   <div id="billingFormTemplate">
+    <form id="billingFormElement">
+        <input type="hidden" id="billingId">
+
+        <div class="row">
+            <div class="col-md-6 form-row">
+                <label for="meterNo" class="form-label">Meter No *</label>
+                <input type="text" class="form-control" id="meterNo" required>
+            </div>
+            <div class="col-md-6 form-row">
+                <label for="customerName" class="form-label">Customer Name *</label>
+                <input type="text" class="form-control" id="customerName" required>
+            </div>
+            <div class="col-md-6 form-row">
+                <label for="propose" class="form-label">Propose</label>
+                <select class="form-select" id="propose">
+                    <option value="Normal House">Normal House</option>
+                    <option value="Seechai">Seechai</option>
+                    <option value="Large Mill">Large Mill</option>
+                    <option value="Small Mill">Small Mill</option>
+                </select>
+            </div>
+            <div class="col-md-6 form-row">
+                <label for="readingDate" class="form-label">Reading Date *</label>
+                <input type="date" class="form-control" id="readingDate" required>
+            </div>
+            <div class="col-md-6 form-row">
+                <label for="currentReading" class="form-label">Current Reading *</label>
+                <input type="number" class="form-control" id="currentReading" required>
+            </div>
+            <div class="col-md-6 form-row">
+                <label for="previousReading" class="form-label">Previous Reading</label>
+                <input type="number" class="form-control" id="previousReading">
+            </div>
+            <div class="mt-3">
+               <strong>Consumption Used unit(KW:</strong> 
+               <span id="consumptionDifference">0</span> units
+            </div>
+            <div class="col-md-6 form-row">
+                <label for="consumptionUnitFee" class="form-label">Consumption Unit Fee</label>
+                <input type="number" step="0.01" class="form-control" id="consumptionUnitFee">
+            </div>
+            <div class="col-md-6 form-row">
+                <label for="demandFee" class="form-label">Demand Fee</label>
+                <input type="number" step="0.01" class="form-control" id="demandFee">
+            </div>
+            <div class="col-md-6 form-row">
+                <label for="activityFee" class="form-label">Activity Fee</label>
+                <input type="number" step="0.01" class="form-control" id="activityFee">
+            </div>
+            <div class="col-md-6 form-row">
+                <label for="netTotal" class="form-label">Net Total *</label>
+                <input type="number" step="0.01" class="form-control" id="netTotal" required readonly>
+            </div>
+            <div class="col-md-6 form-row">
+                <label for="status" class="form-label">Status</label>
+                <select class="form-select" id="status">
+                    <option value="Pending">Pending</option>
+                    <option value="Complete">Complete</option>
+                </select>
+            </div>
+        </div>
+    </form>
+</div>
+        <!-- Payment Form Template -->
+        <div id="paymentFormTemplate">
+            <form id="paymentFormElement">
+                <input type="hidden" id="paymentId">
+                
+                <div class="row">
+                    <div class="col-md-6 form-row">
+                        <label for="paymentCustomerId" class="form-label">Customer ID *</label>
+                        <input type="text" class="form-control" id="paymentCustomerId" required>
+                    </div>
+                    <div class="col-md-6 form-row">
+                        <label for="receiptNo" class="form-label">Receipt No *</label>
+                        <input type="text" class="form-control" id="receiptNo" required>
+                    </div>
+                    <div class="col-md-6 form-row">
+                        <label for="paymentCustomerName" class="form-label">Customer Name *</label>
+                        <input type="text" class="form-control" id="paymentCustomerName" required>
+                    </div>
+                    <div class="col-md-6 form-row">
+                        <label for="paymentDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="paymentDescription" rows="2"></textarea>
+                    </div>
+                    <div class="col-md-6 form-row">
+                        <label for="paymentMethodSelect" class="form-label">Payment Method</label>
+                        <select class="form-select" id="paymentMethodSelect">
+                            <option value="CASH">CASH</option>
+                            <option value="BANK">BANK</option>
+                            <option value="ONLINE">ONLINE</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 form-row">
+                        <label for="paymentAmount" class="form-label">Amount *</label>
+                        <input type="number" step="0.01" class="form-control" id="paymentAmount" required>
+                    </div>
+                    <div class="col-md-6 form-row">
+                        <label for="paymentDateTime" class="form-label">Receipt Date and Time *</label>
+                        <input type="datetime-local" class="form-control" id="paymentDateTime" required>
+                    </div>
+                    <div class="col-md-6 form-row">
+                        <label for="paymentMonth" class="form-label">Payment Month *</label>
+                        <select class="form-select" id="paymentMonth">
+                            <option value="1">Poush</option>
+                            <option value="2">Magh</option>
+                            <option value="3">Falgun</option>
+                            <option value="4">Chaitra</option>
+                            <option value="5">Baishakh</option>
+                            <option value="6">Jestha</option>
+                            <option value="7">Ashad</option>
+                            <option value="8" selected>Shrawan</option>
+                            <option value="9">Bhadra</option>
+                            <option value="10">Aswin</option>
+                            <option value="11">Kartik</option>
+                            <option value="12">Mansir</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
+    <script>
+        // Global variables
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyI2hwiIcfj37EIOTdCwJCWegtWP09-chb61PkzOaLx18BzDjIdBMxWHZ5W7OcY1nuc/exec'; // Replace with your deployed GAS web app URL
+        let currentView = 'dashboard';
+        let billingData = [];
+        let paymentData = [];
+        let currentMonth = new Date().getMonth() + 1;
+        let currentRecord = null;
+        let currentRecordType = null;
+        let currentPaymentData = null;
+        let billMonth = null;
+        let recentTable, billingTable, paymentTable;
+
+        // Month names mapping for display
+        const monthNames = {
+            1: 'Poush',
+            2: 'Magh', 
+            3: 'Falgun',
+            4: 'Chaitra',
+            5: 'Baishakh',
+            6: 'Jestha',
+            7: 'Ashad',
+            8: 'Shrawan',
+            9: 'Bhadra',
+            10: 'Aswin',
+            11: 'Kartik',
+            12: 'Mansir'
+        };
+
+        // Generic API call function
+async function apiCall(action, method = 'GET', body = null, params = {}) {
+    const url = new URL(API_URL);
+    url.searchParams.set('action', action);
+    Object.entries(params).forEach(([key, value]) => {
+        url.searchParams.set(key, value);
+    });
+
+    const options = {
+        method,
+        headers: { 'Content-Type': 'application/json' }
+    };
+    if (body) options.body = JSON.stringify(body);
+
+    try {
+        const response = await fetch(url.toString(), options);
+        if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        const result = await response.json();
+        // Ensure the response data is an array for getData1 and getData2
+        if (action === 'getData1' || action === 'getData2') {
+            return Array.isArray(result.data) ? result.data : [];
+        }
+        return result;
+    } catch (error) {
+        console.error('API Error:', error);
+        // Return an empty array for data-related actions to prevent slice errors
+        if (action === 'getData1' || action === 'getData2') {
+            return [];
+        }
+        throw error;
+    }
+}
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current month as default in selects
+            document.getElementById('monthSelect').value = currentMonth;
+            document.getElementById('billingMonthSelect').value = currentMonth;
+            document.getElementById('paymentMonthSelect').value = currentMonth;
+            
+            // Add event listeners
+            document.getElementById('loginBtn').addEventListener('click', handleLogin);
+            document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+            
+            // Navigation links
+            const navLinks = document.querySelectorAll('.nav-link[data-section]');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    const section = this.getAttribute('data-section');
+                    showSection(section);
+                    
+                    // Load data for the section if needed
+                    if (section === 'billing' && billingData.length === 0) {
+                        loadBillingData();
+                    } else if (section === 'payment' && paymentData.length === 0) {
+                        loadPaymentData();
+                    }
+                });
+            });
+            
+            // Month change listeners
+            document.getElementById('monthSelect').addEventListener('change', function() {
+                loadDashboardData();
+            });
+            
+            document.getElementById('billingMonthSelect').addEventListener('change', function() {
+                loadBillingData();
+            });
+            
+            document.getElementById('paymentMonthSelect').addEventListener('change', function() {
+                loadPaymentData();
+            });
+        });
+        
+        // Show loading overlay
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+        
+        // Hide loading overlay
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+        
+        // Handle login
+        async function handleLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                Swal.fire('Error', 'Please enter both username and password', 'error');
+                return;
+            }
+            
+            showLoading();
+            
+            try {
+                const result = await apiCall('login', 'POST', { username, password });
+                handleLoginSuccess(result.success);
+            } catch (error) {
+                handleLoginFailure(error);
+            }
+        }
+        
+        // Handle successful login
+        function handleLoginSuccess(result) {
+            hideLoading();
+            
+            if (result) {
+                document.querySelector('.login-container').style.display = 'none';
+                document.querySelector('.app-container').style.display = 'flex';
+                loadDashboardData();
+            } else {
+                Swal.fire('Login Failed', 'Invalid username or password', 'error');
+            }
+        }
+        
+        // Handle login failure
+        function handleLoginFailure(error) {
+            hideLoading();
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            Swal.fire('Error', 'Login failed: ' + error.message, 'error');
+        }
+        
+        // Handle logout
+        function handleLogout() {
+            Swal.fire({
+                title: 'Logout',
+                text: 'Are you sure you want to logout?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, logout'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.querySelector('.app-container').style.display = 'none';
+                    document.querySelector('.login-container').style.display = 'flex';
+                    document.getElementById('username').value = '';
+                    document.getElementById('password').value = '';
+                }
+            });
+        }
+        
+        // Load dashboard data
+        async function loadDashboardData() {
+            showLoading();
+            const month = document.getElementById('monthSelect').value;
+            
+            try {
+                const data = await apiCall('getData1', 'GET', null, { month });
+                updateDashboard(data);
+            } catch (error) {
+                handleDataError(error);
+            }
+        }
+        
+        // Update dashboard with data
+        function updateDashboard(data) {
+            hideLoading();
+            
+            if (!data || data.length <= 1) {
+                document.getElementById('totalBills').textContent = '0';
+                document.getElementById('totalRevenue').textContent = '₹0';
+                document.getElementById('activeCustomers').textContent = '0';
+                document.getElementById('pendingPayments').textContent = '0';
+                
+                return;
+            }
+            
+            billingData = data;
+            updateRecentBillsTable();
+            
+            let totalBills = data.length - 1;
+            let totalRevenue = 0;
+            let customers = new Set();
+            let pendingPayments = 0;
+            
+            for (let i = 1; i < data.length; i++) {
+                const row = data[i];
+                
+                if (row[28] && !isNaN(row[28])) {
+                    totalRevenue += parseFloat(row[28]);
+                }
+                
+                if (row[2]) {
+                    customers.add(row[2].toString());
+                }
+                
+                if (row[32] && row[32].toString().toLowerCase() === 'pending') {
+                    pendingPayments++;
+                }
+            }
+            
+            document.getElementById('totalBills').textContent = totalBills;
+            document.getElementById('totalRevenue').textContent = '₹' + totalRevenue.toFixed(2);
+            document.getElementById('activeCustomers').textContent = customers.size;
+            document.getElementById('pendingPayments').textContent = pendingPayments;
+        }
+        
+        // Update recent bills table with DataTables
+        function updateRecentBillsTable() {
+            if (recentTable) recentTable.destroy();
+            
+            const tableData = billingData.slice(1).map(row => ({
+                id: row[0] || '',
+                meterNo: row[1] || '',
+                name: row[2] || '',
+                readingDate: formatDate(row[10]),
+                amount: '₹' + parseFloat(row[28] || 0).toFixed(2),
+                status: row[32] || ''
+            }));
+
+            recentTable = $('#recentBillsTable').DataTable({
+                destroy: true,
+                responsive: true,
+                pageLength: 5,
+                lengthMenu: [[5, 10, 25, -1], [5, 10, 25, "All"]],
+                order: [],
+                data: tableData,
+                columns: [
+                    { data: 'id' },
+                    { data: 'meterNo', className: 'mobile-hidden' },
+                    { data: 'name' },
+                    { data: 'readingDate', className: 'tablet-hidden' },
+                    { data: 'amount' },
+                    { 
+                        data: 'status',
+                        render: function(data) {
+                            let statusBadge = 'secondary';
+                            if (data.toLowerCase() === 'complete') statusBadge = 'success';
+                            if (data.toLowerCase() === 'pending') statusBadge = 'warning';
+                            return `<span class="badge bg-${statusBadge}">${data}</span>`;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function(data) {
+                            return `<i class="fas fa-eye text-success me-2" onclick="viewRecord('billing', ${data.id})"></i><i class="fas fa-print text-success" onclick="printRowBilling(${JSON.stringify(data)})"></i>`;
+                        },
+                        className: "no-print"
+                    }
+                ],
+                columnDefs: [{ targets: [1, 6], className: "all" }],
+                deferRender: true,
+                dom: "lftip",
+                language: { emptyTable: "No data available" },
+                headerCallback: function(thead) { $(thead).show(); }
+            });
+        }
+
+        // Print single row for billing (adapted from second code)
+        function printRowBilling(row) {
+            let win = window.open("", "", "width=800,height=600");
+            win.document.write(`<html><head><title>Billing Record</title><style>body{font-family:'Sarabun',sans-serif;padding:20px;font-size:10pt;}table{width:100%;border-collapse:collapse;}th,td{border:1px solid #ddd;padding:8px;}th{background:#198754;color:white;}.print-header{text-align:center;margin-bottom:20px;}</style></head><body><div class="print-header"><h2>Jeevan Jyoti Gramin Bidhyut Sahakari Sastha</h2><p>Printed on: ${new Date().toLocaleString()}</p></div><table><tr><th>ID</th><td>${row.id}</td></tr><tr><th>Meter No</th><td>${row.meterNo}</td></tr><tr><th>Name</th><td>${row.name}</td></tr><tr><th>Reading Date</th><td>${row.readingDate}</td></tr><tr><th>Amount</th><td>${row.amount}</td></tr><tr><th>Status</th><td>${row.status}</td></tr></table></body></html>`);
+            win.document.close(); win.print(); win.close();
+        }
+        
+        // Load billing data
+        async function loadBillingData() {
+            showLoading();
+            const month = document.getElementById('billingMonthSelect').value;
+            
+            try {
+                const data = await apiCall('getData1', 'GET', null, { month });
+                updateBillingTable(data);
+            } catch (error) {
+                handleDataError(error);
+            }
+        }
+        
+        // Update billing table with DataTables
+        function updateBillingTable(data) {
+            hideLoading();
+            
+            if (!data || data.length <= 1) {
+                if (billingTable) billingTable.destroy();
+                return;
+            }
+            
+            billingData = data;
+            
+            const tableData = data.slice(1).map(row => ({
+                actions: row,
+                id: row[0] || '',
+                meterNo: row[1] || '',
+                name: row[2] || '',
+                propose: row[3] || '',
+                readingDate: formatDate(row[10]),
+                amount: '₹' + parseFloat(row[28] || 0).toFixed(2),
+                status: row[32] || '',
+                paymentDate: formatDate(row[29]),
+                method: row[31] || ''
+            }));
+
+            if (billingTable) billingTable.destroy();
+            
+            billingTable = $('#billingTable').DataTable({
+                destroy: true,
+                responsive: true,
+                pageLength: 10,
+                lengthMenu: [[5, 10, 20, 50, 100, -1], [5, 10, 20, 50, 100, "All"]],
+                order: [],
+                data: tableData,
+                columns: [
+                    {
+                        data: 'actions',
+                        render: function(data, type, row) {
+                            let statusBadge = 'secondary';
+                            if (row.status.toLowerCase() === 'complete') statusBadge = 'success';
+                            if (row.status.toLowerCase() === 'pending') statusBadge = 'warning';
+                            let btnHtml = `<span class="badge bg-${statusBadge}">${row.status}</span>`;
+                            if (row.status.toLowerCase() === 'pending') {
+                                btnHtml += `<button class="btn btn-success btn-sm ms-1" onclick="payBill(${row.id})">Pay</button>`;
+                            }
+                            return btnHtml;
+                        },
+                        orderable: false
+                    },
+                    { data: 'id' },
+                    { data: 'meterNo', className: 'mobile-hidden' },
+                    { data: 'name' },
+                    { data: 'propose', className: 'tablet-hidden' },
+                    { data: 'readingDate', className: 'tablet-hidden' },
+                    { data: 'amount' },
+                    { data: 'status' },
+                    { data: 'paymentDate', className: 'mobile-hidden' },
+                    { data: 'method', className: 'tablet-hidden' },
+                    {
+                        data: null,
+                        render: function(data) {
+                            return `<i class="fas fa-eye text-success me-2" onclick="viewRecord('billing', ${data.id})"></i><i class="fas fa-edit text-warning me-2" onclick="editRecord('billing', ${data.id})"></i><i class="fas fa-print text-success" onclick="printRowBillingFull(${JSON.stringify(data)})"></i>`;
+                        },
+                        className: "no-print"
+                    }
+                ],
+                columnDefs: [{ targets: [1, 2, 4, 5, 8, 9, 10], className: "all" }],
+                deferRender: true,
+                dom: "lftip",
+                language: { emptyTable: "No data available" },
+                headerCallback: function(thead) { $(thead).show(); }
+            });
+        }
+
+        // Print full billing row (adapted)
+        function printRowBillingFull(row) {
+            let win = window.open("", "", "width=800,height=600");
+            win.document.write(`<html><head><title>Billing Record</title><style>body{font-family:'Sarabun',sans-serif;padding:20px;font-size:10pt;}table{width:100%;border-collapse:collapse;}th,td{border:1px solid #ddd;padding:8px;}th{background:#198754;color:white;}.print-header{text-align:center;margin-bottom:20px;}</style></head><body><div class="print-header"><h2>Jeevan Jyoti Gramin Bidhyut Sahakari Sastha</h2><p>Printed on: ${new Date().toLocaleString()}</p></div><table><tr><th>ID</th><td>${row.id}</td></tr><tr><th>Meter No</th><td>${row.meterNo}</td></tr><tr><th>Name</th><td>${row.name}</td></tr><tr><th>Propose</th><td>${row.propose}</td></tr><tr><th>Reading Date</th><td>${row.readingDate}</td></tr><tr><th>Amount</th><td>${row.amount}</td></tr><tr><th>Status</th><td>${row.status}</td></tr><tr><th>Payment Date</th><td>${row.paymentDate}</td></tr><tr><th>Method</th><td>${row.method}</td></tr></table></body></html>`);
+            win.document.close(); win.print(); win.close();
+        }
+        
+        // Load payment data
+        async function loadPaymentData() {
+            showLoading();
+            const month = document.getElementById('paymentMonthSelect').value;
+            
+            try {
+                const data = await apiCall('getData2', 'GET', null, { month });
+                updatePaymentTable(data);
+            } catch (error) {
+                handleDataError(error);
+            }
+        }
+        
+        // Update payment table with DataTables
+        function updatePaymentTable(data) {
+            hideLoading();
+            
+            if (!data || data.length <= 1) {
+                if (paymentTable) paymentTable.destroy();
+                return;
+            }
+            
+            paymentData = data;
+            
+            const tableData = data.slice(1).map(row => ({
+                sn: row[0] || '',
+                customerId: row[1] || '',
+                receiptNo: row[2] || '',
+                customerName: row[3] || '',
+                amount: '₹' + parseFloat(row[6] || 0).toFixed(2),
+                date: formatDate(row[7]),
+                method: row[5] || '',
+                description: row[4] || ''
+            }));
+
+            if (paymentTable) paymentTable.destroy();
+            
+            paymentTable = $('#paymentTable').DataTable({
+                destroy: true,
+                responsive: true,
+                pageLength: 10,
+                lengthMenu: [[5, 10, 20, 50, 100, -1], [5, 10, 20, 50, 100, "All"]],
+                order: [],
+                data: tableData,
+                columns: [
+                    { data: 'sn' },
+                    { data: 'customerId', className: 'mobile-hidden' },
+                    { data: 'receiptNo', className: 'tablet-hidden' },
+                    { data: 'customerName' },
+                    { data: 'amount' },
+                    { data: 'date', className: 'tablet-hidden' },
+                    { data: 'method', className: 'mobile-hidden' },
+                    { data: 'description', className: 'tablet-hidden' },
+                    {
+                        data: null,
+                        render: function(data) {
+                            return `<i class="fas fa-eye text-success me-2" onclick="viewRecord('payment', ${data.sn})"></i><i class="fas fa-edit text-warning me-2" onclick="editRecord('payment', ${data.sn})"></i><i class="fas fa-print text-success" onclick="printRowPayment(${JSON.stringify(data)})"></i>`;
+                        },
+                        className: "no-print"
+                    }
+                ],
+                columnDefs: [{ targets: [1, 2, 5, 6, 7, 8], className: "all" }],
+                deferRender: true,
+                dom: "lftip",
+                language: { emptyTable: "No data available" },
+                headerCallback: function(thead) { $(thead).show(); }
+            });
+        }
+
+        // Print single payment row (from second code)
+        function printRowPayment(row) {
+            let win = window.open("", "", "width=800,height=600");
+            win.document.write(`<html><head><title>Payment Receipt</title><style>body{font-family:'Sarabun',sans-serif;padding:20px;font-size:10pt;}table{width:100%;border-collapse:collapse;}th,td{border:1px solid #ddd;padding:8px;}th{background:#198754;color:white;}.print-header{text-align:center;margin-bottom:20px;}</style></head><body><div class="print-header"><h2>Jeevan Jyoti Gramin Bidhyut Sahakari Sastha</h2><p>Printed on: ${new Date().toLocaleString()}</p></div><table><tr><th>S.N.</th><td>${row.sn}</td></tr><tr><th>Customer ID</th><td>${row.customerId}</td></tr><tr><th>Receipt No.</th><td>${row.receiptNo}</td></tr><tr><th>Customer Name</th><td>${row.customerName}</td></tr><tr><th>Description</th><td>${row.description}</td></tr><tr><th>Payment Method</th><td>${row.method}</td></tr><tr><th>Amount</th><td>${row.amount}</td></tr><tr><th>Receipt Date</th><td>${row.date}</td></tr></table></body></html>`);
+            win.document.close(); win.print(); win.close();
+        }
+        
+        // Handle data error
+        function handleDataError(error) {
+            hideLoading();
+            
+            if (error.message.includes('Sheet not found')) {
+                Swal.fire({
+                    title: 'Data Not Available',
+                    text: 'The requested data is not available for this month. Please try another month.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                Swal.fire('Error', 'Failed to load data: ' + error.message, 'error');
+            }
+        }
+        
+        // Format date for display
+        function formatDate(dateValue) {
+            if (!dateValue) return '';
+            
+            if (typeof dateValue === 'string') return dateValue;
+            
+            if (dateValue instanceof Date) {
+                return dateValue.toLocaleDateString();
+            }
+            
+            return dateValue.toString();
+        }
+        
+        // Show specific section
+        function showSection(section) {
+            document.querySelectorAll('.content-section').forEach(sec => {
+                sec.style.display = 'none';
+            });
+            
+            document.getElementById(section).style.display = 'block';
+            
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`.nav-link[data-section="${section}"]`).classList.add('active');
+            
+            currentView = section;
+        }
+        
+        // Show create form in Swal
+        function showCreateForm(type) {
+            const isBilling = type === 'billing';
+            const title = isBilling ? 'Create New Bill' : 'Create Payment Record';
+            const templateId = isBilling ? 'billingFormTemplate' : 'paymentFormTemplate';
+            const formId = isBilling ? 'billingFormElement' : 'paymentFormElement';
+            const monthSelectId = isBilling ? 'billingMonthSelect' : 'paymentMonthSelect';
+            
+            const formHtml = document.getElementById(templateId).innerHTML;
+            
+            Swal.fire({
+                title: title,
+                html: formHtml,
+                showCancelButton: true,
+                confirmButtonText: 'Save',
+                cancelButtonText: 'Cancel',
+                width: '800px',
+                customClass: 'swal-wide',
+                preConfirm: () => {
+                    const form = Swal.getPopup().querySelector(`#${formId}`);
+                    if (!form.checkValidity()) {
+                        form.reportValidity();
+                        return false;
+                    }
+                    
+                    const data = new FormData(form);
+                    const record = {};
+                    for (let [key, value] of data.entries()) {
+                        record[key] = value;
+                    }
+                    
+                    return record;
+                }
+            }).then(result => {
+                if (result.isConfirmed) {
+                    const record = result.value;
+                    const month = document.getElementById(monthSelectId).value;
+                    showLoading();
+                    
+                    const action = isBilling ? 'addData1' : 'addData2';
+                    apiCall(action, 'POST', { record, month })
+                        .then(() => {
+                            hideLoading();
+                            Swal.fire('Success', `${type.charAt(0).toUpperCase() + type.slice(1)} record created successfully`, 'success');
+                            if (isBilling) loadBillingData();
+                            else loadPaymentData();
+                            loadDashboardData();
+                        })
+                        .catch((error) => {
+                            hideLoading();
+                            Swal.fire('Error', `Failed to create ${type} record: ` + error.message, 'error');
+                        });
+                }
+            });
+            
+            // Set default values in Swal form
+            setTimeout(() => { // Delay to allow Swal popup to render
+                const popup = Swal.getPopup();
+                if (isBilling) {
+                    popup.querySelector('#readingDate').value = new Date().toISOString().split('T')[0];
+                    popup.querySelector('#status').value = 'Pending';
+                } else {
+                    const now = new Date();
+                    const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+                    popup.querySelector('#paymentDateTime').value = localDateTime;
+                    popup.querySelector('#paymentMethodSelect').value = 'CASH';
+                    popup.querySelector('#paymentMonth').value = currentMonth;
+                }
+            }, 100);
+        }
+        
+        // View record details in Swal
+        function viewRecord(type, id) {
+            const data = type === 'billing' ? billingData : paymentData;
+            
+            if (!data || data.length <= 1) {
+                Swal.fire('Error', 'Record not found', 'error');
+                return;
+            }
+            
+            // Find the record by ID
+            let record = null;
+            for (let i = 1; i < data.length; i++) {
+                if (parseInt(data[i][0]) === parseInt(id)) {
+                    record = data[i];
+                    break;
+                }
+            }
+            
+            if (!record) {
+                Swal.fire('Error', 'Record not found', 'error');
+                return;
+            }
+            
+            currentRecord = record;
+            currentRecordType = type;
+            
+            let modalContent = '';
+            
+            if (type === 'billing') {
+                modalContent = `
+                    <div class="field-group">
+                        <h5>Customer Information</h5>
+                        <div class="detail-row">
+                            <div class="detail-label">ID:</div>
+                            <div class="detail-value">${record[0] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Meter No:</div>
+                            <div class="detail-value">${record[1] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Name:</div>
+                            <div class="detail-value">${record[2] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Propose:</div>
+                            <div class="detail-value">${record[3] || ''}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="field-group">
+                        <h5>Previous Reading Details</h5>
+                        <div class="detail-row">
+                            <div class="detail-label">Pre No. of Reading:</div>
+                            <div class="detail-value">${record[4] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Pre Reading:</div>
+                            <div class="detail-value">${record[5] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Pre Consumption Unit Fee:</div>
+                            <div class="detail-value">${record[6] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Demand Fee:</div>
+                            <div class="detail-value">${record[7] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Pre Activity Fee:</div>
+                            <div class="detail-value">${record[8] || ''}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="field-group">
+                        <h5>Current Reading Details</h5>
+                        <div class="detail-row">
+                            <div class="detail-label">Reading Date:</div>
+                            <div class="detail-value">${formatDate(record[10])}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Current No of Reading Times:</div>
+                            <div class="detail-value">${record[11] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Reading:</div>
+                            <div class="detail-value">${record[12] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Current Consumption Unit:</div>
+                            <div class="detail-value">${record[13] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Consumption Unit Fee:</div>
+                            <div class="detail-value">${record[14] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Current Demand Fee:</div>
+                            <div class="detail-value">${record[15] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Current Activity Fee:</div>
+                            <div class="detail-value">${record[16] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Current Card Fee:</div>
+                            <div class="detail-value">${record[17] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Current Other Fee:</div>
+                            <div class="detail-value">${record[18] || ''}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="field-group">
+                        <h5>Gross Details</h5>
+                        <div class="detail-row">
+                            <div class="detail-label">Gross No. of Reading:</div>
+                            <div class="detail-value">${record[20] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Consumption Unit Fee:</div>
+                            <div class="detail-value">${record[21] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Gross Demand Fee:</div>
+                            <div class="detail-value">${record[22] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Activity Fee:</div>
+                            <div class="detail-value">${record[23] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Gross Card Fee:</div>
+                            <div class="detail-value">${record[24] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Other Fee:</div>
+                            <div class="detail-value">${record[25] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Gross Total:</div>
+                            <div class="detail-value">${record[26] || ''}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="field-group">
+                        <h5>Payment Details</h5>
+                        <div class="detail-row">
+                            <div class="detail-label">Late Fine:</div>
+                            <div class="detail-value">${record[27] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Net Total:</div>
+                            <div class="detail-value">${record[28] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Payment Date:</div>
+                            <div class="detail-value">${formatDate(record[29])}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Paid Amount:</div>
+                            <div class="detail-value">${record[30] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Method:</div>
+                            <div class="detail-value">${record[31] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Status:</div>
+                            <div class="detail-value">${record[32] || ''}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="field-group">
+                        <h5>Balance Details</h5>
+                        <div class="detail-row">
+                            <div class="detail-label">Balance No. of Month:</div>
+                            <div class="detail-value">${record[33] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Balance Bill:</div>
+                            <div class="detail-value">${record[34] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Balance Demand Fee:</div>
+                            <div class="detail-value">${record[35] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Balance Activity Fee:</div>
+                            <div class="detail-value">${record[36] || ''}</div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                modalContent = `
+                    <div class="field-group">
+                        <h5>Payment Information</h5>
+                        <div class="detail-row">
+                            <div class="detail-label">S.N.:</div>
+                            <div class="detail-value">${record[0] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Customer ID:</div>
+                            <div class="detail-value">${record[1] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Receipt No.:</div>
+                            <div class="detail-value">${record[2] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Customer Name:</div>
+                            <div class="detail-value">${record[3] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Description:</div>
+                            <div class="detail-value">${record[4] || ''}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="field-group">
+                        <h5>Payment Details</h5>
+                        <div class="detail-row">
+                            <div class="detail-label">Payment Method:</div>
+                            <div class="detail-value">${record[5] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Amount:</div>
+                            <div class="detail-value">${record[6] || ''}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Receipt Date and Time:</div>
+                            <div class="detail-value">${formatDate(record[7])}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Months:</div>
+                            <div class="detail-value">${record[8] || ''}</div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            Swal.fire({
+                title: `${type.charAt(0).toUpperCase() + type.slice(1)} Record #${record[0]}`,
+                html: modalContent,
+                width: '800px',
+                customClass: 'swal-wide',
+                showConfirmButton: true,
+                showDenyButton: true,
+                confirmButtonText: 'Close',
+                denyButtonText: 'Print'
+            }).then((result) => {
+                if (result.isDenied) {
+                    printCurrentRecord();
+                }
+            });
+        }
+        
+        // Edit record in Swal
+        function editRecord(type, id) {
+            const data = type === 'billing' ? billingData : paymentData;
+            
+            if (!data || data.length <= 1) {
+                Swal.fire('Error', 'Record not found', 'error');
+                return;
+            }
+            
+            // Find the record by ID
+            let record = null;
+            for (let i = 1; i < data.length; i++) {
+                if (parseInt(data[i][0]) === parseInt(id)) {
+                    record = data[i];
+                    break;
+                }
+            }
+            
+            if (!record) {
+                Swal.fire('Error', 'Record not found', 'error');
+                return;
+            }
+            
+            const isBilling = type === 'billing';
+            const title = isBilling ? `Edit Bill #${record[0]}` : `Edit Payment #${record[0]}`;
+            const templateId = isBilling ? 'billingFormTemplate' : 'paymentFormTemplate';
+            const formId = isBilling ? 'billingFormElement' : 'paymentFormElement';
+            const monthSelectId = isBilling ? 'billingMonthSelect' : 'paymentMonthSelect';
+            
+            const formHtml = document.getElementById(templateId).innerHTML;
+            
+            Swal.fire({
+                title: title,
+                html: formHtml,
+                showCancelButton: true,
+                confirmButtonText: 'Save',
+                cancelButtonText: 'Cancel',
+                width: '800px',
+                customClass: 'swal-wide',
+                preConfirm: () => {
+                    const form = Swal.getPopup().querySelector(`#${formId}`);
+                    if (!form.checkValidity()) {
+                        form.reportValidity();
+                        return false;
+                    }
+                    
+                    const dataForm = new FormData(form);
+                    const recordData = {};
+                    for (let [key, value] of dataForm.entries()) {
+                        recordData[key] = value;
+                    }
+                    
+                    return recordData;
+                }
+            }).then(result => {
+                if (result.isConfirmed) {
+                    const recordData = result.value;
+                    const month = document.getElementById(monthSelectId).value;
+                    showLoading();
+                    
+                    const action = isBilling ? 'updateData1' : 'updateData2';
+                    apiCall(action, 'POST', { id, record: recordData, month })
+                        .then(() => {
+                            hideLoading();
+                            Swal.fire('Success', `${type.charAt(0).toUpperCase() + type.slice(1)} record updated successfully`, 'success');
+                            if (isBilling) loadBillingData();
+                            else loadPaymentData();
+                            loadDashboardData();
+                        })
+                        .catch((error) => {
+                            hideLoading();
+                            Swal.fire('Error', `Failed to update ${type} record: ` + error.message, 'error');
+                        });
+                }
+            });
+            
+            // Fill form with existing data
+            setTimeout(() => {
+                const popup = Swal.getPopup();
+                popup.querySelector('#' + type + 'Id').value = record[0];
+                if (isBilling) {
+                    popup.querySelector('#meterNo').value = record[1] || '';
+                    popup.querySelector('#customerName').value = record[2] || '';
+                    popup.querySelector('#propose').value = record[3] || 'Normal House';
+                    popup.querySelector('#readingDate').value = formatDateForInput(record[10]);
+                    popup.querySelector('#currentReading').value = record[12] || '';
+                    popup.querySelector('#previousReading').value = record[5] || '';
+                } else {
+                    popup.querySelector('#paymentCustomerId').value = record[1] || '';
+                    popup.querySelector('#receiptNo').value = record[2] || '';
+                    popup.querySelector('#paymentCustomerName').value = record[3] || '';
+                    popup.querySelector('#paymentDescription').value = record[4] || '';
+                    popup.querySelector('#paymentMethodSelect').value = record[5] || 'CASH';
+                    popup.querySelector('#paymentAmount').value = record[6] || '';
+                    popup.querySelector('#paymentDateTime').value = formatDateTimeForInput(record[7]);
+                    const monthValue = Object.keys(monthNames).find(key => monthNames[key] === record[8]);
+                    popup.querySelector('#paymentMonth').value = monthValue || currentMonth;
+                }
+            }, 100);
+        }
+        
+        // Format date for input field
+        function formatDateForInput(dateValue) {
+            if (!dateValue) return '';
+            
+            let date;
+            if (typeof dateValue === 'string') {
+                date = new Date(dateValue);
+            } else if (dateValue instanceof Date) {
+                date = dateValue;
+            } else {
+                return '';
+            }
+            
+            if (isNaN(date.getTime())) return '';
+            
+            return date.toISOString().split('T')[0];
+        }
+        
+        // Format datetime for input field
+        function formatDateTimeForInput(dateTimeValue) {
+            if (!dateTimeValue) return '';
+            
+            let date;
+            if (typeof dateTimeValue === 'string') {
+                date = new Date(dateTimeValue);
+            } else if (dateTimeValue instanceof Date) {
+                date = dateTimeValue;
+            } else {
+                return '';
+            }
+            
+            if (isNaN(date.getTime())) return '';
+            
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            
+            return `${year}-${month}-${day}T${hours}:${minutes}`;
+        }
+        
+        // Pay bill in Swal
+        function payBill(id) {
+            // Find the billing record by ID
+            let record = null;
+            for (let i = 1; i < billingData.length; i++) {
+                if (parseInt(billingData[i][0]) === parseInt(id)) {
+                    record = billingData[i];
+                    break;
+                }
+            }
+            
+            if (!record) {
+                Swal.fire('Error', 'Bill not found', 'error');
+                return;
+            }
+            
+            currentPaymentData = record;
+            
+            // Prepare payment form content
+            const paymentContent = `
+                <div class="mb-3">
+                    <label class="form-label">Customer Name</label>
+                    <input type="text" class="form-control" value="${record[2] || ''}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Meter No</label>
+                    <input type="text" class="form-control" value="${record[1] || ''}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Remaining Consuption Unit to Pay (₹)</label>
+                    <input type="number" step="0.01" class="form-control" id="totalAmount" value="${record[34] || 0}" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Remaining Demand Fee to Pay (₹)</label>
+                    <input type="number" step="0.01" class="form-control" id="totalDemandAmount" value="${record[35] || 0}" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Remaining Activity Fee to Pay (₹)</label>
+                    <input type="number" step="0.01" class="form-control" id="totalActivityAmount" value="${record[36] || 0}" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Amount to Pay in this month (₹)</label>
+                    <input type="number" step="0.01" class="form-control" id="totalNetAmount" value="${record[28] || 0}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="paymentMethod" class="form-label">Payment Method</label>
+                    <select class="form-select" id="paymentMethod" required>
+                        <option value="CASH">CASH</option>
+                        <option value="BANK">BANK</option>
+                        <option value="ONLINE">ONLINE</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" id="modalDescription" rows="2"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="paymentDate" class="form-label">Payment Date</label>
+                    <input type="date" class="form-control" id="paymentDate" value="${new Date().toISOString().split('T')[0]}" required>
+                </div>
+            `;
+            
+            Swal.fire({
+                title: 'Process Payment',
+                html: paymentContent,
+                showCancelButton: true,
+                confirmButtonText: 'Confirm Payment',
+                cancelButtonText: 'Cancel',
+                preConfirm: () => {
+                    const tAmount = Swal.getPopup().querySelector('#totalAmount').value;
+                    const paymentMethod = Swal.getPopup().querySelector('#paymentMethod').value;
+                    const description = Swal.getPopup().querySelector('#modalDescription').value;
+                    const paymentDate = Swal.getPopup().querySelector('#paymentDate').value;
+                    
+                    if (!tAmount || !paymentMethod || !paymentDate) {
+                        Swal.showValidationMessage('Please fill in all required fields');
+                        return false;
+                    }
+                    
+                    return { tAmount, paymentMethod, description, paymentDate };
+                }
+            }).then(result => {
+                if (result.isConfirmed) {
+                    const { tAmount, paymentMethod, description, paymentDate } = result.value;
+                    processPayment(tAmount, paymentMethod, description, paymentDate);
+                }
+            });
+        }
+        
+        // Process payment with proper confirmation and updates
+        async function processPayment(tAmount, paymentMethod, description, paymentDate) {
+            if (!currentPaymentData) {
+                Swal.fire('Error', 'No payment data found', 'error');
+                return;
+            }
+            
+            const billingMonth = document.getElementById('billingMonthSelect').value;
+            
+            showLoading();
+            
+            try {
+                const nextSn = await apiCall('getNextSn', 'GET', null, { month: billingMonth });
+                const shortMonth = monthNames[billingMonth].substring(0, 3);
+                const receiptNo = shortMonth + '-' + nextSn;                    
+                const time = new Date().toLocaleTimeString();
+                const fullDateTime = paymentDate + ' ' + time;
+                
+                const paymentRecord = [
+                    currentPaymentData[0], // customer ID
+                    receiptNo,
+                    currentPaymentData[2], // name
+                    description,
+                    paymentMethod,
+                    parseFloat(tAmount),
+                    fullDateTime,
+                    monthNames[billingMonth].toUpperCase()
+                ];
+                
+                await apiCall('addData2', 'POST', { record: paymentRecord, month: billingMonth });
+                hideLoading();
+                Swal.fire('Success', 'Payment processed successfully', 'success');
+                loadPaymentData();
+                loadDashboardData();
+                loadBillingData();
+            } catch (error) {
+                hideLoading();
+                Swal.fire('Error', 'Failed to process payment: ' + error.message, 'error');
+            }
+        }
+        
+
+        // Print current record using printArea div
+        function printCurrentRecord() {
+            if (!currentRecord || !currentRecordType) return;
+            
+            const printArea = document.getElementById('printArea');
+            printArea.innerHTML = `
+                <div class="print-single">
+                    ${getViewContent(currentRecord, currentRecordType)}
+                </div>
+            `;
+            
+            window.print();
+            printArea.innerHTML = '';
+        }
+        
+        // Get view content for print
+        function getViewContent(record, type) {
+            let content = '';
+            
+            if (type === 'billing') {
+                content = `
+                    <div class="field-group">
+                        <h5>Customer Information</h5>
+                        <div id="resultSection" class="w-full max-w-6xl mx-auto mt-8 bg-white rounded-xl shadow-lg p-6 hidden">
+                            <!-- Result Header --> 
+                            <table class="w-full border-collapse result-table">
+                                <thead>
+                                    <tr class="bg-indigo-100">
+                                        <th class="border border-gray-300 p-2 text-center text-indigo-800">
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 print-small-text customer-details-grid">
+                                                <div class="flex justify-start items-center">
+                                                    <span class="font-bold text-gray-700 min-w-28">PAN No: 303334693</span>
+                                                </div>
+                                                <div class="flex justify-end items-center">
+                                                    <span class="font-bold text-gray-700 min-w-28">Registration No: 386/063/064</span>
+                                                </div>
+                                            </div>
+                                            <div class="flex flex-col md:flex-row justify-between items-center result-header rounded-t-xl p-4 print-compact">
+                                                <div class="flex items-center mb-4 md:mb-0">
+                                                    <img src = "https://drive.google.com/thumbnail?id=1LV7MlBAQgOvdZcAvcftHoEy7gMpvm5BE&sz=w64" alt="Jeevan Jyoti Logo" style="width: 20%; height: 20%; object-fit: contain; margin-right: 1%;">
+                                                    <div class="ml-3" style="display: flex; flex-direction: column; justify-content: center;">
+                                                        <h1 class="text-xl font-bold text-gray-800" style="white-space: nowrap; margin: 0;">Jeevan Jyoti Gramin Bidhyut</h1>
+                                                        <p class="text-sm text-gray-600" style="margin: 0;">Janaki-2, Khaireni, Kailali</p>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <h2 class="text-lg font-bold bg-indigo-100 text-indigo-800 py-1 px-4 rounded-full">Electricity Bill</h2>
+                                                </div>
+                                            </div>
+                                            <div class="bg-gradient-to-r from-indigo-500 to-blue-500 h-1 mb-4 print-compact"></div>
+
+                                            <div class="text-center mb-1.5 print-compact">
+                                                <p id="idError" class="text-red-600 font-bold"></p>
+                                            </div>
+
+                                            <div class="border border-gray-200 overflow-hidden rounded-xl">
+                                                <!-- Customer Details Section -->
+                                                <div class="bg-indigo-50 p-4 border-b border-gray-200">
+                                                    <div class="text-center mb-3">
+                                                        <h3 class="font-bold text-indigo-800">CUSTOMER INFORMATION</h3>
+                                                        <div class="w-24 h-1 bg-indigo-500 mx-auto mt-3"></div>
+                                                    </div><br>
+                                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 print-small-text customer-details-grid">
+                                                        <div class="flex items-center">
+                                                            <span class="font-bold text-gray-700 min-w-28">Bill No:</span>
+                                                            <span id="lastBillNoDisplay" class="ml-2 text-gray-800">${record[0] || ''}</span>
+                                                        </div>
+                                                        <div class="flex items-center">
+                                                            <span class="font-bold text-gray-700 min-w-28">ID No:</span>
+                                                            <span id="idDisplay" class="ml-2 text-gray-800">${record[0] || ''}</span>
+                                                        </div>
+                                                        <div class="flex items-center">
+                                                            <span class="font-bold text-gray-700 min-w-28">Meter No:</span>
+                                                            <span id="meterNoDisplay" class="ml-2 text-gray-800">${record[1] || ''}</span>
+                                                        </div>
+                                                        <div class="flex items-center">
+                                                            <span class="font-bold text-gray-700 min-w-28">Customer Name:</span>
+                                                            <span id="nameDisplay" class="ml-2 text-gray-800">${record[2] || ''}</span>
+                                                        </div>
+                                                        <div class="flex items-center">
+                                                            <span class="font-bold text-gray-700 min-w-28">No. of month to be paid:</span>
+                                                            <span id="balanceNoMonthDisplay" class="ml-2 text-gray-800">${record[33] || ''}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Billing Details Table -->
+                                                <div class="overflow-x-auto">
+                                                    <table class="w-full border-collapse result-table">
+                                                        <thead>
+                                                            <tr class="bg-indigo-100">
+                                                                <th class="border border-gray-300 p-2 text-center text-indigo-800">Description</th>
+                                                                <th class="border border-gray-300 p-2 text-center text-indigo-800">Amount</th>
+                                                                <th class="border border-gray-300 p-2 text-center text-indigo-800">Remarks</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="border border-gray-300 p-2 font-medium">Consumption Unit Fee</td>
+                                                                <td class="border border-gray-300 p-2 text-center" id="grossUnitFeeDisplay">${record[21] || ''}</td>
+                                                                <td class="border border-gray-300 p-2 text-center"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="border border-gray-300 p-2 font-medium">Demand Fee</td>
+                                                                <td class="border border-gray-300 p-2 text-center" id="grossDemandFeeDisplay">${record[22] || ''}</td>
+                                                                <td class="border border-gray-300 p-2 text-center"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="border border-gray-300 p-2 font-medium">Activity Fee</td>
+                                                                <td class="border border-gray-300 p-2 text-center" id="grossActivityFeeDisplay">${record[23] || ''}</td>
+                                                                <td class="border border-gray-300 p-2 text-center"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="border border-gray-300 p-2 font-medium">Card Fee</td>
+                                                                <td class="border border-gray-300 p-2 text-center" id="grossCardFeeDisplay">${record[24] || ''}</td>
+                                                                <td class="border border-gray-300 p-2 text-center"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="border border-gray-300 p-2 font-medium">Other Fee</td>
+                                                                <td class="border border-gray-300 p-2 text-center" id="grossOtherFeeDisplay">${record[25] || ''}</td>
+                                                                <td class="border border-gray-300 p-2 text-center"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="border border-gray-300 p-2 font-medium">Total</td>
+                                                                <td class="border border-gray-300 p-2 text-center" id="grossTotalDisplay">${record[26] || ''}</td>
+                                                                <td class="border border-gray-300 p-2 text-center"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="border border-gray-300 p-2 font-medium">Late Fine</td>
+                                                                <td class="border border-gray-300 p-2 text-center" id="lateFineDisplay">${record[27] || ''}</td>
+                                                                <td class="border border-gray-300 p-2 text-center"></td>
+                                                            </tr>
+                                                            <tr class="bg-indigo-50">
+                                                                <td class="border border-gray-300 p-2 font-bold text-indigo-800">Net Total</td>
+                                                                <td class="border border-gray-300 p-2 text-center" id="netTotalDisplay">${record[28] || ''}</td>
+                                                                <td class="border border-gray-300 p-2 text-center"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="border border-gray-300 p-2 font-medium">Payment Date</td>
+                                                                <td class="border border-gray-300 p-2 text-center" id="paymentDateDisplay">${formatDate(record[29])}</td>
+                                                                <td class="border border-gray-300 p-2 text-center"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="border border-gray-300 p-2 font-medium">Paid Amount</td>
+                                                                <td class="border border-gray-300 p-2 text-center" id="paidDisplay">${record[30] || ''}</td>
+                                                                <td class="border border-gray-300 p-2 text-center"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="border border-gray-300 p-2 font-medium">Payment Method</td>
+                                                                <td class="border border-gray-300 p-2 text-center" id="methodDisplay">${record[31] || ''}</td>
+                                                                <td class="border border-gray-300 p-2 text-center"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="border border-gray-300 p-2 font-medium">Balance</td>
+                                                                <td class="border border-gray-300 p-2 text-center" id="balanceTotalDisplay">${record[34] || ''}</td>
+                                                                <td class="border border-gray-300 p-2 text-center"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="border border-gray-300 p-2 font-medium">Status</td>
+                                                                <td class="border border-gray-300 p-2 text-center text-lg font-bold bg-indigo-100 text-indigo-800 py-1 px-2 rounded-full" id="statusDisplay">${record[32] || ''}</td>
+                                                                <td class="border border-gray-300 p-2 text-center"></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <!-- Print-only footer -->
+                                            <div class="hidden print:block mt-6 text-center print-small-text">
+                                                <div class="w-full h-px bg-gray-300 mb-3"></div>
+                                                <p class="text-gray-600">This is a computer-generated bill. No signature required.</p>
+                                                <p class="text-gray-600">Jeevan Jyoti Gramin Bidhyut © 2025 - All Rights Reserved</p>
+                                                <p id="printDateTime" class="text-gray-600">${new Date().toLocaleString()}</p>
+                                            </div>
+                                        </div>
+                    </div>
+                `;
+            } else {
+                content = `
+                    <div class="field-group">
+                        <h5>Payment Information</h5>
+                        <div id="resultSection" class="w-full max-w-6xl mx-auto mt-8 bg-white rounded-xl shadow-lg p-6 hidden">
+                            <!-- Result Header --> 
+                            <table class="w-full border-collapse result-table">
+                                <thead>
+                                    <tr class="bg-indigo-100">
+                                        <th class="border border-gray-300 p-2 text-center text-indigo-800">
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 print-small-text customer-details-grid">
+                                                <div class="flex justify-start items-center">
+                                                    <span class="font-bold text-gray-700 min-w-28">PAN No: 303334693</span>
+                                                </div>
+                                                <div class="flex justify-end items-center">
+                                                    <span class="font-bold text-gray-700 min-w-28">Registration No: 386/063/064</span>
+                                                </div>
+                                            </div>
+                                            <div class="flex flex-col md:flex-row justify-between items-center result-header rounded-t-xl p-4 print-compact">
+                                                <div class="flex items-center mb-4 md:mb-0">
+                                                    <img src= "https://drive.google.com/thumbnail?id=1LV7MlBAQgOvdZcAvcftHoEy7gMpvm5BE&sz=w64" alt="Jeevan Jyoti Logo" style="width: 20%; height: 20%; object-fit: contain; margin-right: 1%;">
+                                                    <div class="ml-3" style="display: flex; flex-direction: column; justify-content: center;">
+                                                        <h1 class="text-xl font-bold text-gray-800" style="white-space: nowrap; margin: 0;">Jeevan Jyoti Gramin Bidhyut</h1>
+                                                        <p class="text-sm text-gray-600" style="margin: 0;">Janaki-2, Khaireni, Kailali</p>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <h2 class="text-lg font-bold bg-indigo-100 text-indigo-800 py-1 px-4 rounded-full">Payment Receipt</h2>
+                                                </div>
+                                            </div>
+                                            <div class="bg-gradient-to-r from-indigo-500 to-blue-500 h-1 mb-4 print-compact"></div>
+
+                                            <div class="text-center mb-1.5 print-compact">
+                                                <p id="idError" class="text-red-600 font-bold"></p>
+                                            </div>
+
+                                            <div class="border border-gray-200 overflow-hidden rounded-xl">
+                                                <!-- Customer Details Section -->
+                                                <div class="bg-indigo-50 p-4 border-b border-gray-200">
+                                                    <div class="text-center mb-3">
+                                                        <h3 class="font-bold text-indigo-800">PAYMENT INFORMATION</h3>
+                                                        <div class="w-24 h-1 bg-indigo-500 mx-auto mt-3"></div>
+                                                    </div><br>
+                                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 print-small-text customer-details-grid">
+                                                        <div class="flex items-center">
+                                                            <span class="font-bold text-gray-700 min-w-28">Receipt No:</span>
+                                                            <span id="receiptNoDisplay" class="ml-2 text-gray-800">${record[2] || ''}</span>
+                                                        </div>
+                                                        <div class="flex items-center">
+                                                            <span class="font-bold text-gray-700 min-w-28">Customer ID:</span>
+                                                            <span id="customerIdDisplay" class="ml-2 text-gray-800">${record[1] || ''}</span>
+                                                        </div>
+                                                        <div class="flex items-center">
+                                                            <span class="font-bold text-gray-700 min-w-28">Customer Name:</span>
+                                                            <span id="nameDisplay" class="ml-2 text-gray-800">${record[3] || ''}</span>
+                                                        </div>
+                                                        <div class="flex items-center">
+                                                            <span class="font-bold text-gray-700 min-w-28">Payment Month:</span>
+                                                            <span id="monthDisplay" class="ml-2 text-gray-800">${record[8] || ''}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Payment Details Table -->
+                                                <div class="overflow-x-auto">
+                                                    <table class="w-full border-collapse result-table">
+                                                        <thead>
+                                                            <tr class="bg-indigo-100">
+                                                                <th class="border border-gray-300 p-2 text-center text-indigo-800">Description</th>
+                                                                <th class="border border-gray-300 p-2 text-center text-indigo-800">Amount</th>
+                                                                <th class="border border-gray-300 p-2 text-center text-indigo-800">Remarks</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="border border-gray-300 p-2 font-medium">Payment Amount</td>
+                                                                <td class="border border-gray-300 p-2 text-center" id="amountDisplay">${record[6] || ''}</td>
+                                                                <td class="border border-gray-300 p-2 text-center">${record[4] || ''}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="border border-gray-300 p-2 font-medium">Payment Method</td>
+                                                                <td class="border border-gray-300 p-2 text-center" id="methodDisplay">${record[5] || ''}</td>
+                                                                <td class="border border-gray-300 p-2 text-center"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="border border-gray-300 p-2 font-medium">Receipt Date</td>
+                                                                <td class="border border-gray-300 p-2 text-center" id="dateDisplay">${formatDate(record[7])}</td>
+                                                                <td class="border border-gray-300 p-2 text-center"></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <!-- Print-only footer -->
+                                            <div class="hidden print:block mt-6 text-center print-small-text">
+                                                <div class="w-full h-px bg-gray-300 mb-3"></div>
+                                                <p class="text-gray-600">This is a computer-generated receipt. No signature required.</p>
+                                                <p class="text-gray-600">Jeevan Jyoti Gramin Bidhyut © 2025 - All Rights Reserved</p>
+                                                <p id="printDateTime" class="text-gray-600">${new Date().toLocaleString()}</p>
+                                            </div>
+                                        </div>
+                    </div>
+                `;
+            }
+            
+            return content;
+        }
+        
+        // Print all records using printArea div (adapted from second code)
+        async function printAll(type) {
+            const month = type === 'billing' ? 
+                document.getElementById('billingMonthSelect').value :
+                document.getElementById('paymentMonthSelect').value;
+            
+            Swal.fire({
+                title: 'Print All Records',
+                text: `This will print all ${type} records for ${monthNames[month]}.`,
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Continue'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    showLoading();
+                    
+                    const action = type === 'billing' ? 'getData1' : 'getData2';
+                    
+                    apiCall(action, 'GET', null, { month })
+                        .then(function(data) {
+                            hideLoading();
+                            if (!data || data.length <= 1) return;
+                            const tableData = type === 'billing' ? data.slice(1).map(row => ({
+                                id: row[0], meterNo: row[1], name: row[2], propose: row[3], readingDate: formatDate(row[10]), amount: row[28], status: row[32], paymentDate: formatDate(row[29]), method: row[31]
+                            })) : data.slice(1).map(row => ({
+                                sn: row[0], customerId: row[1], receiptNo: row[2], customerName: row[3], description: row[4], method: row[5], amount: row[6], date: formatDate(row[7]), month: row[8]
+                            }));
+                            const headers = type === 'billing' ? ['ID', 'Meter No', 'Name', 'Propose', 'Reading Date', 'Amount', 'Status', 'Payment Date', 'Method'] : ['S.N.', 'Customer ID', 'Receipt No.', 'Customer Name', 'Description', 'Payment Method', 'Amount', 'Receipt Date', 'Month'];
+                            let rows = tableData.map(rowObj => `<tr>${headers.map(h => `<td>${rowObj[h.toLowerCase().replace(' ', '')] || ''}</td>`).join('')}</tr>`).join("");
+                            const printArea = document.getElementById('printArea');
+                            printArea.innerHTML = `
+                                <div class="print-all">
+                                    <div class="print-header"><h2>Jeevan Jyoti Gramin Bidhyut Sahakari Sastha</h2><p>Printed on: ${new Date().toLocaleString()}</p></div>
+                                    <table><thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table>
+                                </div>
+                            `;
+                            window.print();
+                            printArea.innerHTML = '';
+                        })
+                        .catch(handleDataError);
+                }
+            });
+        }
+        
+        // Download all records
+        async function downloadAll(type) {
+            const month = type === 'billing' ? 
+                document.getElementById('billingMonthSelect').value :
+                document.getElementById('paymentMonthSelect').value;
+            
+            Swal.fire({
+                title: 'Download Records',
+                text: `This will download all ${type} records for ${monthNames[month]} as a CSV file.`,
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Download'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    showLoading();
+                    
+                    const action = type === 'billing' ? 'getData1' : 'getData2';
+                    
+                    apiCall(action, 'GET', null, { month })
+                        .then(function(data) {
+                            hideLoading();
+                            downloadCSV(data, `${type}_records_${monthNames[month]}`);
+                        })
+                        .catch(handleDataError);
+                }
+            });
+        }
+        
+        // Download data as CSV
+        function downloadCSV(data, filename) {
+            if (!data || data.length === 0) {
+                Swal.fire('Info', 'No records to download', 'info');
+                return;
+            }
+            
+            let csvContent = '';
+            
+            // Add headers
+            csvContent += data[0].join(',') + '\n';
+            
+            // Add rows
+            for (let i = 1; i < data.length; i++) {
+                csvContent += data[i].join(',') + '\n';
+            }
+            
+            // Create download link
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `${filename}.csv`);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
