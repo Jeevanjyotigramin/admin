@@ -7,9 +7,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/responsive/2.4.0/css/responsive.dataTables.min.css" rel="stylesheet">
     <style>
         :root {
             --primary-color: #4361ee;
@@ -17,7 +14,8 @@
             --success-color: #4cc9f0;
             --light-color: #f8f9fa;
             --dark-color: #212529;
-        } 
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -25,10 +23,11 @@
         }
         
         body {
-            font-family: 'Sarabun', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f5f7fb;
-            min-height: 100vh;
+            min-height: 100%;
         }
+        
         .login-container {
             min-height: 100vh;
             display: flex;
@@ -37,18 +36,19 @@
             background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
             padding: 20px;
         }
+        
         .login-form {
             background: white;
             border-radius: 15px;
             padding: 2.5rem;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-            width: 100vh;
+            width: 100%;
             max-width: 450px;
         }
         
         .app-container {
             display: none;
-            min-height: 100vh;
+            min-height: 100%;
             flex-direction: row;
         }
         
@@ -56,7 +56,7 @@
             background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
             color: white;
             width: 200px;
-            height: 100vh;
+            height: 100%;
             position: fixed;
             left: 0;
             top: 0;
@@ -380,243 +380,237 @@
 
         /* Print styles */
 
-        /* Reset default print styles and ensure visibility */
-        @media screen {
-            #printArea {
-                display: block !important; /* Ensure print area is visible on screen */
-                width: 100%;
-                max-width: 100vh; /* Constrain width for better preview on screen */
-                margin: 0 auto; /* Center on screen */
-                padding: 20px;
-                background: #fff; /* White background for screen preview */
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for visibility */
-            }
+/* Reset default print styles and ensure visibility */
+@media screen {
+    #printArea {
+        display: block !important; /* Ensure print area is visible on screen */
+        width: 100%;
+        max-width: 100vh; /* Constrain width for better preview on screen */
+        margin: 0 auto; /* Center on screen */
+        padding: 20px;
+        background: #fff; /* White background for screen preview */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for visibility */
+    }
 
-            #resultSection {
-                display: block !important; /* Override hidden class for screen view */
-                width: 100%;
-                max-width: 100%; /* Ensure it fits within printArea */
-                padding: 16px;
-                box-sizing: border-box;
-            }
+    #resultSection {
+        display: block !important; /* Override hidden class for screen view */
+        width: 100%;
+        max-width: 100%; /* Ensure it fits within printArea */
+        padding: 16px;
+        box-sizing: border-box;
+    }
 
-            /* Ensure tables and grids fit within the container */
-            .result-table {
-                width: 100%;
-                font-size: 14px; /* Slightly smaller font for screen preview */
-            }
+    /* Ensure tables and grids fit within the container */
+    .result-table {
+        width: 100%;
+        font-size: 14px; /* Slightly smaller font for screen preview */
+    }
 
-            .customer-details-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid */
-                gap: 12px;
-            }
+    .customer-details-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid */
+        gap: 12px;
+    }
 
-            /* Adjust header and logo for screen preview */
-            .result-header {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: space-between;
-                align-items: center;
-                padding: 12px;
-            }
+    /* Adjust header and logo for screen preview */
+    .result-header {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px;
+    }
 
-            .result-header img {
-                max-width: 80px; /* Constrain logo size */
-                height: auto;
-            }
+    .result-header img {
+        max-width: 80px; /* Constrain logo size */
+        height: auto;
+    }
 
-            .result-header h1 {
-                font-size: 1.5rem; /* Adjust heading size for screen */
-            }
+    .result-header h1 {
+        font-size: 1.5rem; /* Adjust heading size for screen */
+    }
 
-            .result-header p {
-                font-size: 0.9rem;
-            }
+    .result-header p {
+        font-size: 0.9rem;
+    }
 
-            /* Ensure print-only footer is hidden on screen */
-            .print\:block {
-                display: none !important;
-            }
-        }
+    /* Ensure print-only footer is hidden on screen */
+    .print\:block {
+        display: none !important;
+    }
+}
 
-        @media print {
-            body > * {
-                display: none !important; /* Hide all elements except printArea */
-            }
+@media print {
+    body > * {
+        display: none !important; /* Hide all elements except printArea */
+    }
 
-            #printArea {
-                display: block !important;
-                width: 100%;
-                max-width: none; /* Remove max-width constraints for print */
-                margin: 0;
-                padding: 0;
-                background: none;
-                box-shadow: none;
-            }
+    #printArea {
+        display: block !important;
+        width: 100%;
+        max-width: none; /* Remove max-width constraints for print */
+        margin: 0;
+        padding: 0;
+        background: none;
+        box-shadow: none;
+    }
 
-            #resultSection {
-                display: block !important;
-                width: 100%;
-                max-width: 100%;
-                padding: 10mm; /* Standard A4 margins */
-                box-sizing: border-box;
-                page-break-inside: avoid; /* Prevent breaking inside resultSection */
-            }
+    #resultSection {
+        display: block !important;
+        width: 100%;
+        max-width: 100%;
+        padding: 10mm; /* Standard A4 margins */
+        box-sizing: border-box;
+        page-break-inside: avoid; /* Prevent breaking inside resultSection */
+    }
 
-            /* Ensure each resultSection starts on a new page */
-            #resultSection + #resultSection {
-                page-break-before: always;
-            }
+    /* Ensure each resultSection starts on a new page */
+    #resultSection + #resultSection {
+        page-break-before: always;
+    }
 
-            /* Adjust table for print */
-            .result-table {
-                width: 100%;
-                font-size: 10pt; /* Standard print font size */
-                border-collapse: collapse;
-            }
+    /* Adjust table for print */
+    .result-table {
+        width: 100%;
+        font-size: 10pt; /* Standard print font size */
+        border-collapse: collapse;
+    }
 
-            .result-table th,
-            .result-table td {
-                border: 1px solid #ccc;
-                padding: 5mm;
-                text-align: center;
-            }
+    .result-table th,
+    .result-table td {
+        border: 1px solid #ccc;
+        padding: 5mm;
+        text-align: center;
+    }
 
-            /* Adjust grid for customer details */
-            .customer-details-grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr; /* Two columns for print */
-                gap: 5mm;
-                font-size: 9pt; /* Smaller font for print */
-            }
+    /* Adjust grid for customer details */
+    .customer-details-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Two columns for print */
+        gap: 5mm;
+        font-size: 9pt; /* Smaller font for print */
+    }
 
-            /* Header styling for print */
-            .result-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 5mm;
-                margin-bottom: 5mm;
-            }
+    /* Header styling for print */
+    .result-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5mm;
+        margin-bottom: 5mm;
+    }
 
-            .result-header img {
-                width: 50mm; /* Fixed width for logo in print */
-                height: auto;
-            }
+    .result-header img {
+        width: 50mm; /* Fixed width for logo in print */
+        height: auto;
+    }
 
-            .result-header h1 {
-                font-size: 14pt;
-            }
+    .result-header h1 {
+        font-size: 14pt;
+    }
 
-            .result-header p {
-                font-size: 10pt;
-            }
+    .result-header p {
+        font-size: 10pt;
+    }
 
-            /* Gradient bar */
-            .bg-gradient-to-r {
-                height: 1mm;
-                margin-bottom: 5mm;
-            }
+    /* Gradient bar */
+    .bg-gradient-to-r {
+        height: 1mm;
+        margin-bottom: 5mm;
+    }
 
-            /* Footer styling */
-            .print\:block {
-                display: block !important;
-                text-align: center;
-                font-size: 8pt;
-                margin-top: 5mm;
-            }
+    /* Footer styling */
+    .print\:block {
+        display: block !important;
+        text-align: center;
+        font-size: 8pt;
+        margin-top: 5mm;
+    }
 
-            .print-small-text {
-                font-size: 8pt;
-            }
+    .print-small-text {
+        font-size: 8pt;
+    }
 
-            .print-compact {
-                margin-bottom: 2mm;
-            }
+    .print-compact {
+        margin-bottom: 2mm;
+    }
 
-            /* Avoid widows and orphans */
-            h1, h2, h3, h5 {
-                page-break-after: avoid;
-            }
+    /* Avoid widows and orphans */
+    h1, h2, h3, h5 {
+        page-break-after: avoid;
+    }
 
-            table {
-                page-break-inside: avoid;
-            }
-        }
+    table {
+        page-break-inside: avoid;
+    }
+}
 
-        /* General styles for consistency */
-        .result-table th {
-            background-color: #e0e7ff; /* Indigo-100 equivalent */
-            color: #4f46e5; /* Indigo-800 equivalent */
-            font-weight: 600;
-        }
+/* General styles for consistency */
+.result-table th {
+    background-color: #e0e7ff; /* Indigo-100 equivalent */
+    color: #4f46e5; /* Indigo-800 equivalent */
+    font-weight: 600;
+}
 
-        .result-table td {
-            background-color: #fff;
-        }
+.result-table td {
+    background-color: #fff;
+}
 
-        .bg-indigo-50 {
-            background-color: #eef2ff; /* Indigo-50 equivalent */
-        }
+.bg-indigo-50 {
+    background-color: #eef2ff; /* Indigo-50 equivalent */
+}
 
-        .bg-indigo-100 {
-            background-color: #e0e7ff;
-        }
+.bg-indigo-100 {
+    background-color: #e0e7ff;
+}
 
-        .text-indigo-800 {
-            color: #4f46e5;
-        }
+.text-indigo-800 {
+    color: #4f46e5;
+}
 
-        .border-gray-200 {
-            border-color: #e5e7eb;
-        }
+.border-gray-200 {
+    border-color: #e5e7eb;
+}
 
-        .border-gray-300 {
-            border-color: #d1d5db;
-        }
+.border-gray-300 {
+    border-color: #d1d5db;
+}
 
-        .text-gray-600 {
-            color: #4b5563;
-        }
+.text-gray-600 {
+    color: #4b5563;
+}
 
-        .text-gray-700 {
-            color: #374151;
-        }
+.text-gray-700 {
+    color: #374151;
+}
 
-        .text-gray-800 {
-            color: #1f2937;
-        }
+.text-gray-800 {
+    color: #1f2937;
+}
 
-        .font-bold {
-            font-weight: 700;
-        }
+.font-bold {
+    font-weight: 700;
+}
 
-        .font-medium {
-            font-weight: 500;
-        }
+.font-medium {
+    font-weight: 500;
+}
 
-        .rounded-xl {
-            border-radius: 0.75rem;
-        }
+.rounded-xl {
+    border-radius: 0.75rem;
+}
 
-        .shadow-lg {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-
-        .dataTables_wrapper { margin-bottom: 20px; }
-        @media (max-width: 768px) { table { font-size: 12px; } th, td { padding: 2px; } }
-        @media (min-width: 769px) and (max-width: 1024px) { table { font-size: 14px; } }
-        @media (min-width: 1025px) { table { font-size: 16px; } }
-        @media print { .no-print, .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_paginate { display: none !important; } body { background: white; } table { width: 100%; border-collapse: collapse; } th, td { border: 1px solid #ddd; padding: 8px; } th { background: #198754; color: white; } .print-header { text-align: center; margin-bottom: 20px; } }
+.shadow-lg {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
     </style>
 </head>
 <body>
     <!-- Login Section -->
     <div class="login-container">
         <div class="login-form">
-            <div class="text-center mb-6">
-                <img src="https://drive.google.com/thumbnail?id=1LV7MlBAQgOvdZcAvcftHoEy7gMpvm5BE&sz=w800" alt="Logo" hight="100px" width="80">
+            <div class="text-center mb-4">
+                <img src="https://drive.google.com/thumbnail?id=1LV7MlBAQgOvdZcAvcftHoEy7gMpvm5BE&sz=w800" alt="Logo" width="60">
                 <h2 class="mt-3">Billing Management</h2>
                 <p class="text-muted">Sign in to your account</p>
             </div>
@@ -635,7 +629,7 @@
                     <input type="password" class="form-control" id="password" placeholder="Enter your password">
                 </div>
             </div>
-            <br>
+            <br><br>
             <button id="loginBtn" class="btn btn-primary w-100 py-2 fw-bold">
                 <i class="fas fa-sign-in-alt me-2"></i> Login
             </button>
@@ -745,10 +739,11 @@
                 <div class="card">
                     <div class="card-header">
                         <span>Recent Bills</span>
+                        <input type="text" class="form-control form-control-sm" id="recentSearch" placeholder="Search..." style="width: 200px;">
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id="recentBillsTable" class="table table-hover display responsive nowrap" style="width:100%">
+                            <table class="table table-hover">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
@@ -757,10 +752,13 @@
                                         <th class="tablet-hidden">Reading Date</th>
                                         <th>Amount</th>
                                         <th>Status</th>
-                                        <th class="no-print">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody></tbody>
+                                <tbody id="recentBills">
+                                    <tr>
+                                        <td colspan="7" class="text-center">No data available</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -803,28 +801,71 @@
                 
                 <div class="card">
                     <div class="card-header">
-                        <span>Billing Records</span>
+                        <span>Billing Records</span><br>
+                          <div class="d-flex align-items-center mb-3">
+                              <label class="me-2" for="billingEntriesSelect">Show</label>
+                              <select class="form-select w-auto" id="billingEntriesSelect">
+                                  <option value="5" selected>5</option>
+                                  <option value="10">10</option>
+                                  <option value="20">20</option>
+                                  <option value="50">50</option>
+                                  <option value="100">100</option>
+                                  <option value="all">All</option>
+                              </select>
+                              <label class="ms-2">entries</label>
+                          </div>
+                        <input type="text" class="form-control form-control-sm" id="billingSearch" placeholder="Search..." style="width: 200px;">
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="billingTable" class="table table-striped table-hover display responsive nowrap" style="width:100%">
-                                <thead>
-                                    <tr>
-                                        <th>Actions</th>
-                                        <th>ID</th>
-                                        <th class="mobile-hidden">Meter No</th>
-                                        <th>Name</th>
-                                        <th class="tablet-hidden">Propose</th>
-                                        <th class="tablet-hidden">Reading Date</th>
-                                        <th>Amount</th>
-                                        <th>Status</th>
-                                        <th class="mobile-hidden">Payment Date</th>
-                                        <th class="tablet-hidden">Method</th>
-                                        <th class="no-print">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
+                        <div class="filter-row">
+                            <div class="filter-item">
+                                <select class="form-select form-select-sm" id="statusFilter">
+                                    <option value="">All Status</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Complete">Complete</option>
+                                </select>
+                            </div>
+                            <div class="filter-item">
+                                <select class="form-select form-select-sm" id="proposeFilter">
+                                    <option value="">All Propose</option>
+                                    <option value="Normal House">Normal House</option>
+                                    <option value="Seechai">Seechai</option>
+                                    <option value="Large Mill">Large Mill</option>
+                                    <option value="Small Mill">Small Mill</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <div class="table-scroll">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Actions</th>
+                                            <th>ID</th>
+                                            <th class="mobile-hidden">Meter No</th>
+                                            <th>Name</th>
+                                            <th class="tablet-hidden">Propose</th>
+                                            <th class="tablet-hidden">Reading Date</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th class="mobile-hidden">Payment Date</th>
+                                            <th class="tablet-hidden">Method</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="billingTable">
+                                        <tr>
+                                            <td colspan="10" class="text-center">No data available</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="pagination-container d-flex justify-content-between align-items-center mt-3">
+                            <div id="billingShowingInfo">Showing 0 to 0 of 0 entries</div>
+                            <div>
+                                <button class="btn btn-sm btn-secondary" id="billingPrevBtn">Previous</button>
+                                <button class="btn btn-sm btn-secondary" id="billingNextBtn">Next</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -866,26 +907,62 @@
                 
                 <div class="card">
                     <div class="card-header">
-                        <span>Payment Records</span>
+                        <span>Payment Records</span><br>
+                          <div class="d-flex align-items-center mb-3">
+                              <label class="me-2" for="paymentEntriesSelect">Show</label>
+                              <select class="form-select w-auto" id="paymentEntriesSelect">
+                                  <option value="5" selected>5</option>
+                                  <option value="10">10</option>
+                                  <option value="20">20</option>
+                                  <option value="50">50</option>
+                                  <option value="100">100</option>
+                                  <option value="all">All</option>
+                              </select>
+                              <label class="ms-2">entries</label>
+                          </div>
+                        <input type="text" class="form-control form-control-sm" id="paymentSearch" placeholder="Search..." style="width: 200px;">
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="paymentTable" class="table table-striped table-hover display responsive nowrap" style="width:100%">
-                                <thead>
-                                    <tr>
-                                        <th>S.N.</th>
-                                        <th class="mobile-hidden">Customer ID</th>
-                                        <th class="tablet-hidden">Receipt No</th>
-                                        <th>Customer Name</th>
-                                        <th>Amount</th>
-                                        <th class="tablet-hidden">Date</th>
-                                        <th class="mobile-hidden">Method</th>
-                                        <th class="tablet-hidden">Description</th>
-                                        <th class="no-print">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
+                        <div class="filter-row">
+                            <div class="filter-item">
+                                <select class="form-select form-select-sm" id="paymentMethodFilter">
+                                    <option value="">All Methods</option>
+                                    <option value="CASH">CASH</option>
+                                    <option value="BANK">BANK</option>
+                                    <option value="ONLINE">ONLINE</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <div class="table-scroll">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Actions</th>
+                                            <th>S.N.</th>
+                                            <th class="mobile-hidden">Customer ID</th>
+                                            <th class="tablet-hidden">Receipt No</th>
+                                            <th>Customer Name</th>
+                                            <th>Amount</th>
+                                            <th class="tablet-hidden">Date</th>
+                                            <th class="mobile-hidden">Method</th>
+                                            <th class="tablet-hidden">Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="paymentTable">
+                                        <tr>
+                                            <td colspan="9" class="text-center">No data available</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="pagination-container d-flex justify-content-between align-items-center mt-3">
+                            <div id="paymentShowingInfo">Showing 0 to 0 of 0 entries</div>
+                            <div>
+                                <button class="btn btn-sm btn-secondary" id="paymentPrevBtn">Previous</button>
+                                <button class="btn btn-sm btn-secondary" id="paymentNextBtn">Next</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -896,70 +973,67 @@
     <!-- Hidden Form Templates for Swal -->
     <div style="display: none;">
         <!-- Billing Form Template -->
-   <div id="billingFormTemplate">
-    <form id="billingFormElement">
-        <input type="hidden" id="billingId">
-
-        <div class="row">
-            <div class="col-md-6 form-row">
-                <label for="meterNo" class="form-label">Meter No *</label>
-                <input type="text" class="form-control" id="meterNo" required>
-            </div>
-            <div class="col-md-6 form-row">
-                <label for="customerName" class="form-label">Customer Name *</label>
-                <input type="text" class="form-control" id="customerName" required>
-            </div>
-            <div class="col-md-6 form-row">
-                <label for="propose" class="form-label">Propose</label>
-                <select class="form-select" id="propose">
-                    <option value="Normal House">Normal House</option>
-                    <option value="Seechai">Seechai</option>
-                    <option value="Large Mill">Large Mill</option>
-                    <option value="Small Mill">Small Mill</option>
-                </select>
-            </div>
-            <div class="col-md-6 form-row">
-                <label for="readingDate" class="form-label">Reading Date *</label>
-                <input type="date" class="form-control" id="readingDate" required>
-            </div>
-            <div class="col-md-6 form-row">
-                <label for="currentReading" class="form-label">Current Reading *</label>
-                <input type="number" class="form-control" id="currentReading" required>
-            </div>
-            <div class="col-md-6 form-row">
-                <label for="previousReading" class="form-label">Previous Reading</label>
-                <input type="number" class="form-control" id="previousReading">
-            </div>
-            <div class="mt-3">
-               <strong>Consumption Used unit(KW:</strong> 
-               <span id="consumptionDifference">0</span> units
-            </div>
-            <div class="col-md-6 form-row">
-                <label for="consumptionUnitFee" class="form-label">Consumption Unit Fee</label>
-                <input type="number" step="0.01" class="form-control" id="consumptionUnitFee">
-            </div>
-            <div class="col-md-6 form-row">
-                <label for="demandFee" class="form-label">Demand Fee</label>
-                <input type="number" step="0.01" class="form-control" id="demandFee">
-            </div>
-            <div class="col-md-6 form-row">
-                <label for="activityFee" class="form-label">Activity Fee</label>
-                <input type="number" step="0.01" class="form-control" id="activityFee">
-            </div>
-            <div class="col-md-6 form-row">
-                <label for="netTotal" class="form-label">Net Total *</label>
-                <input type="number" step="0.01" class="form-control" id="netTotal" required readonly>
-            </div>
-            <div class="col-md-6 form-row">
-                <label for="status" class="form-label">Status</label>
-                <select class="form-select" id="status">
-                    <option value="Pending">Pending</option>
-                    <option value="Complete">Complete</option>
-                </select>
-            </div>
+        <div id="billingFormTemplate">
+            <form id="billingFormElement">
+                <input type="hidden" id="billingId">
+                
+                <div class="row">
+                    <div class="col-md-6 form-row">
+                        <label for="meterNo" class="form-label">Meter No *</label>
+                        <input type="text" class="form-control" id="meterNo" required>
+                    </div>
+                    <div class="col-md-6 form-row">
+                        <label for="customerName" class="form-label">Customer Name *</label>
+                        <input type="text" class="form-control" id="customerName" required>
+                    </div>
+                    <div class="col-md-6 form-row">
+                        <label for="propose" class="form-label">Propose</label>
+                        <select class="form-select" id="propose">
+                            <option value="Normal House">Normal House</option>
+                            <option value="Seechai">Seechai</option>
+                            <option value="Large Mill">Large Mill</option>
+                            <option value="Small Mill">Small Mill</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 form-row">
+                        <label for="readingDate" class="form-label">Reading Date *</label>
+                        <input type="date" class="form-control" id="readingDate" required>
+                    </div>
+                    <div class="col-md-6 form-row">
+                        <label for="currentReading" class="form-label">Current Reading *</label>
+                        <input type="number" class="form-control" id="currentReading" required>
+                    </div>
+                    <div class="col-md-6 form-row">
+                        <label for="previousReading" class="form-label">Previous Reading</label>
+                        <input type="number" class="form-control" id="previousReading">
+                    </div>
+                    <div class="col-md-6 form-row">
+                        <label for="consumptionUnitFee" class="form-label">Consumption Unit Fee</label>
+                        <input type="number" step="0.01" class="form-control" id="consumptionUnitFee">
+                    </div>
+                    <div class="col-md-6 form-row">
+                        <label for="demandFee" class="form-label">Demand Fee</label>
+                        <input type="number" step="0.01" class="form-control" id="demandFee">
+                    </div>
+                    <div class="col-md-6 form-row">
+                        <label for="activityFee" class="form-label">Activity Fee</label>
+                        <input type="number" step="0.01" class="form-control" id="activityFee">
+                    </div>
+                    <div class="col-md-6 form-row">
+                        <label for="netTotal" class="form-label">Net Total *</label>
+                        <input type="number" step="0.01" class="form-control" id="netTotal" required>
+                    </div>
+                    <div class="col-md-6 form-row">
+                        <label for="status" class="form-label">Status</label>
+                        <select class="form-select" id="status">
+                            <option value="Pending">Pending</option>
+                            <option value="Complete">Complete</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
         </div>
-    </form>
-</div>
+
         <!-- Payment Form Template -->
         <div id="paymentFormTemplate">
             <form id="paymentFormElement">
@@ -1019,9 +1093,7 @@
             </form>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
+
     <script>
         // Global variables
         const API_URL = 'https://script.google.com/macros/s/AKfycbyI2hwiIcfj37EIOTdCwJCWegtWP09-chb61PkzOaLx18BzDjIdBMxWHZ5W7OcY1nuc/exec'; // Replace with your deployed GAS web app URL
@@ -1033,7 +1105,16 @@
         let currentRecordType = null;
         let currentPaymentData = null;
         let billMonth = null;
-        let recentTable, billingTable, paymentTable;
+
+        // Pagination variables for billing
+        let billingCurrentPage = 1;
+        let billingPageSize = 5;
+        let billingFilteredData = [];
+
+        // Pagination variables for payment
+        let paymentCurrentPage = 1;
+        let paymentPageSize = 5;
+        let paymentFilteredData = [];
 
         // Month names mapping for display
         const monthNames = {
@@ -1123,6 +1204,68 @@ async function apiCall(action, method = 'GET', body = null, params = {}) {
             document.getElementById('paymentMonthSelect').addEventListener('change', function() {
                 loadPaymentData();
             });
+            
+            // Search listeners
+            document.getElementById('recentSearch').addEventListener('input', function(e) {
+                filterRecentTable(e.target.value);
+            });
+            document.getElementById('billingSearch').addEventListener('input', function() {
+                updateBillingFilteredData();
+            });
+            document.getElementById('paymentSearch').addEventListener('input', function() {
+                updatePaymentFilteredData();
+            });
+            
+            // Filter listeners
+            document.getElementById('statusFilter').addEventListener('change', function() {
+                updateBillingFilteredData();
+            });
+            document.getElementById('proposeFilter').addEventListener('change', function() {
+                updateBillingFilteredData();
+            });
+            document.getElementById('paymentMethodFilter').addEventListener('change', function() {
+                updatePaymentFilteredData();
+            });
+            
+            // Pagination listeners for billing
+            document.getElementById('billingEntriesSelect').addEventListener('change', function(e) {
+                billingPageSize = e.target.value;
+                billingCurrentPage = 1;
+                renderBillingTable();
+            });
+            document.getElementById('billingPrevBtn').addEventListener('click', function() {
+                if (billingCurrentPage > 1) {
+                    billingCurrentPage--;
+                    renderBillingTable();
+                }
+            });
+            document.getElementById('billingNextBtn').addEventListener('click', function() {
+                let size = billingPageSize === 'all' ? billingFilteredData.length : parseInt(billingPageSize);
+                if (billingCurrentPage * size < billingFilteredData.length) {
+                    billingCurrentPage++;
+                    renderBillingTable();
+                }
+            });
+            
+            // Pagination listeners for payment
+            document.getElementById('paymentEntriesSelect').addEventListener('change', function(e) {
+                paymentPageSize = e.target.value;
+                paymentCurrentPage = 1;
+                renderPaymentTable();
+            });
+            document.getElementById('paymentPrevBtn').addEventListener('click', function() {
+                if (paymentCurrentPage > 1) {
+                    paymentCurrentPage--;
+                    renderPaymentTable();
+                }
+            });
+            document.getElementById('paymentNextBtn').addEventListener('click', function() {
+                let size = paymentPageSize === 'all' ? paymentFilteredData.length : parseInt(paymentPageSize);
+                if (paymentCurrentPage * size < paymentFilteredData.length) {
+                    paymentCurrentPage++;
+                    renderPaymentTable();
+                }
+            });
         });
         
         // Show loading overlay
@@ -1171,8 +1314,6 @@ async function apiCall(action, method = 'GET', body = null, params = {}) {
         // Handle login failure
         function handleLoginFailure(error) {
             hideLoading();
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
             Swal.fire('Error', 'Login failed: ' + error.message, 'error');
         }
         
@@ -1217,6 +1358,12 @@ async function apiCall(action, method = 'GET', body = null, params = {}) {
                 document.getElementById('activeCustomers').textContent = '0';
                 document.getElementById('pendingPayments').textContent = '0';
                 
+                document.getElementById('recentBills').innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center">No data available</td>
+                    </tr>
+                `;
+                
                 return;
             }
             
@@ -1250,62 +1397,99 @@ async function apiCall(action, method = 'GET', body = null, params = {}) {
             document.getElementById('pendingPayments').textContent = pendingPayments;
         }
         
-        // Update recent bills table with DataTables
+        // Update recent bills table
         function updateRecentBillsTable() {
-            if (recentTable) recentTable.destroy();
+            const tableBody = document.getElementById('recentBills');
+            let tableHtml = '';
             
-            const tableData = billingData.slice(1).map(row => ({
-                id: row[0] || '',
-                meterNo: row[1] || '',
-                name: row[2] || '',
-                readingDate: formatDate(row[10]),
-                amount: '₹' + parseFloat(row[28] || 0).toFixed(2),
-                status: row[32] || ''
-            }));
-
-            recentTable = $('#recentBillsTable').DataTable({
-                destroy: true,
-                responsive: true,
-                pageLength: 5,
-                lengthMenu: [[5, 10, 25, -1], [5, 10, 25, "All"]],
-                order: [],
-                data: tableData,
-                columns: [
-                    { data: 'id' },
-                    { data: 'meterNo', className: 'mobile-hidden' },
-                    { data: 'name' },
-                    { data: 'readingDate', className: 'tablet-hidden' },
-                    { data: 'amount' },
-                    { 
-                        data: 'status',
-                        render: function(data) {
-                            let statusBadge = 'secondary';
-                            if (data.toLowerCase() === 'complete') statusBadge = 'success';
-                            if (data.toLowerCase() === 'pending') statusBadge = 'warning';
-                            return `<span class="badge bg-${statusBadge}">${data}</span>`;
-                        }
-                    },
-                    {
-                        data: null,
-                        render: function(data) {
-                            return `<i class="fas fa-eye text-success me-2" onclick="viewRecord('billing', ${data.id})"></i><i class="fas fa-print text-success" onclick="printRowBilling(${JSON.stringify(data)})"></i>`;
-                        },
-                        className: "no-print"
-                    }
-                ],
-                columnDefs: [{ targets: [1, 6], className: "all" }],
-                deferRender: true,
-                dom: "lftip",
-                language: { emptyTable: "No data available" },
-                headerCallback: function(thead) { $(thead).show(); }
-            });
+            if (!billingData || billingData.length <= 1) {
+                tableHtml = `<tr><td colspan="7" class="text-center">No data available</td></tr>`;
+            } else {
+                // Show only the 5 most recent bills
+                const recentBills = billingData.slice(1).slice(-5).reverse();
+                
+                recentBills.forEach(row => {
+                    const id = row[0] || '';
+                    const meterNo = row[1] || '';
+                    const name = row[2] || '';
+                    const readingDate = row[10] || '';
+                    const amount = row[28] || 0;
+                    const status = row[32] || '';
+                    
+                    let statusBadge = 'secondary';
+                    if (status.toString().toLowerCase() === 'complete') statusBadge = 'success';
+                    if (status.toString().toLowerCase() === 'pending') statusBadge = 'warning';
+                    
+                    tableHtml += `
+                        <tr>
+                            <td>${id}</td>
+                            <td class="mobile-hidden">${meterNo}</td>
+                            <td>${name}</td>
+                            <td class="tablet-hidden">${formatDate(readingDate)}</td>
+                            <td>₹${parseFloat(amount).toFixed(2)}</td>
+                            <td><span class="badge bg-${statusBadge}">${status}</span></td>
+                        </tr>
+                    `;
+                });
+            }
+            
+            tableBody.innerHTML = tableHtml;
         }
-
-        // Print single row for billing (adapted from second code)
-        function printRowBilling(row) {
-            let win = window.open("", "", "width=800,height=600");
-            win.document.write(`<html><head><title>Billing Record</title><style>body{font-family:'Sarabun',sans-serif;padding:20px;font-size:10pt;}table{width:100%;border-collapse:collapse;}th,td{border:1px solid #ddd;padding:8px;}th{background:#198754;color:white;}.print-header{text-align:center;margin-bottom:20px;}</style></head><body><div class="print-header"><h2>Jeevan Jyoti Gramin Bidhyut Sahakari Sastha</h2><p>Printed on: ${new Date().toLocaleString()}</p></div><table><tr><th>ID</th><td>${row.id}</td></tr><tr><th>Meter No</th><td>${row.meterNo}</td></tr><tr><th>Name</th><td>${row.name}</td></tr><tr><th>Reading Date</th><td>${row.readingDate}</td></tr><tr><th>Amount</th><td>${row.amount}</td></tr><tr><th>Status</th><td>${row.status}</td></tr></table></body></html>`);
-            win.document.close(); win.print(); win.close();
+        
+        // Filter recent table
+        function filterRecentTable(search) {
+            search = search.toLowerCase().trim();
+            const data = billingData.slice(1);
+            
+            const tableBody = document.getElementById('recentBills');
+            let tableHtml = '';
+            
+            if (search === '') {
+                updateRecentBillsTable();
+                return;
+            }
+            
+            if (data.length === 0) {
+                tableHtml = `<tr><td colspan="7" class="text-center">No data available</td></tr>`;
+            } else {
+                const filteredData = data.filter(row => {
+                    return (
+                        (row[0] && row[0].toString().toLowerCase().includes(search)) ||
+                        (row[1] && row[1].toString().toLowerCase().includes(search)) ||
+                        (row[2] && row[2].toString().toLowerCase().includes(search)) ||
+                        (row[32] && row[32].toString().toLowerCase().includes(search))
+                    );
+                }).slice(-5).reverse();
+                
+                if (filteredData.length === 0) {
+                    tableHtml = `<tr><td colspan="7" class="text-center">No matching records found</td></tr>`;
+                } else {
+                    filteredData.forEach(row => {
+                        const id = row[0] || '';
+                        const meterNo = row[1] || '';
+                        const name = row[2] || '';
+                        const readingDate = row[10] || '';
+                        const amount = row[28] || 0;
+                        const status = row[32] || '';
+                        
+                        let statusBadge = 'secondary';
+                        if (status.toString().toLowerCase() === 'complete') statusBadge = 'success';
+                        if (status.toString().toLowerCase() === 'pending') statusBadge = 'warning';
+                        
+                        tableHtml += `
+                            <tr>
+                                <td>${id}</td>
+                                <td class="mobile-hidden">${meterNo}</td>
+                                <td>${name}</td>
+                                <td class="tablet-hidden">${formatDate(readingDate)}</td>
+                                <td>₹${parseFloat(amount).toFixed(2)}</td>
+                                <td><span class="badge bg-${statusBadge}">${status}</span></td>
+                            </tr>
+                        `;
+                    });
+                }
+            } 
+            tableBody.innerHTML = tableHtml;
         }
         
         // Load billing data
@@ -1321,84 +1505,112 @@ async function apiCall(action, method = 'GET', body = null, params = {}) {
             }
         }
         
-        // Update billing table with DataTables
+        // Update billing table with data
         function updateBillingTable(data) {
             hideLoading();
             
             if (!data || data.length <= 1) {
-                if (billingTable) billingTable.destroy();
+                billingFilteredData = [];
+                renderBillingTable();
                 return;
             }
             
             billingData = data;
-            
-            const tableData = data.slice(1).map(row => ({
-                actions: row,
-                id: row[0] || '',
-                meterNo: row[1] || '',
-                name: row[2] || '',
-                propose: row[3] || '',
-                readingDate: formatDate(row[10]),
-                amount: '₹' + parseFloat(row[28] || 0).toFixed(2),
-                status: row[32] || '',
-                paymentDate: formatDate(row[29]),
-                method: row[31] || ''
-            }));
-
-            if (billingTable) billingTable.destroy();
-            
-            billingTable = $('#billingTable').DataTable({
-                destroy: true,
-                responsive: true,
-                pageLength: 10,
-                lengthMenu: [[5, 10, 20, 50, 100, -1], [5, 10, 20, 50, 100, "All"]],
-                order: [],
-                data: tableData,
-                columns: [
-                    {
-                        data: 'actions',
-                        render: function(data, type, row) {
-                            let statusBadge = 'secondary';
-                            if (row.status.toLowerCase() === 'complete') statusBadge = 'success';
-                            if (row.status.toLowerCase() === 'pending') statusBadge = 'warning';
-                            let btnHtml = `<span class="badge bg-${statusBadge}">${row.status}</span>`;
-                            if (row.status.toLowerCase() === 'pending') {
-                                btnHtml += `<button class="btn btn-success btn-sm ms-1" onclick="payBill(${row.id})">Pay</button>`;
-                            }
-                            return btnHtml;
-                        },
-                        orderable: false
-                    },
-                    { data: 'id' },
-                    { data: 'meterNo', className: 'mobile-hidden' },
-                    { data: 'name' },
-                    { data: 'propose', className: 'tablet-hidden' },
-                    { data: 'readingDate', className: 'tablet-hidden' },
-                    { data: 'amount' },
-                    { data: 'status' },
-                    { data: 'paymentDate', className: 'mobile-hidden' },
-                    { data: 'method', className: 'tablet-hidden' },
-                    {
-                        data: null,
-                        render: function(data) {
-                            return `<i class="fas fa-eye text-success me-2" onclick="viewRecord('billing', ${data.id})"></i><i class="fas fa-edit text-warning me-2" onclick="editRecord('billing', ${data.id})"></i><i class="fas fa-print text-success" onclick="printRowBillingFull(${JSON.stringify(data)})"></i>`;
-                        },
-                        className: "no-print"
-                    }
-                ],
-                columnDefs: [{ targets: [1, 2, 4, 5, 8, 9, 10], className: "all" }],
-                deferRender: true,
-                dom: "lftip",
-                language: { emptyTable: "No data available" },
-                headerCallback: function(thead) { $(thead).show(); }
-            });
+            updateBillingFilteredData();
         }
-
-        // Print full billing row (adapted)
-        function printRowBillingFull(row) {
-            let win = window.open("", "", "width=800,height=600");
-            win.document.write(`<html><head><title>Billing Record</title><style>body{font-family:'Sarabun',sans-serif;padding:20px;font-size:10pt;}table{width:100%;border-collapse:collapse;}th,td{border:1px solid #ddd;padding:8px;}th{background:#198754;color:white;}.print-header{text-align:center;margin-bottom:20px;}</style></head><body><div class="print-header"><h2>Jeevan Jyoti Gramin Bidhyut Sahakari Sastha</h2><p>Printed on: ${new Date().toLocaleString()}</p></div><table><tr><th>ID</th><td>${row.id}</td></tr><tr><th>Meter No</th><td>${row.meterNo}</td></tr><tr><th>Name</th><td>${row.name}</td></tr><tr><th>Propose</th><td>${row.propose}</td></tr><tr><th>Reading Date</th><td>${row.readingDate}</td></tr><tr><th>Amount</th><td>${row.amount}</td></tr><tr><th>Status</th><td>${row.status}</td></tr><tr><th>Payment Date</th><td>${row.paymentDate}</td></tr><tr><th>Method</th><td>${row.method}</td></tr></table></body></html>`);
-            win.document.close(); win.print(); win.close();
+        
+        // Update filtered data for billing
+        function updateBillingFilteredData() {
+            let data = billingData.slice(1);
+            const search = document.getElementById('billingSearch').value.toLowerCase().trim();
+            const statusFilter = document.getElementById('statusFilter').value;
+            const proposeFilter = document.getElementById('proposeFilter').value;
+            
+            if (search) {
+                data = data.filter(row => (
+                    (row[0] && row[0].toString().toLowerCase().includes(search)) ||
+                    (row[1] && row[1].toString().toLowerCase().includes(search)) ||
+                    (row[2] && row[2].toString().toLowerCase().includes(search)) ||
+                    (row[32] && row[32].toString().toLowerCase().includes(search))
+                ));
+            }
+            
+            if (statusFilter) {
+                data = data.filter(row => row[32] === statusFilter);
+            }
+            
+            if (proposeFilter) {
+                data = data.filter(row => row[3] === proposeFilter);
+            }
+            
+            billingFilteredData = data;
+            billingCurrentPage = 1;
+            renderBillingTable();
+        }
+        
+        // Render billing table with pagination
+        function renderBillingTable() {
+            const tableBody = document.getElementById('billingTable');
+            let tableHtml = '';
+            
+            const total = billingFilteredData.length;
+            
+            if (total === 0) {
+                tableHtml = `<tr><td colspan="10" class="text-center">No data available</td></tr>`;
+                document.getElementById('billingShowingInfo').textContent = 'Showing 0 to 0 of 0 entries';
+                document.getElementById('billingPrevBtn').disabled = true;
+                document.getElementById('billingNextBtn').disabled = true;
+            } else {
+                let size = billingPageSize === 'all' ? total : parseInt(billingPageSize);
+                let start = (billingCurrentPage - 1) * size;
+                let end = Math.min(start + size, total);
+                
+                const pageData = billingFilteredData.slice(start, end);
+                
+                pageData.forEach(row => {
+                    const id = row[0] || '';
+                    const meterNo = row[1] || '';
+                    const name = row[2] || '';
+                    const propose = row[3] || '';
+                    const readingDate = row[10] || '';
+                    const amount = row[28] || 0;
+                    const status = row[32] || '';
+                    const paymentDate = row[29] || '';
+                    const method = row[31] || '';
+                    
+                    let statusBadge = 'secondary';
+                    if (status.toString().toLowerCase() === 'complete') statusBadge = 'success';
+                    if (status.toString().toLowerCase() === 'pending') statusBadge = 'warning';
+                    
+                    tableHtml += `
+                        <tr>
+                            <td>
+                                <div class="btn-group-sm">
+                                    <button class="btn btn-info" onclick="viewRecord('billing', ${id})">View</button>
+                                    <button class="btn btn-warning" onclick="editRecord('billing', ${id})">Edit</button>
+                                    ${status.toString().toLowerCase() === 'pending' ? 
+                                        `<button class="btn btn-success" onclick="payBill(${id})">Pay</button>` : ''}
+                                </div>
+                            </td>
+                            <td>${id}</td>
+                            <td class="mobile-hidden">${meterNo}</td>
+                            <td>${name}</td>
+                            <td class="tablet-hidden">${propose}</td>
+                            <td class="tablet-hidden">${formatDate(readingDate)}</td>
+                            <td>₹${parseFloat(amount).toFixed(2)}</td>
+                            <td><span class="badge bg-${statusBadge}">${status}</span></td>
+                            <td class="mobile-hidden">${formatDate(paymentDate)}</td>
+                            <td class="tablet-hidden">${method}</td>
+                        </tr>
+                    `;
+                });
+                
+                document.getElementById('billingShowingInfo').textContent = `Showing ${start + 1} to ${end} of ${total} entries`;
+                document.getElementById('billingPrevBtn').disabled = billingCurrentPage === 1;
+                document.getElementById('billingNextBtn').disabled = end >= total;
+            }
+            
+            tableBody.innerHTML = tableHtml;
         }
         
         // Load payment data
@@ -1414,67 +1626,98 @@ async function apiCall(action, method = 'GET', body = null, params = {}) {
             }
         }
         
-        // Update payment table with DataTables
+        // Update payment table with data
         function updatePaymentTable(data) {
             hideLoading();
             
             if (!data || data.length <= 1) {
-                if (paymentTable) paymentTable.destroy();
+                paymentFilteredData = [];
+                renderPaymentTable();
                 return;
             }
             
             paymentData = data;
-            
-            const tableData = data.slice(1).map(row => ({
-                sn: row[0] || '',
-                customerId: row[1] || '',
-                receiptNo: row[2] || '',
-                customerName: row[3] || '',
-                amount: '₹' + parseFloat(row[6] || 0).toFixed(2),
-                date: formatDate(row[7]),
-                method: row[5] || '',
-                description: row[4] || ''
-            }));
-
-            if (paymentTable) paymentTable.destroy();
-            
-            paymentTable = $('#paymentTable').DataTable({
-                destroy: true,
-                responsive: true,
-                pageLength: 10,
-                lengthMenu: [[5, 10, 20, 50, 100, -1], [5, 10, 20, 50, 100, "All"]],
-                order: [],
-                data: tableData,
-                columns: [
-                    { data: 'sn' },
-                    { data: 'customerId', className: 'mobile-hidden' },
-                    { data: 'receiptNo', className: 'tablet-hidden' },
-                    { data: 'customerName' },
-                    { data: 'amount' },
-                    { data: 'date', className: 'tablet-hidden' },
-                    { data: 'method', className: 'mobile-hidden' },
-                    { data: 'description', className: 'tablet-hidden' },
-                    {
-                        data: null,
-                        render: function(data) {
-                            return `<i class="fas fa-eye text-success me-2" onclick="viewRecord('payment', ${data.sn})"></i><i class="fas fa-edit text-warning me-2" onclick="editRecord('payment', ${data.sn})"></i><i class="fas fa-print text-success" onclick="printRowPayment(${JSON.stringify(data)})"></i>`;
-                        },
-                        className: "no-print"
-                    }
-                ],
-                columnDefs: [{ targets: [1, 2, 5, 6, 7, 8], className: "all" }],
-                deferRender: true,
-                dom: "lftip",
-                language: { emptyTable: "No data available" },
-                headerCallback: function(thead) { $(thead).show(); }
-            });
+            updatePaymentFilteredData();
         }
-
-        // Print single payment row (from second code)
-        function printRowPayment(row) {
-            let win = window.open("", "", "width=800,height=600");
-            win.document.write(`<html><head><title>Payment Receipt</title><style>body{font-family:'Sarabun',sans-serif;padding:20px;font-size:10pt;}table{width:100%;border-collapse:collapse;}th,td{border:1px solid #ddd;padding:8px;}th{background:#198754;color:white;}.print-header{text-align:center;margin-bottom:20px;}</style></head><body><div class="print-header"><h2>Jeevan Jyoti Gramin Bidhyut Sahakari Sastha</h2><p>Printed on: ${new Date().toLocaleString()}</p></div><table><tr><th>S.N.</th><td>${row.sn}</td></tr><tr><th>Customer ID</th><td>${row.customerId}</td></tr><tr><th>Receipt No.</th><td>${row.receiptNo}</td></tr><tr><th>Customer Name</th><td>${row.customerName}</td></tr><tr><th>Description</th><td>${row.description}</td></tr><tr><th>Payment Method</th><td>${row.method}</td></tr><tr><th>Amount</th><td>${row.amount}</td></tr><tr><th>Receipt Date</th><td>${row.date}</td></tr></table></body></html>`);
-            win.document.close(); win.print(); win.close();
+        
+        // Update filtered data for payment
+        function updatePaymentFilteredData() {
+            let data = paymentData.slice(1);
+            const search = document.getElementById('paymentSearch').value.toLowerCase().trim();
+            const methodFilter = document.getElementById('paymentMethodFilter').value;
+            
+            if (search) {
+                data = data.filter(row => (
+                    (row[1] && row[1].toString().toLowerCase().includes(search)) ||
+                    (row[2] && row[2].toString().toLowerCase().includes(search)) ||
+                    (row[3] && row[3].toString().toLowerCase().includes(search))
+                ));
+            }
+            
+            if (methodFilter) {
+                data = data.filter(row => row[5] === methodFilter);
+            }
+            
+            paymentFilteredData = data;
+            paymentCurrentPage = 1;
+            renderPaymentTable();
+        }
+        
+        // Render payment table with pagination
+        function renderPaymentTable() {
+            const tableBody = document.getElementById('paymentTable');
+            let tableHtml = '';
+            
+            const total = paymentFilteredData.length;
+            
+            if (total === 0) {
+                tableHtml = `<tr><td colspan="9" class="text-center">No data available</td></tr>`;
+                document.getElementById('paymentShowingInfo').textContent = 'Showing 0 to 0 of 0 entries';
+                document.getElementById('paymentPrevBtn').disabled = true;
+                document.getElementById('paymentNextBtn').disabled = true;
+            } else {
+                let size = paymentPageSize === 'all' ? total : parseInt(paymentPageSize);
+                let start = (paymentCurrentPage - 1) * size;
+                let end = Math.min(start + size, total);
+                
+                const pageData = paymentFilteredData.slice(start, end);
+                
+                pageData.forEach(row => {
+                    const sn = row[0] || '';
+                    const customerId = row[1] || '';
+                    const receiptNo = row[2] || '';
+                    const customerName = row[3] || '';
+                    const amount = row[6] || 0;
+                    const date = row[7] || '';
+                    const method = row[5] || '';
+                    const description = row[4] || '';
+                    
+                    tableHtml += `
+                        <tr>
+                            <td>
+                                <div class="btn-group-sm">
+                                    <button class="btn btn-info" onclick="viewRecord('payment', ${sn})">View</button>
+                                    <button class="btn btn-warning" onclick="editRecord('payment', ${sn})">Edit</button>
+                                </div>
+                            </td>
+                            <td>${sn}</td>
+                            <td class="mobile-hidden">${customerId}</td>
+                            <td class="tablet-hidden">${receiptNo}</td>
+                            <td>${customerName}</td>
+                            <td>₹${parseFloat(amount).toFixed(2)}</td>
+                            <td class="tablet-hidden">${formatDate(date)}</td>
+                            <td class="mobile-hidden">${method}</td>
+                            <td class="tablet-hidden">${description}</td>
+                        </tr>
+                    `;
+                });
+                
+                document.getElementById('paymentShowingInfo').textContent = `Showing ${start + 1} to ${end} of ${total} entries`;
+                document.getElementById('paymentPrevBtn').disabled = paymentCurrentPage === 1;
+                document.getElementById('paymentNextBtn').disabled = end >= total;
+            }
+            
+            tableBody.innerHTML = tableHtml;
         }
         
         // Handle data error
@@ -1934,10 +2177,15 @@ async function apiCall(action, method = 'GET', body = null, params = {}) {
                 if (isBilling) {
                     popup.querySelector('#meterNo').value = record[1] || '';
                     popup.querySelector('#customerName').value = record[2] || '';
-                    popup.querySelector('#propose').value = record[3] || 'Normal House';
+                    popup.querySelector('#propose').value = record[3] || 'Residential';
                     popup.querySelector('#readingDate').value = formatDateForInput(record[10]);
                     popup.querySelector('#currentReading').value = record[12] || '';
                     popup.querySelector('#previousReading').value = record[5] || '';
+                    popup.querySelector('#consumptionUnitFee').value = record[14] || '';
+                    popup.querySelector('#demandFee').value = record[15] || '';
+                    popup.querySelector('#activityFee').value = record[16] || '';
+                    popup.querySelector('#netTotal').value = record[28] || '';
+                    popup.querySelector('#status').value = record[32] || 'Pending';
                 } else {
                     popup.querySelector('#paymentCustomerId').value = record[1] || '';
                     popup.querySelector('#receiptNo').value = record[2] || '';
@@ -2028,15 +2276,15 @@ async function apiCall(action, method = 'GET', body = null, params = {}) {
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Remaining Demand Fee to Pay (₹)</label>
-                    <input type="number" step="0.01" class="form-control" id="totalDemandAmount" value="${record[35] || 0}" required>
+                    <input type="number" step="0.01" class="form-control" id="totalAmount" value="${record[35] || 0}" required>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Remaining Activity Fee to Pay (₹)</label>
-                    <input type="number" step="0.01" class="form-control" id="totalActivityAmount" value="${record[36] || 0}" required>
+                    <input type="number" step="0.01" class="form-control" id="totalAmount" value="${record[36] || 0}" required>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Amount to Pay in this month (₹)</label>
-                    <input type="number" step="0.01" class="form-control" id="totalNetAmount" value="${record[28] || 0}" required>
+                    <input type="number" step="0.01" class="form-control" id="totalAmount" value="${record[28] || 0}" required>
                 </div>
                 <div class="mb-3">
                     <label for="paymentMethod" class="form-label">Payment Method</label>
@@ -2113,6 +2361,11 @@ async function apiCall(action, method = 'GET', body = null, params = {}) {
                 ];
                 
                 await apiCall('addData2', 'POST', { record: paymentRecord, month: billingMonth });
+                
+                // Update billing record (assuming updateData1 can handle payment update)
+                const updateRecord = { /* Add fields to update billing status, etc. */ };
+                await apiCall('updateData1', 'POST', { id: currentPaymentData[0], record: updateRecord, month: billingMonth });
+                
                 hideLoading();
                 Swal.fire('Success', 'Payment processed successfully', 'success');
                 loadPaymentData();
@@ -2132,6 +2385,8 @@ async function apiCall(action, method = 'GET', body = null, params = {}) {
             const printArea = document.getElementById('printArea');
             printArea.innerHTML = `
                 <div class="print-single">
+                    <h1>${currentRecordType.charAt(0).toUpperCase() + currentRecordType.slice(1)} Record #${currentRecord[0]}</h1>
+                    <p>Generated on: ${new Date().toLocaleString()}</p>
                     ${getViewContent(currentRecord, currentRecordType)}
                 </div>
             `;
@@ -2164,7 +2419,7 @@ async function apiCall(action, method = 'GET', body = null, params = {}) {
                                             </div>
                                             <div class="flex flex-col md:flex-row justify-between items-center result-header rounded-t-xl p-4 print-compact">
                                                 <div class="flex items-center mb-4 md:mb-0">
-                                                    <img src = "https://drive.google.com/thumbnail?id=1LV7MlBAQgOvdZcAvcftHoEy7gMpvm5BE&sz=w64" alt="Jeevan Jyoti Logo" style="width: 20%; height: 20%; object-fit: contain; margin-right: 1%;">
+                                                    <img src="https://drive.google.com/thumbnail?id=1LV7MlBAQgOvdZcAvcftHoEy7gMpvm5BE&sz=w64" alt="Jeevan Jyoti Logo" style="width: 20%; height: 20%; object-fit: contain; margin-right: 1%;">
                                                     <div class="ml-3" style="display: flex; flex-direction: column; justify-content: center;">
                                                         <h1 class="text-xl font-bold text-gray-800" style="white-space: nowrap; margin: 0;">Jeevan Jyoti Gramin Bidhyut</h1>
                                                         <p class="text-sm text-gray-600" style="margin: 0;">Janaki-2, Khaireni, Kailali</p>
@@ -2321,7 +2576,7 @@ async function apiCall(action, method = 'GET', body = null, params = {}) {
                                             </div>
                                             <div class="flex flex-col md:flex-row justify-between items-center result-header rounded-t-xl p-4 print-compact">
                                                 <div class="flex items-center mb-4 md:mb-0">
-                                                    <img src= "https://drive.google.com/thumbnail?id=1LV7MlBAQgOvdZcAvcftHoEy7gMpvm5BE&sz=w64" alt="Jeevan Jyoti Logo" style="width: 20%; height: 20%; object-fit: contain; margin-right: 1%;">
+                                                    <img src="https://drive.google.com/thumbnail?id=1LV7MlBAQgOvdZcAvcftHoEy7gMpvm5BE&sz=w64" alt="Jeevan Jyoti Logo" style="width: 20%; height: 20%; object-fit: contain; margin-right: 1%;">
                                                     <div class="ml-3" style="display: flex; flex-direction: column; justify-content: center;">
                                                         <h1 class="text-xl font-bold text-gray-800" style="white-space: nowrap; margin: 0;">Jeevan Jyoti Gramin Bidhyut</h1>
                                                         <p class="text-sm text-gray-600" style="margin: 0;">Janaki-2, Khaireni, Kailali</p>
@@ -2409,7 +2664,7 @@ async function apiCall(action, method = 'GET', body = null, params = {}) {
             return content;
         }
         
-        // Print all records using printArea div (adapted from second code)
+        // Print all records using printArea div
         async function printAll(type) {
             const month = type === 'billing' ? 
                 document.getElementById('billingMonthSelect').value :
@@ -2430,19 +2685,25 @@ async function apiCall(action, method = 'GET', body = null, params = {}) {
                     apiCall(action, 'GET', null, { month })
                         .then(function(data) {
                             hideLoading();
-                            if (!data || data.length <= 1) return;
-                            const tableData = type === 'billing' ? data.slice(1).map(row => ({
-                                id: row[0], meterNo: row[1], name: row[2], propose: row[3], readingDate: formatDate(row[10]), amount: row[28], status: row[32], paymentDate: formatDate(row[29]), method: row[31]
-                            })) : data.slice(1).map(row => ({
-                                sn: row[0], customerId: row[1], receiptNo: row[2], customerName: row[3], description: row[4], method: row[5], amount: row[6], date: formatDate(row[7]), month: row[8]
-                            }));
-                            const headers = type === 'billing' ? ['ID', 'Meter No', 'Name', 'Propose', 'Reading Date', 'Amount', 'Status', 'Payment Date', 'Method'] : ['S.N.', 'Customer ID', 'Receipt No.', 'Customer Name', 'Description', 'Payment Method', 'Amount', 'Receipt Date', 'Month'];
-                            let rows = tableData.map(rowObj => `<tr>${headers.map(h => `<td>${rowObj[h.toLowerCase().replace(' ', '')] || ''}</td>`).join('')}</tr>`).join("");
                             const printArea = document.getElementById('printArea');
                             printArea.innerHTML = `
                                 <div class="print-all">
-                                    <div class="print-header"><h2>Jeevan Jyoti Gramin Bidhyut Sahakari Sastha</h2><p>Printed on: ${new Date().toLocaleString()}</p></div>
-                                    <table><thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table>
+                                    <h1>${type.charAt(0).toUpperCase() + type.slice(1)} Records - ${monthNames[month]}</h1>
+                                    <p>Generated on: ${new Date().toLocaleString()}</p>
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <thead>
+                                            <tr>
+                                                ${data[0].map(header => `<th style="border: 1px solid #ddd; padding: 8px;">${header}</th>`).join('')}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${data.slice(1).map(row => `
+                                                <tr>
+                                                    ${row.map(cell => `<td style="border: 1px solid #ddd; padding: 8px;">${cell}</td>`).join('')}
+                                                </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
                                 </div>
                             `;
                             window.print();
@@ -2513,5 +2774,4 @@ async function apiCall(action, method = 'GET', body = null, params = {}) {
         }
     </script>
 </body>
-
 </html>
