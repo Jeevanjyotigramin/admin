@@ -1,684 +1,1888 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <title>Print Table · Unique Date Filter</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Bootstrap & Font Awesome -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-    <style>
-        /* base */
-        body { margin: 20px; background: #f5f7fa; }
-        .print-wrapper { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 0 15px rgba(0,0,0,0.05); }
-
-        /* filter bar */
-        .filter-bar { display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-end; margin-bottom: 25px; padding: 15px 0; border-bottom: 1px solid #ddd; }
-        .filter-bar .form-group { margin-bottom: 0; }
-        .filter-bar label { font-weight: 600; margin-right: 6px; color: #2c3e50; }
-        .filter-bar select { padding: 6px 12px; border: 1px solid #ccc; border-radius: 6px; min-width: 200px; background: white; }
-        .btn-print { background: #1e3c72; color: white; border: none; padding: 8px 24px; border-radius: 30px; font-weight: 500; transition: 0.2s; }
-        .btn-print:hover { background: #0f274a; color: #fff; }
-        .btn-reset { background: #6c757d; color: white; border: none; padding: 8px 20px; border-radius: 30px; font-weight: 500; }
-        .btn-reset:hover { background: #5a6268; color: #fff; }
-
-        /* table */
-        .table-responsive { max-height: 550px; overflow-y: auto; border: 1px solid #e9ecef; border-radius: 8px; }
-
-        /* --- HEADER: white background, black text --- */
-        .table thead th {
-            background: white !important;
-            color: black !important;
-            border-bottom: 2px solid #333;
-            position: sticky;
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Jeevan | Jyoti</title>
+        <!-- SweetAlert2 (popup) -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <!-- Boxicons (icons) -->
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <!-- Mixitup (filter) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mixitup/3.3.1/mixitup.min.js"></script>
+        <!-- ScrollReveal (fly-in) -->
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <!-- ✅ SINGLE font load: Devanagari + Poppins together -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Mukta:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <style>
+          * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            list-style: none;
+            scroll-behavior: smooth;
+            font-family: 'Noto Sans Devanagari', 'Mukta', 'Poppins', system-ui, 'Segoe UI', 'Mangal', sans-serif;
+            font-feature-settings: normal;
+            font-variant-numeric: normal;
+          }
+          body, h1, h2, h3, h4, h5, h6, p, span, a, li, div, button, input, textarea, .heading, .main-text, .service-title, .service-description, .service-category, .service-price, .sanstha-tag, .intro-verse, .paragraph-card, .sewa-khetra, .location-grid, .bullet-vikas, .jj-nav a, .jj-btn, .service-link, .jj-readMore, .jj-portfolio-content {
+            font-family: 'Noto Sans Devanagari', 'Mukta', 'Poppins', system-ui, 'Segoe UI', 'Mangal', sans-serif;
+          }
+          .jj-logo, .jj-gradient-span, .heading:lang(en), [lang="en"] {
+            font-family: 'Poppins', 'Noto Sans Devanagari', 'Mukta', sans-serif;
+          }
+          :root {
+            --primary: #e6006d;
+            --secondary: #630db2;
+            --gradient: linear-gradient(135deg, #e6006d, #a1089c, #630db2);
+            --light-bg: #f8f9ff;
+            --dark: #2c3e50;
+            --shadow: 0 10px 30px rgba(0,0,0,0.1);
+            --hover-shadow: 0 15px 40px rgba(230,0,109,0.2);
+            --bg-color: #e3edf7;
+            --gradient-white-bg: linear-gradient(0deg, #fff 0%, #edf4fa 51%, #e5eef7 100%);
+            --gradient-color-bg: linear-gradient(180deg, rgba(247, 1, 120, 1) 0%, rgba(160, 8, 156, 1) 51%, rgba(99, 13, 178, 1) 100%);
+            --main-color: #e6006d;
+            --font-color: #4a5c6c;
+            --hover-box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+            --gradient-white-bg2: linear-gradient(98deg, #e5eef7 0%, #fff 100%);
+            --scale-lift: scale(1.04) translateY(-5px);
+            --transition-smooth: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          }
+          .main-text, .heading, .jj-about-content .heading,
+          .services .main-text, .portfolio .main-text,
+          .jj-contact-info .main-text, .jj-skills .main-text {
+            text-align: center;
+            width: 100%;
+          }
+          .heading { font-size: 2.2rem; margin-bottom: 0.4rem; }
+          .main-text span { color: var(--font-color); display: block; margin-bottom: 1.5rem; }
+          a { text-decoration: none; color: #000; }
+          a:hover{ transform: scale(1.05);}
+          /* ---------- HEADER ---------- */
+          .jj-header {
+            padding: 12px 5%;
+            width: 100%;
+            position: fixed;
             top: 0;
-            z-index: 10;
+            left: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--gradient-white-bg);
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+          }
+          .jj-header .jj-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          }
+          .jj-logo-circle {
+            display: inline-flex;
+            width: 40px; height: 40px;
+            background: var(--gradient-color-bg);
+            border-radius: 50%;
+            justify-content: center; align-items: center;
+            color: white; font-weight: bold;
+            transform: var(--scale-lift);
+            box-shadow: var(--hover-box-shadow);
+          }
+          .jj-gradient-span {
+            background: var(--gradient-color-bg);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+          }
+          .jj-nav {
+            display: flex;
+            gap: 1.5rem;
+            transition: 0.3s;
+          }
+          .jj-nav li a {
+            font-weight: 600;
+            padding: 5px 0;
+            position: relative;
+            color: #000;
+            transition: var(--transition-smooth);
+            display: inline-block;
+          }
+          .jj-nav li a:hover,
+          .jj-nav li a.active {
+            background: var(--gradient-color-bg);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transform: translateY(-2px);
+          }
+          .jj-right-header {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+          }
+          .jj-btn {
+            padding: 8px 16px;
+            font-weight: 500;
+            transition: var(--transition-smooth);
+            background: hsla(0, 100%, 50%, 0.1);
+            border-radius: 60px;
+            color: #1d3b1d;
+            box-shadow: 1.5px 1.5px 3px #0e0e0e, -1.5px -1.5px 3px rgb(95 94 94 / 25%), inset 0px 0px 0px #0e0e0e, inset 0px -0px 0px #5f5e5e;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+          }
+          .jj-btn:hover {
+            background: var(--gradient-color-bg);
+            box-shadow: var(--hover-box-shadow); transform: var(--scale-lift); }
+
+          .jj-menu-icon {
+            display: none;
+            width: 30px; height: 30px;
+            cursor: pointer;
+            flex-direction: column;
+            justify-content: center;
+            gap: 6px;
+          }
+          .jj-menu-icon .jj-bar,
+          .jj-menu-icon::after,
+          .jj-menu-icon::before {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 3px;
+            background: #1a1a1a;
+            border-radius: 3px;
+            transition: 0.3s;
+          }
+          .jj-menu-icon.active .jj-bar { opacity: 0; }
+          .jj-menu-icon.active::before { transform: rotate(45deg) translate(5px, 6px); }
+          .jj-menu-icon.active::after { transform: rotate(-45deg) translate(5px, -6px); }
+          .jj-overlay {
+            position: fixed;
+            top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 900;
+            opacity:0; pointer-events:none;
+            transition:0.3s;
+          }
+          body.jj-open .jj-overlay { opacity:1; pointer-events:auto; }
+          section { padding: 60px 5%; width: 100%; overflow-x: hidden; }
+          /* ---------- HOME ---------- */
+          .jj-home {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 2rem;
+            background: var(--gradient-white-bg2);
+            margin-top: 0;
+            padding-top: 100px;
+            width: 100%;
+          }
+          .jj-hero-info h3 { color: var(--font-color); font-weight: 400; font-size: 1.2rem; }
+          .jj-hero-info h1 { font-size: 2.5rem; line-height:1.2; margin:10px 0; }
+          .jj-text-animate {
+            width:100%; max-width:400px; position:relative; margin:10px 0;
+          }
+          .jj-text-animate h2 {
+            font-size:20px; font-weight:700; color:transparent;
+            -webkit-text-stroke:1px #770753;
+            background: var(--gradient-color-bg);
+            background-repeat:no-repeat;
+            background-position:-24rem 0;
+            animation: jj-moveText 3s linear infinite;
+            letter-spacing:1px;
+          }
+          @keyframes jj-moveText {
+            0%,100%{ background-position:-24rem 0; }
+            70%{ background-position:0 0; }
+          }
+          .jj-hero-info p { color:var(--font-color); margin:15px 0; line-height:1.5; }
+          .img-hero {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            animation: jj-floatImage 4s ease-in-out infinite;
+            max-width: 100%;
+          }
+          .img-hero img {
+            width: 100%;
+            max-width: 380px;
+            height: auto;
+            object-fit: contain;
+            z-index: 30;
+            border-radius: 20px;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
+            transition: var(--transition-smooth);
+          }
+          .img-hero img:hover { transform: scale(1.02) translateY(-8px); filter: drop-shadow(0 20px 25px rgba(230,0,109,0.2)); }
+          .rotate-text {
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 140%;
+            max-width: 520px;
+            aspect-ratio: 1/1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            pointer-events: none;
+          }
+          .rotate-text .text {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #f2f6fb;
+            box-shadow: 0 1px 6px 5.94px rgba(0,0,0,0.2);
+            animation: rotateText 30s linear infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          .text p { position: relative; width:100%; height:100%; margin:0; padding:0; }
+          .text b {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            display: block;
+            white-space: nowrap;
+            font-weight: 600;
+            font-size: calc(0.8rem + 0.6vw);
+            background: linear-gradient(180deg, #f70178, #a1089c, #630db2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transform-origin: 0 50%;
+          }
+          .rotate-text span {
+            position: absolute;
+            width: 83%;
+            height: 83%;
+            border-radius: 50%;
+            border: 4px solid #eaeef0;
+            background: rgba(200, 40, 100, 0.1);
+            z-index: 1;
+            overflow: hidden;
+          }
+          .rotate-text span i {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, #f70178, #a1089c, #630db2);
+            filter: blur(6px);
+            animation: animate 2s linear infinite;
+            opacity: 0.7;
+          }
+          @keyframes jj-floatImage {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0); }
+          }
+          @keyframes rotateText {
+            0% { transform: rotate(360deg); }
+            100% { transform: rotate(0deg); }
+          }
+          @keyframes animate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+          .jj-btn-box { display: flex; gap:1rem; margin:2rem 0; flex-wrap: wrap; }
+          .jj-btn-box .jj-d-CV {
+             padding:8px 16px; border-radius:60px;
+            box-shadow: 0 4px 0 #b1741c;
+            display:flex; align-items:center; gap:5px;
+          }
+          .jj-social-media {
+            display: flex;
+            justify-content: space-between;
+            width: 220px;
+            height: 45px;
+          }
+
+          .jj-social-media a {
+            width: 42px; height: 42px; font-size: 1.5rem;
+            background: var(--gradient-color-bg); color:white;
+            display: inline-flex; justify-content: center; align-items: center;
+            transition: var(--transition-smooth); border-radius: 50%; z-index: 1;
+          }
+          .jj-social-media a:hover { transform: var(--scale-lift); box-shadow: var(--hover-box-shadow); }
+          .jj-bg-icon{ position: relative; display: flex; justify-content: center; align-items: center; }
+          .jj-bg-icon span {
+            position: absolute; width: 50px; height: 50px;
+            background: var(--gradient-color-bg); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            animation: animate 1s linear infinite;
+          }
+          .jj-about {
+            display:flex; align-items:center; gap:3rem; flex-wrap:wrap; width:100%;
+            overflow: visible;
+          }
+          .jj-about .img-hero { flex:1; min-width:280px; }
+          .jj-about-content { flex:2; }
+          .jj-about-btn { display:flex; gap:0.8rem; flex-wrap:wrap; margin:1rem 0; justify-content:center; }
+          .jj-about-btn button {
+            padding:10px 18px; border:none; border-radius:30px; font-weight:500;
+            background: hsla(0, 100%, 50%, 0.1); box-shadow: 1.5px 1.5px 3px #0e0e0e, -1.5px -1.5px 3px rgb(95 94 94 / 25%), inset 0px 0px 0px #0e0e0e, inset 0px -0px 0px #5f5e5e; cursor:pointer;
+            transition: var(--transition-smooth);
+          }
+          .jj-about-btn button:hover {
+            color: #fff;
+            background: var(--gradient-color-bg);
+            box-shadow: var(--hover-box-shadow); transform: var(--scale-lift);
+          }
+          .jj-content-btn .jj-content { margin-top:1rem; display:none; }
+          .jj-content-btn .jj-content:first-child { display:block; }
+          .jj-content .text-box p { text-align:center; }
+
+
+          .services-container {
+            max-width: 100%;
+            margin: 0 auto;
+          }
+          .services-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: rgba(255,255,255,0.9);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+          }
+          .services-header h1 {
+            font-size: 2.5rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+          }
+          .service-count {
+            display: inline-block;
+            background: var(--gradient);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-top: 1rem;
+          }
+          .service-title {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+            font-weight: 600;
+            line-height: 1.4;
+          }
+          .service-description {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+          }
+          .service-features {
+            list-style: none;
+            margin-top: 1rem;
+          }
+          .service-features li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+            color: #555;
+            font-size: 0.9rem;
+          }
+          .service-features li i {
+            color: var(--primary);
+            font-size: 1.2rem;
+          }
+          .service-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 2px dashed rgba(230,0,109,0.2);
+          }
+          .service-price {
+            background: linear-gradient(135deg, #f0f0f0, #ffffff);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: 600;
+            color: var(--primary);
+          }
+          .service-link {
+            padding:10px 18px;
+            border:none; border-radius:30px;
+            font-weight:500;
+            background: hsla(0, 100%, 50%, 0.1);
+            box-shadow: 0 4px 0 #b1741c;
+            cursor:pointer;
+            transition: var(--transition-smooth);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+          }
+          .service-link:hover {
+            gap: 0.8rem;
+            color: #fff;
+            background: var(--gradient-color-bg);
+            box-shadow: var(--hover-box-shadow); transform: var(--scale-lift);;
+          }
+          .service-category {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            margin:10px;
+            background: linear-gradient(135deg, #f0f0f0, #e8e8e8);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 1rem;
+          }
+
+          .jj-allServices {
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            gap: 2rem;
+            position: relative;
+            z-index: 1;
+          }
+          .jj-servicesItem {
+            box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+            padding: 2rem 1rem;
+            border-radius: 10px;
+            background: var(--gradient-white-bg2);
+            text-align: center;
+            transition: var(--transition-smooth);
+            position: relative;
+            z-index: 1;
+          }
+          .jj-servicesItem:hover {
+            transform: var(--scale-lift);
+            box-shadow: var(--hover-box-shadow);
+          }
+          .jj-icon-services {
+            display: inline-flex;
+            position: relative;
+          }
+          .jj-icon-services i {
+            box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+            padding: .5rem;
+            border-radius: 50%;
+            background: var(--gradient-color-bg);
+            width: 70px; height: 70px; color: #fff; font-size: 2.5rem;
+            display: inline-flex; justify-content: center; align-items: center;
+            transition: var(--transition-smooth); z-index: 1;
+          }
+          .jj-servicesItem:hover i { outline: 2px solid var(--main-color); transform: scale(1.15); }
+          .jj-icon-services span {
+            position: absolute; width: 80px; height: 80px; left: -5px; top: -5px;
+            background: var(--gradient-color-bg); border-radius: 50%;
+            animation: animate 1s linear infinite;
+          }
+          .jj-servicesItem h3 { margin: 1rem 0 0.5rem; }
+          .jj-servicesItem p { margin-bottom: 1.5rem; font-size: .9rem; color: var(--font-color); }
+          .jj-hidden-info {
+            display:none; background:var(--gradient-white-bg2); padding:1.5rem; border-radius:10px;
+            margin-top:1rem; text-align:left; border:1px solid #f0c0d0; transition: var(--transition-smooth);
+            position: relative;
+            z-index: 100;
+          }
+          .jj-hidden-info.active { display:block; animation: fadeSlide 0.2s ease; }
+          @keyframes fadeSlide { from{opacity:0;transform:translateY(-5px);} to{opacity:1;transform:translateY(0);} }
+          .jj-readMore {
+            background:white; padding:8px 15px; border-radius:30px; font-weight:500;
+            color:#e6006d; display:inline-block; margin-top:1rem;
+            cursor:pointer; transition: var(--transition-smooth);
+            box-shadow: 0 4px 0 #b1741c;
+          }
+          .jj-readMore:hover { color: #fff;
+            background: var(--gradient-color-bg);
+            box-shadow: var(--hover-box-shadow); transform: scale(1.05); }
+          /* ---------- PORTFOLIO (team gallery) ---------- */
+          .jj-fillter-buttons {
+            text-align: center; margin: 2rem 0; display: flex; flex-wrap: wrap;
+            gap: 0.5rem; justify-content: center;
+          }
+          .jj-fillter-buttons button {
+            padding: 10px 20px; border: none; border-radius: 30px;
+            font-weight: 500; box-shadow: 0 4px 0 #b1741c; cursor: pointer;
+            transition: var(--transition-smooth);
+          }
+          .jj-fillter-buttons button:hover {
+            color: #fff;
+            background: var(--gradient-color-bg);
+            box-shadow: var(--hover-box-shadow); transform: var(--scale-lift);
+          }
+          .jj-fillter-buttons button.mixitup-control-active,
+          .jj-fillter-buttons button.active-filter {
+            background: var(--gradient-color-bg); color: white;
+          }
+          .jj-portfolio-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 330px));
+            gap: 2rem;
+            width: 100%;
+            justify-content: center;
+          }
+          .jj-portfolio-box {
+            box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+            border-radius: 10px;
+            background: var(--gradient-white-bg2);
+            padding: 1rem;
+            display: flex; justify-content: center; align-items: center; gap: 1rem;
+            transition: var(--transition-smooth);
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+          }
+          .jj-portfolio-box:hover {
+            transform: var(--scale-lift);
+            box-shadow: var(--hover-box-shadow);
+          }
+          .jj-portfolio-content { flex:2; text-align: left; }
+          .jj-portfolio-content h3 { font-size: 1.2rem; }
+          .jj-portfolio-img {
+            flex:1;
+            border-radius: 10px;
+            border:1px solid rgba(0,0,0,0.1);
+            overflow: hidden;
+            box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0;
+            transition: transform 0.4s ease;
+          }
+          .jj-portfolio-img img {
+            width: 100%;
+            height: 125px;
+            border-radius: 10px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+            display: block;
+          }
+          .jj-portfolio-img img:hover { transform: scale(1.15); }
+          .jj-portfolio-gallery.res { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,330px)); justify-content: center; }
+          /* contact */
+          .jj-contactSkills {display:flex; gap:2rem; flex-wrap:wrap; width:100%;}
+          .jj-contact-info, .jj-skills {flex:1; min-width:280px; padding:2rem; border-radius:5px; background: var(--gradient-white-bg2); box-shadow:rgba(0, 0, 0, 0.06) 0px 1px 2px 0px; transition: var(--transition-smooth);}
+          .jj-contact-info:hover, .jj-skills:hover { box-shadow: var(--hover-box-shadow); }
+          .jj-input-box { margin-bottom:1rem; }
+          .jj-input-box input, .jj-input-box textarea {
+            width:100%; padding:12px 10px; margin:0; border-radius:10px; border:1px solid #fff;
+            font-family:inherit; outline:none; transition:0.3s; background:#fff;
+          }
+          .jj-input-box input:focus, .jj-input-box textarea:focus { border-color:#e6006d; transform: scale(1.01); }
+          .jj-error-message { color:#e6006d; font-size:0.8rem; margin-top:4px; display:none; }
+          .jj-input-error { border-color:#e6006d !important; }
+          .jj-footer { text-align:center; padding:2rem 5%; border-top:1px solid #d4d4d4; background:var(--gradient-white-bg); width:100%; }
+          .formBtn { border:none; }
+          .formsummitbtn {display:flex; justify-content: space-around; gap: 10px; margin-top: 20px;}
+
+          .jj.feedback-btn.whatsapp {
+              background-color: #25D366;
+              color: white;
+          }
+
+          .jj.feedback-btn.whatsapp:hover {
+              background-color: #128C7E;
+              transform: translateY(-3px);
+          }
+
+          .jj.feedback-btn.email {
+              background-color: var(--primary);
+              color: white;
+          }
+
+          .jj.feedback-btn.email:hover {
+              background-color: #c1121f;
+              transform: translateY(-3px);
+          }
+
+          /* Fix for form buttons */
+          #sendWhatsApp, #sendEmail {
+            width: 120px;
+            justify-content: center;
+          }
+
+          .jj-progress {
+            position:fixed; bottom:30px; right:20px; width:50px; height:50px;
+            background:conic-gradient(#fff 0%, #e6006d 0%); border-radius:50%;
+            display:none; place-items:center; cursor:pointer; z-index:99;
+          }
+          .jj-progress-value {
+            width:40px; height:40px; background:var(--gradient-color-bg); border-radius:50%;
+            display:flex; align-items:center; justify-content:center; color:white;
+            transition: var(--transition-smooth);
+          }
+          .jj-progress-value:hover { transform: scale(1.1); }
+          /* fullscreen bill popup */
+          .fullscreen-popup {
+            width: 100vw !important;
+            height: 100vh !important;
+            margin: 0 !important;
+            top: 0 !important;
+            left: 0 !important;
+            position: fixed !important;
+          }
+
+          .fullscreen-popup .swal2-close {
+            font-size: 4rem !important;   /* Increase size */
+            color: #1d3b1d;
+            right: 20px !important;
+            top: 15px !important;
         }
-
-        .table tbody tr:hover { background: #f1f9ff; }
-        .badge-count { background: #1e3c72; color: white; padding: 2px 10px; border-radius: 30px; font-size: 13px; margin-left: 8px; }
-        .no-records { text-align: center; padding: 30px; font-size: 16px; color: #888; }
-        .footer-meta { margin-top: 12px; display: flex; justify-content: space-between; font-size: 13px; color: #555; }
-
-        /* --- PRINT overrides: remove header background, keep white/black, hide domain --- */
-        @media print {
-            /* hide filter bar and other non-print elements */
-            .filter-bar, .no-print, .btn-print, .btn-reset {
-                display: none !important;
-            }
-
-            .print-wrapper {
-                box-shadow: none;
-                padding: 0;
-                border-radius: 0;
-                background: white;
-            }
-
-            .table-responsive {
-                max-height: none;
-                overflow: visible;
-                border: none;
-            }
-
-            /* force header white background + black text */
-            .table thead th {
-                background: white !important;
-                color: black !important;
-                border-bottom: 2px solid #000 !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-
-            /* remove any URL / domain name that might appear in print header/footer */
-            @page {
-                margin: 0.5cm;
-                /* most browsers remove domain if margin is set, but we also use JS to clear */
-            }
-
-            body {
-                margin: 0;
-                background: white;
-            }
-
-            .badge-count { display: none; }
+          .fullscreen-popup .swal2-close:hover {
+            color: red !important;
         }
-    </style>
-</head>
-<body>
-<div class="container-fluid print-wrapper">
-    <!-- HEADER -->
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 5px;">
-        <div>
-            <h3 style="margin: 0; font-weight: 600; color: #1e3c72;">F JEEVANJYOTI GRAMIN BIDHYUT S.S.LTD.</h3>
-            <p style="margin: 0; color: #3d5166;">LamkiChuha Nagarpalika-7, Kailali · Dhangadhi</p>
+          .iframe-container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+          }
+          .iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+          }
+          /* Fly-in animation classes */
+          .fly-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+          }
+          .fly-in.active {
+            opacity: 1;
+            transform: translateY(0);
+          }
+
+          /* responsive */
+          @media (max-width: 991px) {
+            .jj-home { grid-template-columns:1fr; text-align:center; gap:1rem; }
+            .jj-hero-info { order:2; }
+            .img-hero { order:1; margin-top:20px; }
+            .rotate-text { max-width: 480px; }
+          }
+          @media (max-width: 768px) {
+            .jj-header { padding:10px 4%; }
+            .jj-menu-icon { display:flex; }
+            .jj-nav {
+              position:absolute; top:100%; left:0; width:100%; background:var(--gradient-white-bg);
+              flex-direction:column; align-items:center; padding:20px 0; gap:1.2rem;
+              transform:translateY(-150%); opacity:0; pointer-events:none; transition:0.3s; z-index:999; }
+            .jj-nav.active { transform:translateY(0); opacity:1; pointer-events:auto; }
+            .jj-nav li a { font-size:1.2rem; }
+            .jj-right-header .jj-btn { padding:6px 12px; font-size:0.9rem; }
+            .img-hero img { max-width:280px; }
+            .rotate-text { width: 140%; max-width:420px; }
+            .jj-allServices {
+            display: grid;
+            grid-template-columns: 1fr;
+              padding-bottom:10px;
+            }
+            .jj-portfolio-gallery { justify-content: center; width: 100%; margin-bottom: 2rem; }
+            .jj-portfolio-box {max-width:400px;}
+            .jj-about { flex-direction:column; }
+            .jj-contactSkills { flex-direction:column; }
+            body, html { overflow-x: hidden; width: 100%; }
+            section { padding:3% 2%;}
+          }
+          @media (max-width: 600px) {
+            .rotate-text { width: 145%; }
+          }
+          @media (max-width: 480px) {
+            .img-hero img { max-width:240px; }
+            .rotate-text { width: 150%; max-width:360px; }
+            .rotate-text .text b { font-size: 0.65rem; }
+            .jj-btn-box { justify-content:center; }
+            .jj-hero-info h1 { font-size:2rem; }
+          }
+        </style>
+    </head>
+    <body>
+        <div class="jj-overlay"></div>
+        <div class="jj-header">
+          <a href="https://jeevanjyotigramin.github.io/Jeevanjyoti/" class="jj-logo"><span class="jj-logo-circle">JJ</span> <span class="jj-gradient-span">JEEVAN JYOTI</span></a>
+          <ul class="jj-nav">
+            <li><a href="#home" class="active">गृहपृष्ठ</a></li>
+            <li><a href="#about">हाम्रो बारेमा</a></li>
+            <li><a href="#services">सेवाहरू</a></li>
+            <li><a href="#portfolio">परियोजनाहरू</a></li>
+            <li><a href="#portfolio">सूचनाहरू</a></li>
+            <li><a href="#contact">सम्पर्क</a></li>
+          </ul>
+          <div class="jj-right-header">
+            <a href="https://wa.me/qr/XRKUSGUNJ3T4J1" target="_blank" class="jj-btn">कुराकानी गरौं <i class='bx bx-message-dots'></i></a>
+            <div class="jj-menu-icon"><div class="jj-bar"></div></div>
+          </div>
         </div>
-        <div class="no-print">
-            <span class="badge-count" id="rowCounter">0 entries</span>
+        <!-- HOME -->
+        <section class="jj-home" id="home">
+            <div>
+                 <div class="header-decoration">
+                    <h1>⚡ जीवन ज्योती ग्रामीण <br> विद्युत सहकारी संस्था लिमिटेड</h1>
+                    <br>
+                    <!-- ✅ Devanagari numerals written as actual Unicode chars -->
+                    <div class="sanstha-tag">जानकी गाउँपालिका – २, खैरेनी (कैलाली) <br> स्थापना : २०६३ | </div>
+                    <div class="vakra-rekha"></div>
+                    </div>
+                    <div class="jj-text-animate"><h2>जीबन ज्योति ग्रामीण बिद्युत सहकारी संस्था लिमिटेड</h2></div>
+                    <div class="jj-btn-box">
+                      <a href="#" onclick="showFormPopup()" class="jj-btn">बिल जाँच गर्नुहोस् <i class='bx bx-right-arrow-alt'></i></a>
+                      <a href="#about" class="jj-btn jj-d-CV">थप जान्नुहोस् <i class='bx bx-plug'></i></a>
+                    </div>
+                    <div class="jj-hero-info fly-in" data-delay="100">
+                        <br>
+                        <div class="jj-social-media">
+                          <div class="jj-bg-icon"><a href="#"><i class='bx bxl-instagram'></i></a><span></span></div>
+                          <div class="jj-bg-icon"><a href="#"><i class='bx bxl-github'></i></a><span></span></div>
+                          <div class="jj-bg-icon"><a href="#"><i class='bx bxl-whatsapp'></i></a><span></span></div>
+                          <div class="jj-bg-icon"><a href="#"><i class='bx bxl-facebook'></i></a><span></span></div>
+                        </div>
+                    </div>
+                 </div>
+             <div>
+                <div class="img-hero fly-in" data-delay="300">
+                    <img src="https://raw.githubusercontent.com/Jeevanjyotigramin/Jeevanjyoti/refs/heads/main/img/saddam.png" alt="saddam - Jeevan Jyoti">
+                    <div class="rotate-text">
+                    <div class="text"><p>JEEVAN JYOTI GRAMIN BIDHYUT * JANAKI-2, KHAIRENI KAILALI *&nbsp;</p></div>
+                    <span><i></i></span>
+                 </div>
+              </div>
+                 <br>
+                 <br>
+                <h3>जीवन ज्योतिमा स्वागत छ.....</h3>
+                <h1>समुदायहरूलाई विद्युतले सशक्त बनाउँदै..…..</h1>
+                <p>जीवन ज्योति ग्रामीण विद्युत सहकारी संस्था लिमिटेडले ग्रामीण क्षेत्रमा भरपर्दो, सस्तो र दिगो विद्युत सेवा उपलब्ध गराउन समर्पित छ।</p>
+          </div>
+        </section>
+        <section class="jj-about" id="about">
+          <div class="img-hero fly-in" data-delay="200">
+            <img src="https://raw.githubusercontent.com/Jeevanjyotigramin/Jeevanjyoti/refs/heads/main/img/saddam.png" alt="saddam">
+            <div class="rotate-text">
+              <div class="text"><p>JEEVAN JYOTI GRAMIN BIDHYUT  * JANAKI-2, KHAIRENI KAILALI *&nbsp;</p></div>
+              <span><i></i></span>
+            </div>
+          </div>
+        <div class="jj-about-content fly-in" data-delay="400">
+          <div class="services-container">
+            <div class="jj-portfolio-gallery res" style="margin-bottom: 2rem; justify-content:center;">
+              <div class="jj-portfolio-box fly-in" data-delay="100" style="max-width:450px;">
+                <div class="jj-portfolio-content">
+                  <span>Get In Touch</span>
+                  <h3>सुझाव छ?</h3>
+                  <br>
+                  <a href="#contact" class="jj-btn">सम्पर्क गर्नुहोस्</a>
+                </div>
+                <div class="jj-portfolio-img">
+                  <img src="https://raw.githubusercontent.com/Jeevanjyotigramin/Jeevanjyoti/refs/heads/main/img/support.png" alt="">
+                </div>
+              </div>
+            </div>
+         </div>
+                <div class="intro-verse">
+                    🌱 ग्रामीण उज्यालोको अभियान : २०६३ सालमा जन्मेको जीवन ज्योती सहकारीले बिजुली, मल र बिकासको धारा बगाइरहेको छ ।
+                </div>
+            <div class="jj-about-btn fly-in" data-delay="500">
+              <button class="active">दिगो ऊर्जा</button>
+              <button>समुदाय-केन्द्रित</button>
+              <button>भरपर्दो सेवा</button>
+            </div>
+            <div class="jj-content-btn">
+              <div class="jj-content fly-in" data-delay="600"><div class="text-box"><p>हामी नवीकरणीय ऊर्जा स्रोतहरूमा केन्द्रित छौं जसले पर्यावरणमैत्री विद्युत समाधान प्रदान गर्दछ।</p></div></div>
+              <div class="jj-content fly-in" data-delay="700"><div class="text-box"><p>हाम्रो सहकारी मोडेलले स्थानीय समुदायहरूलाई उनीहरूको ऊर्जा आवश्यकताहरू व्यवस्थापन गर्न सशक्त बनाउँछ।</p></div></div>
+              <div class="jj-content fly-in" data-delay="800"><div class="text-box"><p>हामी ग्रामीण घरपरिवारहरूलाई निरन्तर र सस्तो विद्युत आपूर्ति सुनिश्चित गर्दछौं।</p></div></div>
+            </div>
+          </div>
+          <!-- पृष्ठभूमि परिच्छेदहरुको सूची (विस्तृत) -->
+            <div class="jj-allServices">
+                <!-- परिच्छेद १ – स्थापना र उद्देश्य -->
+                    <div class="paragraph-card">
+                        <h2><span>१</span> स्थापना काल : २०६३ को दूरदृष्टि</h2>
+                        <p>वि.सं. २०६३ मा कैलालीको जानकी गाउँपालिका–२ खैरेनीमा <strong>जीवन ज्योती ग्रामीण विद्युत सहकारी संस्था लिमिटेड</strong> को स्थापना भयो । ग्रामीण विद्युतीकरण र आत्मनिर्भर स्थानीय अर्थतन्त्रको परिकल्पना बोकेर उदाएको यो सहकारी आज ऊर्जा तथा कृषि आपूर्तिको मेरुदण्ड बनेको छ । स्थानीय सक्रियता र सहभागिताको जगमा उभिएको संस्थाले सुरुवाती दिनदेखि नै उपभोक्तालाई सस्तो, भरपर्दो विद्युत् र कृषि सामग्री उपलब्ध गराउने लक्ष्य लिएको थियो ।</p>
+                    </div>
+
+                <!-- परिच्छेद २ – ऊर्जा साझेदारी (NEA बाट विद्युत खरीद) -->
+                    <div class="paragraph-card">
+                        <h2><span>२</span> ऊर्जा साझेदार : नेपाल विद्युत प्राधिकरण</h2>
+                        <p>संस्थाको मूल कार्यक्षेत्र ऊर्जा वितरण हो । <strong>नेपाल विद्युत प्राधिकरण (NEA)</strong> सँगको औपचारिक सम्झौता अनुरूप जीवन ज्योतीले थोक बिजुली खरिद गरी आफ्ना सदस्य/उपभोक्तालाई वितरण गर्दै आएको छ । प्राधिकरणको प्रसारण लाइनबाट लिइएको विद्युत्लाई सहकारीले स्थानीय सञ्जालमार्फत हरदानी, खैरेनी, खर्गौली, परागीपुर क्षेत्रमा पुर्याउँछ । यसले प्राधिकरण र समुदायबीचको सेतुको काम गर्दै गाउँ–गाउँमा उज्यालो मात्र होइन, उद्यमशीलताको पनि बिजौटा रोपेको छ ।</p>
+                    </div>
+
+                <!-- परिच्छेद ३ – मल तथा कृषि सामग्री आपूर्ति -->
+                      <div class="paragraph-card">
+                          <h2><span>३</span> मल वितरण : साल्ट ट्रेडिङ् र कृषि सामग्री कम्पनी सँग सहकार्य</h2>
+                          <p>बिजुलीसँगै किसानका लागि जीवनरेखा हो – मल । यसै महसुस गर्दै जीवन ज्योतीले <strong>साल्ट ट्रेडिङ कर्पोरेशन</strong> र <strong>कृषि सामग्री कम्पनी लिमिटेड</strong> बाट रासायनिक मल (युरिया, डीएपी, पोटास) तथा अन्य कृषि सामग्री खरिद गरी सहुलियत दरमा सदस्य किसानलाई उपलब्ध गराउँदै आएको छ । यसले बिचौलियाको लगभग अन्त्य गरी कृषि उत्पादन वृद्धि र समयमै मल पुर्याउने कार्यमा ठोस योगदान दिएको छ । संस्थाले विकासका लागि कृषिलाई आधार मानेको छ ।</p>
+                          <ul class="bullet-vikas">
+                              <li><strong>⚡ साल्ट ट्रेडिङ् र कृषि सामग्री कम्पनीसँग:</strong> बीउ, विषादी र आधुनिक उपकरणमा सहज पहुँच,रासायनिक मलको नियमित आपूर्ति, मूल्य स्थिरता।</li>
+                          </ul>
+                      </div>
+
+                <!-- परिच्छेद ४ – सेवा विस्तार र भौगोलिक क्षेत्र -->
+                    <div class="paragraph-card">
+                        <h2><span>४</span> फैलँदो सेवा क्षेत्र : लम्कीचूहा–७ देखि परागीपुर सम्म</h2>
+                        <p>प्रारम्भमा सीमित क्षेत्रमा केन्द्रित सहकारीको सेवा सञ्जाल अहिले फराकिलो भएको छ । संस्थाले हाल <strong>लम्कीचूहा–७ हरदानी, जानकी–२ खैरेनी, खर्गौली, परागीपुर</strong> लगायत आसपासका बस्तीहरूमा सेवा पुर्याइरहेको छ । सहकारीको प्रभावकारी विद्युत् वितरण प्रणाली र मल डिपोले यी क्षेत्रका हजारौं घरधुरी तथा कृषकलाई प्रत्यक्ष लाभान्वित गरेको छ ।</p>
+                        <div class="sewa-khetra">
+                            <h3>📍 सक्रिय सेवा उपलब्ध स्थान</h3>
+                            <div class="location-grid">
+                                <div>जानकी–२, खैरेनी</div>
+                              	<div>लम्कीचूहा–७, हरदानी</div>
+                                <div>जानकी–२,खर्गौली</div>
+                                <div>जानकी–२, परागीपुर</div>
+                                <div>जानकी गाउँपालिका आसपास</div>
+                            </div>
+                            <p style="margin-top: 18px; color: #fffbdb; font-size: 1.1rem;">✧ यी क्षेत्रहरूमा विद्युत् पूर्वाधार र मल वितरण केन्द्र सञ्चालनमा छन् ।</p>
+                        </div>
+                    </div>
+
+                <!-- परिच्छेद ५ – विकास क्रम र भावी आयाम -->
+                      <div class="paragraph-card">
+                          <h2><span>५</span> बढ्दो विकास क्रम : उज्यालोतर्फको यात्रा</h2>
+                          <p>स्थापनाकालको सानो संरचनाबाट हालसम्म आइपुग्दा जीवन ज्योती सहकारीले विद्युत् गुणस्तर, नवीकरणीय ऊर्जा प्रवर्धन र कृषि आपूर्ति श्रृंखलामा उल्लेख्य प्रगति गरेको छ । नियमित रूपमा लाइन मर्मत, स्मार्ट मिटर प्रणालीतर्फ अग्रसरता, र किसानलाई समयमै मल पुर्याउन डिजिटल प्रणालीको परीक्षण जस्ता कार्यक्रम अघि बढाइरहेको छ । भौतिक पूर्वाधार मात्र होइन, संस्थागत सुशासन र सदस्य सेवामा सुधार गर्दै सहकारीले ग्रामीण विकासको नमुना बन्ने लक्ष्य लिएको छ । </p>
+                          <p>आगामी दिनमा सौर्य ऊर्जा, सिँचाइ सहकार्य र कृषि प्रशोधन केन्द्र स्थापना गर्ने योजना रहेकोले जीवन ज्योती ग्रामीण विद्युत सहकारी केवल एक वितरण संस्था नभएर समृद्धिको साझेदार बन्दै गएको छ ।</p>
+                      </div>
+
+              <!-- संस्थाको परिचयात्मक सारांश (थप पंक्ति) -->
+            <div class="paragraph-card" style="justify-content:center">
+                <p style="font-size: 1.3rem; font-weight: 600; color: #1c501c;">💬 <em>“जीवन ज्योती ग्रामीण विद्युत सहकारी – स्थानीय स्रोत, सामूहिक प्रयास र दिगो विकासको उजेलो यात्रा”</em></p>
+              	<span style="font-size: 1.3rem; font-weight: 600; color: #1c501c;">⚡ NEA सँग विद्युत् खरिद सम्झौता  •  🌾 साल्ट ट्रेडिङ् / कृषि सामग्री कम्पनी मल आपूर्ति साझेदारी  •  📍 सेवा क्षेत्र : हरदानी, खैरेनी, खर्गौली, परागीपुर</span>
+            </div>
+               </div>
+        </section>
+        <!-- SERVICES -->
+        <section class="services" id="services">
+             <div class="services-container">
+               <div class="services-header fly-in"><h1>⚡विद्युत सहकारी⚡</h1><div class="service-count">विशेष सेवाहरू</div> </div>
+            </div>
+          <div class="jj-allServices">
+             <div class="jj-servicesItem fly-in" data-delay="100">
+                <div class="jj-icon-services"><i class='bx bx-plug'></i><span></span></div><br><br>
+                <span class="service-category">⚡ विद्युत सेवा</span>
+                <h3 class="service-title">नयाँ विद्युत जडान सेवा</h3>
+                <p class="service-description">
+                  ग्रामीण क्षेत्रका घरधुरी, व्यवसाय तथा उद्योगहरूमा नयाँ विद्युत जडान सेवा सरल, छिटो र पारदर्शी तरिकाले उपलब्ध गराइन्छ।
+                </p>
+                <ul class="service-features">
+                  <li><i class='bx bx-check-circle'></i> घरायसी जडान (सिंगल फेज)</li>
+                  <li><i class='bx bx-check-circle'></i> व्यवसायिक जडान (थ्री फेज)</li>
+                  <li><i class='bx bx-check-circle'></i> उद्योगिक जडान (उच्च क्षमता)</li>
+                  <li><i class='bx bx-check-circle'></i> सिँचाइ पम्प जडान</li>
+                </ul>
+                <div class="service-footer"><span class="service-price">नि:शुल्क परामर्श</span><a href="https://wa.me/qr/XRKUSGUNJ3T4J1" target="_blank" class="service-link">थप जानकारी <i class='bx bx-message-dots'></i></a> </div>
+          </div>
+              <div class="jj-servicesItem fly-in" data-delay="200">
+                <div class="jj-icon-services">
+                  <i class='bx bx-rupee'></i><span></span></div><br><br>
+                <span class="service-category">💰 आर्थिक सेवा</span>
+                <h3 class="service-title">विद्युत महसुल संकलन सेवा</h3>
+                <p class="service-description">
+                  सहज र सरल तरिकाले विद्युत महसुल भुक्तानी गर्ने व्यवस्था। विभिन्न भुक्तानी माध्यमहरू उपलब्ध।
+                </p>
+                <ul class="service-features">
+                  <li><i class='bx bx-check-circle'></i> नगद भुक्तानी (कार्यालयमा)</li>
+                  <li><i class='bx bx-check-circle'></i> अनलाइन भुक्तानी </li>
+                  <li><i class='bx bx-check-circle'></i> मोबाइल बैंकिङ</li>
+                  <li><i class='bx bx-check-circle'></i> घर-घरमा संकलन सेवा</li>
+                </ul>
+                <div class="service-footer">
+                  <span class="service-price">सजिलो किस्ता</span>
+                  <a href="https://wa.me/qr/XRKUSGUNJ3T4J1" target="_blank" class="service-link">थप जानकारी <i class='bx bx-message-dots'></i></a>
+                </div>
+              </div>
+              <div class="jj-servicesItem fly-in" data-category="electricity" data-delay="300">
+                <div class="jj-icon-services">
+                  <i class='bx bx-bar-chart-alt-2'></i><span></span></div><br><br>
+                <span class="service-category">⚡ विद्युत सेवा</span>
+                <h3 class="service-title">मिटर रिडिङ तथा बिलिङ सेवा</h3>
+                <p class="service-description">
+                  नियमित मिटर रिडिङ, सटीक बिलिङ र समयमै विद्युत महसुल वितरण सेवा।
+                </p>
+                <ul class="service-features">
+                  <li><i class='bx bx-check-circle'></i> डिजिटल मिटर रिडिङ</li>
+                  <li><i class='bx bx-check-circle'></i> एसएमएस बिल सूचना</li>
+                  <li><i class='bx bx-check-circle'></i> अनलाइन बिल उपलब्ध</li>
+                  <li><i class='bx bx-check-circle'></i> मासिक उपभोग विवरण</li>
+                </ul>
+                <div class="service-footer">
+                  <span class="service-price">नि:शुल्क</span>
+                  <a href="https://wa.me/qr/XRKUSGUNJ3T4J1" target="_blank" class="service-link">थप जानकारी <i class='bx bx-message-dots'></i></a>
+                </div>
+              </div>
+              <div class="jj-servicesItem fly-in" data-category="maintenance" data-delay="400">
+                <div class="jj-icon-services">
+                  <i class='bx bx-wrench'></i><span></span></div><br><br>
+                <span class="service-category">🔧 मर्मत सम्भार</span>
+                <h3 class="service-title">लाइन मर्मत तथा स्तरोन्नति सेवा</h3>
+                <p class="service-description">
+                  विद्युत लाइनमा आएको समस्या तत्काल समाधान, नियमित मर्मत र आवश्यक स्तरोन्नति।
+                </p>
+                <ul class="service-features">
+                  <li><i class='bx bx-check-circle'></i> आपतकालीन मर्मत (२४/७)</li>
+                  <li><i class='bx bx-check-circle'></i> नियमित अनुगमन</li>
+                  <li><i class='bx bx-check-circle'></i> पोल तथा ट्रान्सफर्मर मर्मत</li>
+                  <li><i class='bx bx-check-circle'></i> भोल्टेज स्थिरीकरण</li>
+                </ul>
+                <div class="service-footer">
+                  <span class="service-price">२४/७ सेवा</span>
+                  <a href="https://wa.me/qr/XRKUSGUNJ3T4J1" target="_blank" class="service-link">थप जानकारी <i class='bx bx-message-dots'></i></a>
+                </div>
+              </div>
+              <div class="jj-servicesItem fly-in" data-category="training" data-delay="600">
+                <div class="jj-icon-services">
+                  <i class='bx bx-shield-quarter'></i><span></span></div><br><br>
+                <span class="service-category">📚 तालिम तथा शिक्षा</span>
+                <h3 class="service-title">विद्युत सुरक्षा तालिम</h3>
+                <p class="service-description">
+                  विद्युत दुर्घटना रोकथाम, सुरक्षित प्रयोग र प्राथमिक उपचार सम्बन्धी तालिम।
+                </p>
+                <ul class="service-features">
+                  <li><i class='bx bx-check-circle'></i> विद्युत सुरक्षा सचेतना</li>
+                  <li><i class='bx bx-check-circle'></i> प्राथमिक उपचार तालिम</li>
+                  <li><i class='bx bx-check-circle'></i> आगलागी नियन्त्रण</li>
+                  <li><i class='bx bx-check-circle'></i> बालबालिकाका लागि विशेष</li>
+                </ul>
+                <div class="service-footer">
+                  <span class="service-price">नि:शुल्क</span>
+                  <a href="https://wa.me/qr/XRKUSGUNJ3T4J1" target="_blank" class="service-link">थप जानकारी <i class='bx bx-message-dots'></i></a>
+                </div>
+              </div>
+              <div class="jj-servicesItem fly-in" data-category="training" data-delay="700">
+                <div class="jj-icon-services">
+                  <i class='bx bx-leaf'></i><span></span></div><br><br>
+                <span class="service-category">📚 तालिम तथा शिक्षा</span>
+                <h3 class="service-title">ऊर्जा दक्षता परामर्श सेवा</h3>
+                <p class="service-description">
+                  विद्युत खपत कम गर्ने उपाय, ऊर्जा दक्ष उपकरण र बचत सुझावहरू।
+                </p>
+                <ul class="service-features">
+                  <li><i class='bx bx-check-circle'></i> ऊर्जा अडिट सेवा</li>
+                  <li><i class='bx bx-check-circle'></i> एलईडी बत्ती प्रवर्द्धन</li>
+                  <li><i class='bx bx-check-circle'></i> स्टार रेटिङ उपकरण</li>
+                </ul>
+                <div class="service-footer">
+                  <span class="service-price">नि:शुल्क परामर्श</span>
+                  <a href="https://wa.me/qr/XRKUSGUNJ3T4J1" target="_blank" class="service-link">थप जानकारी <i class='bx bx-message-dots'></i></a>
+                </div>
+              </div>
+                <div class="jj-servicesItem fly-in" data-delay="900">
+                <div class="jj-icon-services">
+                  <i class='bx bx-cylinder'></i><span></span></div><br><br>
+                <span class="service-category">🔧 मर्मत सम्भार</span>
+                <h3 class="service-title">ट्रान्सफर्मर मर्मत सेवा</h3>
+                <p class="service-description">
+                  ट्रान्सफर्मर मर्मत, तेल परिवर्तन र नियमित परीक्षण सेवा।
+                </p>
+                <ul class="service-features">
+                  <li><i class='bx bx-check-circle'></i> ट्रान्सफर्मर मर्मत</li>
+                  <li><i class='bx bx-check-circle'></i> तेल परीक्षण तथा परिवर्तन</li>
+                  <li><i class='bx bx-check-circle'></i> क्षमता परीक्षण</li>
+                  <li><i class='bx bx-check-circle'></i> आकस्मिक प्रतिस्थापन</li>
+                </ul>
+                <div class="service-footer">
+                  <span class="service-price">तत्काल सेवा</span>
+                  <a href="https://wa.me/qr/XRKUSGUNJ3T4J1" target="_blank" class="service-link">थप जानकारी <i class='bx bx-message-dots'></i></a>
+                </div>
+              </div>
+               <div class="jj-servicesItem fly-in" data-category="electricity" data-delay="1100">
+                <div class="jj-icon-services">
+                  <i class='bx bx-headphone'></i><span></span></div><br><br>
+                <span class="service-category">⚡ विद्युत सेवा</span>
+                <h3 class="service-title">गुनासो सुनुवाइ सेवा</h3>
+                <p class="service-description">
+                  उपभोक्ताका गुनासो, सुझाव र समस्या समाधानका लागि विशेष सेल।
+                </p>
+                <ul class="service-features">
+                  <li><i class='bx bx-check-circle'></i> टोल फ्री नम्बर</li>
+                  <li><i class='bx bx-check-circle'></i> गुनासो केन्द्र</li>
+                  <li><i class='bx bx-check-circle'></i> अनलाइन गुनासो दर्ता</li>
+                  <li><i class='bx bx-check-circle'></i> २४ घण्टाभित्र समाधान</li>
+                </ul>
+                <div class="service-footer">
+                  <span class="service-price">२४/७ सेवा</span>
+                  <a href="https://wa.me/qr/XRKUSGUNJ3T4J1" target="_blank" class="service-link">थप जानकारी <i class='bx bx-message-dots'></i></a>
+                </div>
+              </div>
+              <div class="jj-servicesItem fly-in" data-category="maintenance" data-delay="1300">
+                <div class="jj-icon-services">
+                  <i class='bx bx-alarm-exclamation'></i><span></span></div><br><br>
+                <span class="service-category">🔧 मर्मत सम्भार</span>
+                <h3 class="service-title">आपतकालीन विद्युत सेवा</h3>
+                <p class="service-description">
+                  राति, बिदाको दिन तथा आपतकालीन अवस्थामा तत्काल विद्युत सेवा उपलब्ध।
+                </p>
+                <ul class="service-features">
+                  <li><i class='bx bx-check-circle'></i> २४/७ हटलाइन: ९८२३३९७८७९</li>
+                  <li><i class='bx bx-check-circle'></i> आधा घण्टाभित्र सेवा</li>
+                  <li><i class='bx bx-check-circle'></i> आकस्मिक जेनेरेटर</li>
+                  <li><i class='bx bx-check-circle'></i> निःशुल्क आपतकालीन सेवा</li>
+                </ul>
+                <div class="service-footer">
+                  <span class="service-price">तत्काल सेवा</span>
+                  <a href="https://wa.me/qr/XRKUSGUNJ3T4J1" target="_blank" class="service-link">थप जानकारी <i class='bx bx-message-dots'></i></a>
+                </div>
+              </div>
+              <div class="jj-servicesItem fly-in" data-category="electricity" data-delay="1400">
+                <div class="jj-icon-services">
+                  <i class='bx bx-group'></i><span></span></div><br><br>
+                <span class="service-category">⚡ विद्युत सेवा</span>
+                <h3 class="service-title">सामुदायिक विद्युतीकरण परियोजना</h3>
+                <p class="service-description">
+                  टोल, वडा तथा गाउँ स्तरमा सामूहिक विद्युतीकरण परियोजना सञ्चालन।
+                </p>
+                <ul class="service-features">
+                  <li><i class='bx bx-check-circle'></i> सडक बत्ती जडान</li>
+                  <li><i class='bx bx-check-circle'></i> सार्वजनिक स्थल विद्युतीकरण</li>
+                  <li><i class='bx bx-check-circle'></i> विद्यालय विद्युतीकरण</li>
+                </ul>
+                <div class="service-footer">
+                  <span class="service-price">सामूहिक सेवा</span>
+                  <a href="https://wa.me/qr/XRKUSGUNJ3T4J1" target="_blank" class="service-link">थप जानकारी <i class='bx bx-message-dots'></i></a>
+                </div>
+              </div>
         </div>
-    </div>
+          <div class="main-text fly-in"><h2 class="heading">Our Services</h2><span>We offer a range of services to ensure rural communities have access to reliable electricity.</span></div>
+          <div class="jj-allServices">
+            <div class="jj-servicesItem fly-in" data-delay="100">
+              <div class="jj-icon-services"><i class='bx bx-plug'></i><span></span></div>
+              <h3>Electricity Distribution</h3>
+              <p>Providing consistent power supply to rural households and businesses.</p>
+            <a href="#" class="jj-readMore" data-info-id="info1">Explore More</a>
+                <div id="info1" class="jj-hidden-info"><h4>Electricity Distribution</h4><p>We ensure a steady and reliable power supply.</p></div>
+            </div>
+            <div class="jj-servicesItem fly-in" data-delay="200"><div class="jj-icon-services"><i class='bx bx-sun'></i><span></span></div><h3>Energy Solutions</h3><p>Implementing solar panels and microgrids for sustainable energy.</p><a href="#" class="jj-readMore" data-info-id="info2">Explore More</a><div id="info2" class="jj-hidden-info"><h4>Energy Solutions</h4><p>Renewable energy for remote areas.</p></div></div>
 
-    <!-- FILTER BAR (hidden on print) -->
-    <div class="filter-bar no-print">
-        <div class="form-group">
-            <label for="dateSelect"><i class="fa fa-calendar"></i> Select Date</label>
-            <select id="dateSelect" class="form-control" style="display:inline-block; width:auto; min-width:220px;">
-                <option value="">-- All dates --</option>
-            </select>
-        </div>
-        <div>
-            <button class="btn-reset" id="resetBtn"><i class="fa fa-undo"></i> Reset</button>
-            <button class="btn-print" id="printBtn"><i class="fa fa-print"></i> Print</button>
-        </div>
-        <div style="margin-left: auto; font-size:14px; color:#2c3e50;">
-            <i class="fa fa-info-circle"></i> <span id="dateRangeLabel">All dates</span>
-        </div>
-    </div>
+            <div class="jj-servicesItem fly-in" data-delay="300"><div class="jj-icon-services"><i class='bx bx-wrench'></i><span></span></div><h3>Maintenance Services</h3><p>Regular upkeep of electrical infrastructure for uninterrupted service.</p><a href="#" class="jj-readMore" data-info-id="info3">Explore More</a><div id="info3" class="jj-hidden-info"><h4>Maintenance Services</h4><p>Routine maintenance for safe supply.</p></div></div>
 
-    <!-- TABLE -->
-    <div class="table-responsive" id="tableWrapper">
-        <table class="table table-bordered table-condensed table-striped" id="dataTable">
-            <thead>
-                <tr>
-                    <th>S.N</th>
-                    <th>Date</th>
-                    <th>Item</th>
-                    <th>Quantity</th>
-                    <th>Rate</th>
-                    <th>Amount</th>
-                    <th>Farmer</th>
-                    <th>Phone</th>
-                    <th>Address</th>
-                    <th>Purpose</th>
-                    <th>Remarks</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody">
-                <!-- data injected by JavaScript -->
-            </tbody>
-        </table>
-    </div>
-    <div class="footer-meta no-print">
-        <span><i class="fa fa-database"></i> Total rows: <strong id="totalRowsDisplay">0</strong></span>
-        <span><i class="fa fa-clock-o"></i> Generated: <span id="generatedTime"></span></span>
-    </div>
-</div>
+            <div class="jj-servicesItem fly-in" data-delay="400"><div class="jj-icon-services"><i class='bx bx-bulb'></i><span></span></div><h3>Energy Education</h3><p>Training communities on energy conservation and safety practices.</p><a href="#" class="jj-readMore" data-info-id="info4">Explore More</a><div id="info4" class="jj-hidden-info"><h4>Energy Education</h4><p>Conservation and safety training.</p></div></div>
+        </section>
+        <section class="portfolio" id="portfolio">
+          <div class="main-text fly-in"><h2 class="heading">Our Projects</h2><span>Explore our initiatives to electrify rural communities.</span></div>
+          <!-- manager card - fixed without overlay -->
+          <div class="jj-portfolio-gallery res" style="margin-bottom: 2rem; justify-content:center;">
+            <div class="jj-portfolio-box fly-in" style="max-width:450px;" data-delay="100">
+              <div class="jj-portfolio-content">
+                <h3>प्रबन्धक</h3>
+                <p>श्री विश्व प्रकाश जोशी</p>
+                <p>९८६६२४४७६०</p>
+                <a href="#" class="jj-readMore" data-info-id="info5">Explore More</a><div id="info5" class="jj-hidden-info"><h4>प्रबन्धक</h4><p>श्री विश्व प्रकाश जोशी leads with dedication.</p></div></div>
+              <div class="jj-portfolio-img"><img src="https://raw.githubusercontent.com/Jeevanjyotigramin/Jeevanjyoti/refs/heads/main/img/support.png" alt=""></div>
+            </div>
+          </div>
+          <div class="jj-fillter-buttons" id="filter-button-container">
+            <button class="filter-btn active-filter" data-filter="all"><i class='bx bx-user'></i> सबै सदस्य</button>
+            <button class="filter-btn" data-filter=".web">⚙️ कार्य समिति</button>
+            <button class="filter-btn" data-filter=".uiux">📊 लेखा समिति</button>
+            <button class="filter-btn" data-filter=".branding">🤝 सल्लाहकार समिति</button>
+            <button class="filter-btn" data-filter=".other">💡 पोलबत्ति समिति</button>
+          </div>
+          <div class="jj-portfolio-gallery" id="portfolio-gallery">
+            <!-- कार्य समिति (web) -->
+            <div class="jj-portfolio-box mix web fly-in" data-delay="100">
+              <div class="jj-portfolio-content">
+                <h3>अध्यक्ष</h3>
+                <p>श्री दिपक देउवा</p>
+                <p><i class='bx bx-phone-call'></i>&nbsp; ९८६८८२६९७५</p>
+                <a href="#" class="jj-readMore" data-info-id="info6">Explore More</a>
+              <div id="info6" class="jj-hidden-info">
+                 <h4>अध्यक्ष, कार्य समिति</h4>
+                 <p><strong>कार्य विवरण:</strong> समितिको बैठकको अध्यक्षता गर्ने, संस्थाको नीति तथा कार्यक्रम निर्धारण गर्ने, प्रमुख कार्यकारीको रुपमा संस्थाको प्रतिनिधित्व गर्ने, र संस्थाको दीर्घकालीन योजना निर्माणमा नेतृत्व प्रदान गर्ने। वार्षिक बजेट तथा कार्यक्रम स्वीकृत गराउने र समग्र संस्थाको सञ्चालन तथा व्यवस्थापनको अनुगमन गर्ने।</p>
+                 <div class="jj-social-links" style="margin-top: 10px; display: flex; gap: 15px;">
+                    <a href="https://www.facebook.com/deepak.deuba.37" target="_blank" title="Facebook"><i class='bx bxl-facebook-circle' style="font-size: 24px; color: #3b5998;"></i></a>
+                    <a href="#" target="_blank" title="Instagram"><i class='bx bxl-instagram' style="font-size: 24px; color: #E1306C;"></i></a>
+                    <a href="https://wa.me/9779868826975" target="_blank" title="WhatsApp"><i class='bx bxl-whatsapp' style="font-size: 24px; color: #25D366;"></i></a>
+                </div></div>
+              </div>
+              <div class="jj-portfolio-img"><img src="https://raw.githubusercontent.com/Jeevanjyotigramin/Jeevanjyoti/refs/heads/main/img/portfolio/1.jpg" alt="अध्यक्ष"></div>
+            </div>
+            <div class="jj-portfolio-box mix web fly-in" data-delay="200">
+              <div class="jj-portfolio-content">
+                <h3>उपाध्यक्ष</h3>
+                <p>श्री मायाराम चौधरी</p>
+                <p><i class='bx bx-phone-call'></i>&nbsp; ९८२५६१२७७२</p>
+                <a href="#" class="jj-readMore" data-info-id="info8">Explore More</a>
+              <div id="info8" class="jj-hidden-info">
+                 <h4>उपाध्यक्ष, कार्य समिति</h4>
+                 <p><strong>कार्य विवरण:</strong> अध्यक्षको अनुपस्थितिमा अध्यक्षको सम्पूर्ण कार्यभार सम्हाल्ने, संस्थाका विभिन्न समिति तथा उपसमितिहरूको समन्वय गर्ने, सदस्यहरूबीच एकता कायम गराउने, र अध्यक्षलाई संस्थाको दैनिक प्रशासन तथा कार्यक्रम सञ्चालनमा सहयोग पुर्याउने। विशेष परियोजनाहरूको अनुगमन तथा मूल्यांकन गर्ने।</p>
+                 <div class="jj-social-links" style="margin-top: 10px; display: flex; gap: 15px;">
+                    <a href="#" target="_blank"><i class='bx bxl-facebook-circle' style="font-size: 24px; color: #3b5998;"></i></a>
+                    <a href="#" target="_blank"><i class='bx bxl-instagram' style="font-size: 24px; color: #E1306C;"></i></a>
+                    <a href="https://wa.me/9779825612772" target="_blank"><i class='bx bxl-whatsapp' style="font-size: 24px; color: #25D366;"></i></a>
+                 </div>
+              </div>
+              </div>
+              <div class="jj-portfolio-img"><img src="https://raw.githubusercontent.com/Jeevanjyotigramin/Jeevanjyoti/refs/heads/main/img/portfolio/2.jpg" alt="उपाध्यक्ष"></div>
+            </div>
+            <div class="jj-portfolio-box mix web fly-in" data-delay="300">
+              <div class="jj-portfolio-content">
+                <h3>सचिव</h3>
+                <p>श्री विजय चौधरी</p>
+                <p><i class='bx bx-phone-call'></i>&nbsp; ९८४२८७२२५३</p>
+                <a href="#" class="jj-readMore" data-info-id="info9">Explore More</a>
+              <div id="info9" class="jj-hidden-info">
+                 <h4>सचिव, कार्य समिति</h4>
+                 <p><strong>कार्य विवरण:</strong> समितिको बैठक बोलाउने, बैठकको कार्यसूची तय गर्ने, बैठकको कार्यवृत्त तयार गरी संरक्षण गर्ने, संस्थाको अभिलेख तथा कागजातहरू व्यवस्थित गर्ने, पत्राचार तथा सञ्चारको जिम्मेवारी लिने, र वार्षिक प्रतिवेदन तयार गर्ने। सदस्यहरूको विवरण अद्यावधिक राख्ने।</p>
+                 <div class="jj-social-links" style="margin-top: 10px; display: flex; gap: 15px;">
+                    <a href="https://www.facebook.com/bijay.chaudhary.3323457" target="_blank"><i class='bx bxl-facebook-circle' style="font-size: 24px; color: #3b5998;"></i></a>
+                    <a href="#" target="_blank"><i class='bx bxl-instagram' style="font-size: 24px; color: #E1306C;"></i></a>
+                    <a href="https://wa.me/9779842872253" target="_blank"><i class='bx bxl-whatsapp' style="font-size: 24px; color: #25D366;"></i></a>
+                 </div>
+              </div>
+              </div>
+              <div class="jj-portfolio-img"><img src="https://raw.githubusercontent.com/Jeevanjyotigramin/Jeevanjyoti/refs/heads/main/img/portfolio/3.jpg" alt="सचिव"></div>
+            </div>
+            <div class="jj-portfolio-box mix web fly-in" data-delay="400">
+              <div class="jj-portfolio-content">
+                <h3>कोषाध्यक्ष</h3>
+                <p>श्री मोहनमति चौधरी</p>
+                <p><i class='bx bx-phone-call'></i>&nbsp; ९८००६२६८६०</p>
+                <a href="#" class="jj-readMore" data-info-id="info10">Explore More</a>
+              <div id="info10" class="jj-hidden-info">
+                 <h4>कोषाध्यक्ष, कार्य समिति</h4>
+                 <p><strong>कार्य विवरण:</strong> संस्थाको आर्थिक कारोबारको अभिलेख राख्ने, आय-व्ययको विवरण तयार गर्ने, बजेट निर्माण तथा कार्यान्वयनमा सहयोग गर्ने, चेक हस्ताक्षरको जिम्मेवारी लिने (अन्य पदाधिकारीसँग संयुक्त रुपमा), र वार्षिक आर्थिक प्रतिवेदन तयार गरी लेखापरीक्षण गराउने। नियमित रुपमा आर्थिक विवरण सार्वजनिक गर्ने।</p>
+                 <div class="jj-social-links" style="margin-top: 10px; display: flex; gap: 15px;">
+                    <a href="https://www.facebook.com/monika.chaudhary.158136" target="_blank"><i class='bx bxl-facebook-circle' style="font-size: 24px; color: #3b5998;"></i></a>
+                    <a href="#" target="_blank"><i class='bx bxl-instagram' style="font-size: 24px; color: #E1306C;"></i></a>
+                    <a href="https://wa.me/9779800626860" target="_blank"><i class='bx bxl-whatsapp' style="font-size: 24px; color: #25D366;"></i></a>
+                 </div>
+              </div>
+              </div>
+              <div class="jj-portfolio-img"><img src="https://raw.githubusercontent.com/Jeevanjyotigramin/Jeevanjyoti/refs/heads/main/img/portfolio/4.jpg" alt="कोषाध्यक्ष"></div>
+            </div>
+            <div class="jj-portfolio-box mix web fly-in" data-delay="500">
+              <div class="jj-portfolio-content">
+                <h3>सदस्य</h3>
+                <p>श्री शान्ति कामी</p>
+                <p><i class='bx bx-phone-call'></i>&nbsp; ९८२५६०८०८५</p>
+                <a href="#" class="jj-readMore" data-info-id="info11">Explore More</a>
+              <div id="info11" class="jj-hidden-info">
+                 <h4>सदस्य, कार्य समिति</h4>
+                 <p><strong>कार्य विवरण:</strong> समितिको बैठकमा सहभागी भई निर्णय प्रक्रियामा योगदान पुर्याउने, विभिन्न उपसमिति तथा कार्यदलमा रहेर कार्य गर्ने, संस्थाका कार्यक्रम तथा परियोजनाहरूमा सक्रिय सहभागिता जनाई कार्यान्वयनमा सहयोग गर्ने, र समुदाय स्तरमा संस्थाको प्रतिनिधित्व गर्ने।</p>
+                 <div class="jj-social-links" style="margin-top: 10px; display: flex; gap: 15px;">
+                    <a href="https://www.facebook.com/shanta.bc.481144" target="_blank"><i class='bx bxl-facebook-circle' style="font-size: 24px; color: #3b5998;"></i></a>
+                    <a href="#" target="_blank"><i class='bx bxl-instagram' style="font-size: 24px; color: #E1306C;"></i></a>
+                    <a href="https://wa.me/9779825608085" target="_blank"><i class='bx bxl-whatsapp' style="font-size: 24px; color: #25D366;"></i></a>
+                 </div>
+              </div>
+              </div>
+              <div class="jj-portfolio-img"><img src="https://raw.githubusercontent.com/Jeevanjyotigramin/Jeevanjyoti/refs/heads/main/img/portfolio/5.jpg" alt="सदस्य"></div>
+            </div>
+            <div class="jj-portfolio-box mix web fly-in" data-delay="600">
+              <div class="jj-portfolio-content">
+                <h3>सदस्य</h3>
+                <p>श्री लोक बहादुर रावल</p>
+                <p><i class='bx bx-phone-call'></i>&nbsp; ९८२२१२८४७५</p>
+                <a href="#" class="jj-readMore" data-info-id="info12">Explore More</a>
+              <div id="info12" class="jj-hidden-info">
+                 <h4>सदस्य, कार्य समिति</h4>
+                 <p><strong>कार्य विवरण:</strong> समितिको बैठकमा सहभागी भई निर्णय प्रक्रियामा योगदान पुर्याउने, विभिन्न उपसमिति तथा कार्यदलमा रहेर कार्य गर्ने, संस्थाका कार्यक्रम तथा परियोजनाहरूमा सक्रिय सहभागिता जनाई कार्यान्वयनमा सहयोग गर्ने, र समुदाय स्तरमा संस्थाको प्रतिनिधित्व गर्ने।</p>
+                 <div class="jj-social-links" style="margin-top: 10px; display: flex; gap: 15px;">
+                    <a href="#" target="_blank"><i class='bx bxl-facebook-circle' style="font-size: 24px; color: #3b5998;"></i></a>
+                    <a href="#" target="_blank"><i class='bx bxl-instagram' style="font-size: 24px; color: #E1306C;"></i></a>
+                    <a href="https://wa.me/9779822128475" target="_blank"><i class='bx bxl-whatsapp' style="font-size: 24px; color: #25D366;"></i></a>
+                 </div>
+              </div>
+              </div>
+              <div class="jj-portfolio-img"><img src="https://raw.githubusercontent.com/Jeevanjyotigramin/Jeevanjyoti/refs/heads/main/img/portfolio/6.jpg" alt="सदस्य"></div>
+            </div>
+            <div class="jj-portfolio-box mix web fly-in" data-delay="700">
+              <div class="jj-portfolio-content">
+                <h3>सदस्य</h3>
+                <p>श्री रहिश अलि जागा</p>
+                <p><i class='bx bx-phone-call'></i>&nbsp; ९८२१६४९७४५</p>
+                <a href="#" class="jj-readMore" data-info-id="info13">Explore More</a>
+              <div id="info13" class="jj-hidden-info">
+                 <h4>सदस्य, कार्य समिति</h4>
+                 <p><strong>कार्य विवरण:</strong> समितिको बैठकमा सहभागी भई निर्णय प्रक्रियामा योगदान पुर्याउने, विभिन्न उपसमिति तथा कार्यदलमा रहेर कार्य गर्ने, संस्थाका कार्यक्रम तथा परियोजनाहरूमा सक्रिय सहभागिता जनाई कार्यान्वयनमा सहयोग गर्ने, र समुदाय स्तरमा संस्थाको प्रतिनिधित्व गर्ने।</p>
+                 <div class="jj-social-links" style="margin-top: 10px; display: flex; gap: 15px;">
+                    <a href="#" target="_blank"><i class='bx bxl-facebook-circle' style="font-size: 24px; color: #3b5998;"></i></a>
+                    <a href="#" target="_blank"><i class='bx bxl-instagram' style="font-size: 24px; color: #E1306C;"></i></a>
+                    <a href="https://wa.me/9779821649745" target="_blank"><i class='bx bxl-whatsapp' style="font-size: 24px; color: #25D366;"></i></a>
+                 </div>
+              </div>
+              </div>
+              <div class="jj-portfolio-img"><img src="https://raw.githubusercontent.com/Jeevanjyotigramin/Jeevanjyoti/refs/heads/main/img/portfolio/7.jpg" alt="सदस्य"></div>
+            </div>
+            <div class="jj-portfolio-box mix web fly-in" data-delay="800">
+              <div class="jj-portfolio-content">
+                <h3>सदस्य</h3>
+                <p>श्री पर्बे चौलागाईं</p>
+                <p><i class='bx bx-phone-call'></i>&nbsp; ९८४८५८१९४३</p>
+                <a href="#" class="jj-readMore" data-info-id="info14">Explore More</a>
+              <div id="info14" class="jj-hidden-info">
+                 <h4>सदस्य, कार्य समिति</h4>
+                 <p><strong>कार्य विवरण:</strong> समितिको बैठकमा सहभागी भई निर्णय प्रक्रियामा योगदान पुर्याउने, विभिन्न उपसमिति तथा कार्यदलमा रहेर कार्य गर्ने, संस्थाका कार्यक्रम तथा परियोजनाहरूमा सक्रिय सहभागिता जनाई कार्यान्वयनमा सहयोग गर्ने, र समुदाय स्तरमा संस्थाको प्रतिनिधित्व गर्ने।</p>
+                 <div class="jj-social-links" style="margin-top: 10px; display: flex; gap: 15px;">
+                    <a href="https://www.facebook.com/parbya.chaulagain" target="_blank"><i class='bx bxl-facebook-circle' style="font-size: 24px; color: #3b5998;"></i></a>
+                    <a href="#" target="_blank"><i class='bx bxl-instagram' style="font-size: 24px; color: #E1306C;"></i></a>
+                    <a href="https://wa.me/9779848581943" target="_blank"><i class='bx bxl-whatsapp' style="font-size: 24px; color: #25D366;"></i></a>
+                 </div>
+              </div>
+              </div>
+              <div class="jj-portfolio-img"><img src="https://raw.githubusercontent.com/Jeevanjyotigramin/Jeevanjyoti/refs/heads/main/img/portfolio/8.jpg" alt="सदस्य"></div>
+            </div>
+            <div class="jj-portfolio-box mix web fly-in" data-delay="900">
+              <div class="jj-portfolio-content">
+                <h3>सदस्य</h3>
+                <p>श्री सरस्वती मल्ल</p>
+                <p><i class='bx bx-phone-call'></i>&nbsp; ९८४८६६३४९६</p>
+                <a href="#" class="jj-readMore" data-info-id="info15">Explore More</a>
+              <div id="info15" class="jj-hidden-info">
+                 <h4>सदस्य, कार्य समिति</h4>
+                 <p><strong>कार्य विवरण:</strong> समितिको बैठकमा सहभागी भई निर्णय प्रक्रियामा योगदान पुर्याउने, विभिन्न उपसमिति तथा कार्यदलमा रहेर कार्य गर्ने, संस्थाका कार्यक्रम तथा परियोजनाहरूमा सक्रिय सहभागिता जनाई कार्यान्वयनमा सहयोग गर्ने, र समुदाय स्तरमा संस्थाको प्रतिनिधित्व गर्ने।</p>
+                 <div class="jj-social-links" style="margin-top: 10px; display: flex; gap: 15px;">
+                    <a href="https://www.facebook.com/sarasvati.malla.675059" target="_blank"><i class='bx bxl-facebook-circle' style="font-size: 24px; color: #3b5998;"></i></a>
+                    <a href="#" target="_blank"><i class='bx bxl-instagram' style="font-size: 24px; color: #E1306C;"></i></a>
+                    <a href="https://wa.me/9779848663496" target="_blank"><i class='bx bxl-whatsapp' style="font-size: 24px; color: #25D366;"></i></a>
+                 </div>
+              </div>
+              </div>
+              <div class="jj-portfolio-img"><img src="https://raw.githubusercontent.com/Jeevanjyotigramin/Jeevanjyoti/refs/heads/main/img/portfolio/9.jpg" alt="सदस्य"></div>
+            </div>
+            <!-- लेखा समिति (uiux) -->
+            <div class="jj-portfolio-box mix uiux fly-in" data-delay="100">
+              <div class="jj-portfolio-content">
+                <h3>संयोजक</h3>
+                <p>श्री कालीराम चौधरी</p>
+                <p><i class='bx bx-phone-call'></i>&nbsp; ९८४८५००३४७</p>
+                <a href="#" class="jj-readMore" data-info-id="info7">Explore More</a>
+              <div id="info7" class="jj-hidden-info">
+                 <h4>संयोजक, लेखा समिति</h4>
+                 <p><strong>कार्य विवरण:</strong> लेखा समितिको बैठकको अध्यक्षता गर्ने, संस्थाको आय-व्यय तथा आर्थिक कारोबारको नियमित लेखापरीक्षण गर्ने, आर्थिक अनियमितता रोक्न सुझाव दिने, लेखापरीक्षण प्रतिवेदन कार्य समितिमा पेश गर्ने, र आर्थिक पारदर्शिता कायम गर्न आवश्यक सिफारिस गर्ने।</p>
+                 <div class="jj-social-links" style="margin-top: 10px; display: flex; gap: 15px;">
+                    <a href="https://www.facebook.com/kaliram.chaudhary.7796" target="_blank"><i class='bx bxl-facebook-circle' style="font-size: 24px; color: #3b5998;"></i></a>
+                    <a href="#" target="_blank"><i class='bx bxl-instagram' style="font-size: 24px; color: #E1306C;"></i></a>
+                    <a href="https://wa.me/9779848500347" target="_blank"><i class='bx bxl-whatsapp' style="font-size: 24px; color: #25D366;"></i></a>
+                 </div>
+              </div>
+              </div>
+              <div class="jj-portfolio-img"><img src="https://raw.githubusercontent.com/Jeevanjyotigramin/Jeevanjyoti/refs/heads/main/img/portfolio/10.jpg" alt="संयोजक"></div>
+            </div>
+            <div class="jj-portfolio-box mix uiux fly-in" data-delay="200">
+              <div class="jj-portfolio-content">
+                <h3>सदस्य</h3>
+                <p>श्री केदार चौधरी</p>
+                <p><i class='bx bx-phone-call'></i>&nbsp; ९८xxxxxxxx</p>
+               <a href="#" class="jj-readMore" data-info-id="info16">Explore More</a>
+              <div id="info16" class="jj-hidden-info">
+                 <h4>सदस्य, लेखा समिति</h4>
+                 <p><strong>कार्य विवरण:</strong> लेखा समितिको बैठकमा सहभागी भई छलफलमा योगदान पुर्याउने, संस्थाको आर्थिक कारोबारको विस्तृत अध्ययन गरी लेखापरीक्षण कार्यमा सहयोग गर्ने, आवश्यक परेमा आर्थिक कागजातहरूको परीक्षण गर्ने, र समितिको प्रतिवेदन तयार गर्न सहयोग गर्ने।</p>
+                 <div class="jj-social-links" style="margin-top: 10px; display: flex; gap: 15px;">
+                    <a href="#" target="_blank"><i class='bx bxl-facebook-circle' style="font-size: 24px; color: #3b5998;"></i></a>
+                    <a href="#" target="_blank"><i class='bx bxl-instagram' style="font-size: 24px; color: #E1306C;"></i></a>
+                    <a href="#" target="_blank"><i class='bx bxl-whatsapp' style="font-size: 24px; color: #25D366;"></i></a>
+                 </div>
+              </div>
+              </div>
+              <div class="jj-portfolio-img"><img src="https://raw.githubusercontent.com/Jeevanjyotigramin/Jeevanjyoti/refs/heads/main/img/portfolio/11.jpg" alt="सदस्य"></div>
+            </div>
+            <div class="jj-portfolio-box mix uiux fly-in" data-delay="300">
+              <div class="jj-portfolio-content">
+                <h3>सदस्य</h3>
+                <p>श्री शारदा सार्की</p>
+                <p><i class='bx bx-phone-call'></i>&nbsp; ९८xxxxxxxx</p>
+                <a href="#" class="jj-readMore" data-info-id="info17">Explore More</a>
+              <div id="info17" class="jj-hidden-info">
+                 <h4>सदस्य, लेखा समिति</h4>
+                 <p><strong>कार्य विवरण:</strong> लेखा समितिको बैठकमा सहभागी भई छलफलमा योगदान पुर्याउने, संस्थाको आर्थिक कारोबारको विस्तृत अध्ययन गरी लेखापरीक्षण कार्यमा सहयोग गर्ने, आवश्यक परेमा आर्थिक कागजातहरूको परीक्षण गर्ने, र समितिको प्रतिवेदन तयार गर्न सहयोग गर्ने।</p>
+                 <div class="jj-social-links" style="margin-top: 10px; display: flex; gap: 15px;">
+                    <a href="#" target="_blank"><i class='bx bxl-facebook-circle' style="font-size: 24px; color: #3b5998;"></i></a>
+                    <a href="#" target="_blank"><i class='bx bxl-instagram' style="font-size: 24px; color: #E1306C;"></i></a>
+                    <a href="#" target="_blank"><i class='bx bxl-whatsapp' style="font-size: 24px; color: #25D366;"></i></a>
+                 </div>
+              </div>
+              </div>
+              <div class="jj-portfolio-img"><img src="https://raw.githubusercontent.com/Jeevanjyotigramin/Jeevanjyoti/refs/heads/main/img/portfolio/12.jpg" alt="सदस्य"></div>
+            </div>
+            <!-- पोलबत्ति समिति (other) -->
+            <div class="jj-portfolio-box mix other fly-in" data-delay="400">
+              <div class="jj-portfolio-content">
+                <h3>संयोजक</h3>
+                <p>श्री मायाराम चौधरी</p>
+                <p><i class='bx bx-phone-call'></i>&nbsp; ९८२५६१२७७२</p>
+                <a href="#" class="jj-readMore" data-info-id="info22">Explore More</a>
+              <div id="info22" class="jj-hidden-info">
+                 <h4>उपाध्यक्ष, पोलबत्ति समिति</h4>
+                 <p><strong>कार्य विवरण:</strong> पोलबत्ति समितिको संयोजकको अनुपस्थितिमा कार्यभार सम्हाल्ने, विद्युत् महसुल संकलन तथा भुक्तानीको नियमित अनुगमन गर्ने, नयाँ विद्युत् जडान तथा मर्मतको लागि समन्वय गर्ने, र विद्युत् चुहावट नियन्त्रणमा सचेतना फैलाउने।</p>
+                 <div class="jj-social-links" style="margin-top: 10px; display: flex; gap: 15px;">
+                    <a href="#" target="_blank"><i class='bx bxl-facebook-circle' style="font-size: 24px; color: #3b5998;"></i></a>
+                    <a href="#" target="_blank"><i class='bx bxl-instagram' style="font-size: 24px; color: #E1306C;"></i></a>
+                    <a href="https://wa.me/9779825612772" target="_blank"><i class='bx bxl-whatsapp' style="font-size: 24px; color: #25D366;"></i></a>
+                 </div>
+              </div>
+              </div>
+              <div class="jj-portfolio-img"><img src="https://raw.githubusercontent.com/Jeevanjyotigramin/Jeevanjyoti/refs/heads/main/img/portfolio/2.jpg" alt="संयोजक"></div>
+            </div>
+            <div class="jj-portfolio-box mix other fly-in" data-delay="500">
+              <div class="jj-portfolio-content">
+                <h3>सदस्य</h3>
+                <p>श्री विजय चौधरी</p>
+                <p><i class='bx bx-phone-call'></i>&nbsp; ९८४२८७२२५३</p>
+                <a href="#" class="jj-readMore" data-info-id="info18">Explore More</a>
+              <div id="info18" class="jj-hidden-info">
+                 <h4>सदस्य, पोलबत्ति समिति</h4>
+                 <p><strong>कार्य विवरण:</strong> पोलबत्ति समितिको बैठकमा सहभागी हुने, विद्युत् लाइन मर्मत तथा स्तरोन्नतिको क्रममा आवश्यक जनशक्ति तथा सामग्री व्यवस्थापनमा सहयोग गर्ने, उपभोक्ताको गुनासो सुन्ने तथा समाधानको लागि पहल गर्ने, र मिटर रिडिङ तथा बिलिङ प्रक्रियामा सहयोग गर्ने।</p>
+                 <div class="jj-social-links" style="margin-top: 10px; display: flex; gap: 15px;">
+                    <a href="#" target="_blank"><i class='bx bxl-facebook-circle' style="font-size: 24px; color: #3b5998;"></i></a>
+                    <a href="#" target="_blank"><i class='bx bxl-instagram' style="font-size: 24px; color: #E1306C;"></i></a>
+                    <a href="https://wa.me/9779842872253" target="_blank"><i class='bx bxl-whatsapp' style="font-size: 24px; color: #25D366;"></i></a>
+                 </div>
+              </div>
+              </div>
+              <div class="jj-portfolio-img"><img src="https://raw.githubusercontent.com/Jeevanjyotigramin/Jeevanjyoti/refs/heads/main/img/portfolio/3.jpg" alt="सदस्य"></div>
+            </div>
+            <div class="jj-portfolio-box mix other fly-in" data-delay="600">
+              <div class="jj-portfolio-content">
+                <h3>सदस्य</h3>
+                <p>श्री लोक बहादुर रावल</p>
+                <p><i class='bx bx-phone-call'></i>&nbsp; ९८२२१२८४७५</p>
+                <a href="#" class="jj-readMore" data-info-id="info19">Explore More</a>
+              <div id="info19" class="jj-hidden-info">
+                 <h4>सदस्य, पोलबत्ति समिति</h4>
+                 <p><strong>कार्य विवरण:</strong> पोलबत्ति समितिको बैठकमा सहभागी हुने, विद्युत् लाइन मर्मत तथा स्तरोन्नतिको क्रममा आवश्यक जनशक्ति तथा सामग्री व्यवस्थापनमा सहयोग गर्ने, उपभोक्ताको गुनासो सुन्ने तथा समाधानको लागि पहल गर्ने, र मिटर रिडिङ तथा बिलिङ प्रक्रियामा सहयोग गर्ने।</p>
+                 <div class="jj-social-links" style="margin-top: 10px; display: flex; gap: 15px;">
+                    <a href="#" target="_blank"><i class='bx bxl-facebook-circle' style="font-size: 24px; color: #3b5998;"></i></a>
+                    <a href="#" target="_blank"><i class='bx bxl-instagram' style="font-size: 24px; color: #E1306C;"></i></a>
+                    <a href="https://wa.me/9779822128475" target="_blank"><i class='bx bxl-whatsapp' style="font-size: 24px; color: #25D366;"></i></a>
+                 </div>
+              </div>
+              </div>
+              <div class="jj-portfolio-img"><img src="https://raw.githubusercontent.com/Jeevanjyotigramin/Jeevanjyoti/refs/heads/main/img/portfolio/6.jpg" alt="सदस्य"></div>
+            </div>
+            <!-- सल्लाहकार समिति (branding) -->
+            <div class="jj-portfolio-box mix branding fly-in" data-delay="700">
+              <div class="jj-portfolio-content">
+                <h3>संयोजक</h3>
+                <p>श्री डम्मर बहादुर रावल</p>
+                <p><i class='bx bx-phone-call'></i>&nbsp; ९८०१७१८४२२</p>
+                <a href="#" class="jj-readMore" data-info-id="info23">Explore More</a>
+              <div id="info23" class="jj-hidden-info">
+                 <h4>सदस्य, सल्लाहकार समिति</h4>
+                 <p><strong>कार्य विवरण:</strong> संस्थालाई आवश्यक परेको बेला नीतिगत तथा कानुनी सल्लाह प्रदान गर्ने, संस्थाका दीर्घकालीन योजना तथा रणनीति निर्माणमा मार्गदर्शन गर्ने, संस्थाले सञ्चालन गर्ने ठूला परियोजनाहरूको सम्भाव्यता अध्ययनमा सहयोग गर्ने, र संस्थाको छवि निर्माण तथा सुदृढीकरणमा योगदान पुर्याउने।</p>
+                 <div class="jj-social-links" style="margin-top: 10px; display: flex; gap: 15px;">
+                    <a href="#" target="_blank"><i class='bx bxl-facebook-circle' style="font-size: 24px; color: #3b5998;"></i></a>
+                    <a href="#" target="_blank"><i class='bx bxl-instagram' style="font-size: 24px; color: #E1306C;"></i></a>
+                    <a href="https://wa.me/9779801718422" target="_blank"><i class='bx bxl-whatsapp' style="font-size: 24px; color: #25D366;"></i></a>
+                 </div>
+              </div>
+              </div>
+              <div class="jj-portfolio-img"><img src="https://raw.githubusercontent.com/Jeevanjyotigramin/Jeevanjyoti/refs/heads/main/img/portfolio/13.jpg" alt="संयोजक"></div>
+            </div>
+            <div class="jj-portfolio-box mix branding fly-in" data-delay="800">
+              <div class="jj-portfolio-content">
+                <h3>सदस्य</h3>
+                <p>श्री रुद्र चौधरी</p>
+                <p><i class='bx bx-phone-call'></i>&nbsp; ९८xxxxxxxx</p>
+                <a href="#" class="jj-readMore" data-info-id="info20">Explore More</a>
+              <div id="info20" class="jj-hidden-info">
+                 <h4>सदस्य, सल्लाहकार समिति</h4>
+                 <p><strong>कार्य विवरण:</strong> संस्थालाई आवश्यक परेको बेला नीतिगत तथा कानुनी सल्लाह प्रदान गर्ने, संस्थाका दीर्घकालीन योजना तथा रणनीति निर्माणमा मार्गदर्शन गर्ने, संस्थाले सञ्चालन गर्ने ठूला परियोजनाहरूको सम्भाव्यता अध्ययनमा सहयोग गर्ने, र संस्थाको छवि निर्माण तथा सुदृढीकरणमा योगदान पुर्याउने।</p>
+                 <div class="jj-social-links" style="margin-top: 10px; display: flex; gap: 15px;">
+                    <a href="#" target="_blank"><i class='bx bxl-facebook-circle' style="font-size: 24px; color: #3b5998;"></i></a>
+                    <a href="#" target="_blank"><i class='bx bxl-instagram' style="font-size: 24px; color: #E1306C;"></i></a>
+                    <a href="#" target="_blank"><i class='bx bxl-whatsapp' style="font-size: 24px; color: #25D366;"></i></a>
+                 </div>
+              </div>
+              </div>
+              <div class="jj-portfolio-img"><img src="https://raw.githubusercontent.com/Jeevanjyotigramin/Jeevanjyoti/refs/heads/main/img/portfolio/14.jpg" alt="सदस्य"></div>
+            </div>
+            <div class="jj-portfolio-box mix branding fly-in" data-delay="900">
+              <div class="jj-portfolio-content">
+                <h3>सदस्य</h3>
+                <p>श्री राम प्रसाद न्यौपाने</p>
+                <p><i class='bx bx-phone-call'></i>&nbsp; ९८xxxxxxxx</p>
+                <a href="#" class="jj-readMore" data-info-id="info21">Explore More</a>
+              <div id="info21" class="jj-hidden-info">
+                 <h4>सदस्य, सल्लाहकार समिति</h4>
+                 <p><strong>कार्य विवरण:</strong> संस्थालाई आवश्यक परेको बेला नीतिगत तथा कानुनी सल्लाह प्रदान गर्ने, संस्थाका दीर्घकालीन योजना तथा रणनीति निर्माणमा मार्गदर्शन गर्ने, संस्थाले सञ्चालन गर्ने ठूला परियोजनाहरूको सम्भाव्यता अध्ययनमा सहयोग गर्ने, र संस्थाको छवि निर्माण तथा सुदृढीकरणमा योगदान पुर्याउने।</p>
+                 <div class="jj-social-links" style="margin-top: 10px; display: flex; gap: 15px;">
+                    <a href="#" target="_blank"><i class='bx bxl-facebook-circle' style="font-size: 24px; color: #3b5998;"></i></a>
+                    <a href="#" target="_blank"><i class='bx bxl-instagram' style="font-size: 24px; color: #E1306C;"></i></a>
+                    <a href="#" target="_blank"><i class='bx bxl-whatsapp' style="font-size: 24px; color: #25D366;"></i></a>
+                 </div>
+              </div>
+              </div>
+              <div class="jj-portfolio-img"><img src="https://raw.githubusercontent.com/Jeevanjyotigramin/Jeevanjyoti/refs/heads/main/img/portfolio/15.jpg" alt="सदस्य"></div>
+            </div>
+          </div>
+        </section>
+        <!-- CONTACT -->
+        <section class="down-box" id="contact">
+          <div class="jj-contactSkills">
+            <div class="jj-contact-info fly-in"><div class="main-text"><h2 class="heading">Contact Us</h2></div>
+              <form id="contactForm">
+                <div class="jj-input-box"><input type="text" id="firstName" placeholder="First Name" required><span class="jj-error-message" id="firstNameError">First name required</span></div>
+                <div class="jj-input-box"><input type="text" id="lastName" placeholder="Last Name" required><span class="jj-error-message" id="lastNameError">Last name required</span></div>
+                <div class="jj-input-box"><input type="email" id="email" placeholder="Email" required><span class="jj-error-message" id="emailError">Valid email required</span></div>
+                <div class="jj-input-box"><input type="text" id="subject" placeholder="Subject" required><span class="jj-error-message" id="subjectError">Subject required</span></div>
+                <div class="jj-input-box"><textarea id="message" placeholder="Your message..." required></textarea><span class="jj-error-message" id="messageError">Message required</span></div>
+                <div class="formsummitbtn">
+                  <div class="formBtn jj-feedback-btn-whatsapp"><button type="button" id="sendWhatsApp" class="jj-btn"><span>Send</span> <i class='bx bxl-whatsapp'></i></button></div>
+                  <div class="formBtn jj-feedback-btn-email"><button type="button" id="sendEmail" class="jj-btn"><span>Send</span> <i class='bx bxl-gmail'></i></button></div>
+                </div>
+              </form>
+            </div>
+            <div class="jj-skills fly-in"><div class="skillBox"><div class="main-text"><h2 class="heading">Our Skills</h2><span>Let Us Help You</span></div></div></div>
+          </div>
+        </section>
+        <div class="jj-footer"><p>Copyright © 2025 by Jeevan Jyoti Gramin Bidhyut Sahakari Sastha Ltd. | All Rights Reserved.</p></div>
+        <div class="jj-progress" id="progress"><span class="jj-progress-value" id="progress-value"><i class='bx bxs-chevrons-up'></i></span></div>
+        <script>
+          /* ✅ REMOVED the broken normalizeNepaliText block.
+             It wasn't doing anything useful and risked touching Devanagari text.
+             If you need clipboard normalization for any reason, do it very carefully
+             and NEVER apply it to Devanagari numerals. */
 
-<script>
-(function() {
-    // ----------------------------------------------------------------
-    // 1. ORIGINAL DATA (extracted from the static HTML)
-    // ----------------------------------------------------------------
-    const rawRows = [
-        { sn:1, date:"2083-04-8", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600.00, farmer:"Bhagiram Chaudhary", phone:"9801564688", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:2, date:"2083-04-8", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100.00, farmer:"Bhagiram Chaudhary", phone:"9801564688", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:3, date:"2083-04-8", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100.00, farmer:"Nabin Kumar Dagaura", phone:"9822627978", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:4, date:"2083-04-8", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600.00, farmer:"Nabin Kumar Dagaura", phone:"9822627978", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:5, date:"2083-04-8", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100.00, farmer:"Ramesh Kumar Tharu", phone:"9822667937", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:6, date:"2083-04-8", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600.00, farmer:"Ramesh Kumar Tharu", phone:"9822667937", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:7, date:"2083-04-8", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100.00, farmer:"tulsa Devi Joshi", phone:"9848633244", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:8, date:"2083-04-8", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600.00, farmer:"tulsa Devi Joshi", phone:"9848633244", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:9, date:"2083-04-8", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600.00, farmer:"Bhagiram Chaudhary", phone:"9801564688", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:10, date:"2083-04-8", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100.00, farmer:"Bhagiram Chaudhary", phone:"9801564688", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:11, date:"2083-04-8", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100.00, farmer:"Binod Bahadur Dagaura", phone:"9804606455", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:12, date:"2083-04-8", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600.00, farmer:"Binod Bahadur Dagaura", phone:"9804606455", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:13, date:"2083-04-8", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100.00, farmer:"Pratima Chaudhary", phone:"9811649859", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:14, date:"2083-04-8", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600.00, farmer:"Pratima Chaudhary", phone:"9811649859", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:15, date:"2083-04-8", item:"Urea", qty:"0.15 MT", rate:1100, amount:3300.00, farmer:"Fulram Dagaura Tharu", phone:"9848657857", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:16, date:"2083-04-8", item:"DAP", qty:"0.15 MT", rate:2600, amount:7800.00, farmer:"Fulram Dagaura Tharu", phone:"9848657857", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:17, date:"2083-04-8", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100.00, farmer:"Sita Chaudhary", phone:"9815653959", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:18, date:"2083-04-8", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600.00, farmer:"Sita Chaudhary", phone:"9815653959", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:19, date:"2083-04-8", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600.00, farmer:"Bhagiram Chaudhary", phone:"9801564688", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:20, date:"2083-04-8", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100.00, farmer:"Bhagiram Chaudhary", phone:"9801564688", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:21, date:"2083-04-8", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100.00, farmer:"bhaga Sarki", phone:"9860762745", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:22, date:"2083-04-8", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600.00, farmer:"bhaga Sarki", phone:"9860762745", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:23, date:"2083-04-8", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100.00, farmer:"lokendra chaudhary", phone:"9749442784", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:24, date:"2083-04-8", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600.00, farmer:"lokendra chaudhary", phone:"9749442784", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:25, date:"2083-04-8", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100.00, farmer:"lal bahadur tharu", phone:"9868441629", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:26, date:"2083-04-8", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600.00, farmer:"lal bahadur tharu", phone:"9868441629", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:27, date:"2083-04-8", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600.00, farmer:"lal bahadur tharu", phone:"9868441629", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:28, date:"2083-04-8", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100.00, farmer:"lal bahadur tharu", phone:"9868441629", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:29, date:"2083-04-8", item:"Urea", qty:"0.1 MT", rate:1100, amount:2200.00, farmer:"Mohammat rouf jaga", phone:"9865946930", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:30, date:"2083-04-8", item:"DAP", qty:"0.1 MT", rate:2600, amount:5200.00, farmer:"Mohammat rouf jaga", phone:"9865946930", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:31, date:"2083-04-8", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100.00, farmer:"Roini Devi Tharuni", phone:"9702919506", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:32, date:"2083-04-8", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600.00, farmer:"Roini Devi Tharuni", phone:"9702919506", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:33, date:"2083-04-8", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600.00, farmer:"Parbati Jagri", phone:"9860761811", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:34, date:"2083-04-8", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100.00, farmer:"Parbati Jagri", phone:"9860761811", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:35, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Khima Devi Joshi", phone:"9748871648", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:36, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Binod Bahadur Dagaura", phone:"9804606455", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:37, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Anoj awasthi", phone:"9811661241", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:38, date:"2083-03-6", item:"DAP", qty:"0.1 MT", rate:2600, amount:5200, farmer:"Pratima Chaudhary", phone:"9811649859", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:39, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"tulsa Devi Joshi", phone:"9848633244", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:40, date:"2083-03-6", item:"DAP", qty:"0.15 MT", rate:2600, amount:7800, farmer:"Fulram Dagaura Tharu", phone:"9848657857", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:41, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Bhagiram Chaudhary", phone:"9801564688", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:42, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Sita Chaudhary", phone:"9815653959", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:43, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Ram parsad Neupane", phone:"9804673857", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:44, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"motisara Pandey", phone:"9863107412", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:45, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"motisara Pandey", phone:"9863107412", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:46, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Bhagiram Chaudhary", phone:"9801564688", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:47, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"bhaga Sarki", phone:"9860762745", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:48, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"lokendra chaudhary", phone:"9749442784", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:49, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Ratha Devi Thakulla", phone:"9708905618", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:50, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"lal bahadur tharu", phone:"9868441629", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:51, date:"2083-03-6", item:"DAP", qty:"0.1 MT", rate:2600, amount:5200, farmer:"Binod Bahadur Dagaura", phone:"9804606455", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:52, date:"2083-03-6", item:"DAP", qty:"0.15 MT", rate:2600, amount:7800, farmer:"Binod Bahadur Dagaura", phone:"9804606455", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:53, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Khima Devi Joshi", phone:"9748871648", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:54, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Anoj awasthi", phone:"9811661241", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:55, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Binod Bahadur Dagaura", phone:"9804606455", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:56, date:"2083-03-6", item:"DAP", qty:"0.1 MT", rate:2600, amount:5200, farmer:"Pratima Chaudhary", phone:"9811649859", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:57, date:"2083-03-6", item:"DAP", qty:"0.15 MT", rate:2600, amount:7800, farmer:"Fulram Dagaura Tharu", phone:"9848657857", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:58, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Bhagiram Chaudhary", phone:"9801564688", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:59, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"tulsa Devi Joshi", phone:"9848633244", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:60, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Sita Chaudhary", phone:"9815653959", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:61, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Ram parsad Neupane", phone:"9804673857", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:62, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"motisara Pandey", phone:"9863107412", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:63, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"motisara Pandey", phone:"9863107412", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:64, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Bhagiram Chaudhary", phone:"9801564688", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:65, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"bhaga Sarki", phone:"9860762745", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:66, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"lokendra chaudhary", phone:"9749442784", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:67, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Ratha Devi Thakulla", phone:"9708905618", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:68, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"indal paswan", phone:"9804693240", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:69, date:"2083-03-6", item:"DAP", qty:"0.15 MT", rate:2600, amount:7800, farmer:"Asarfi tharuni", phone:"9804601957", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:70, date:"2083-03-6", item:"DAP", qty:"0.1 MT", rate:2600, amount:5200, farmer:"indal paswan", phone:"9804693240", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:71, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"sunu prasad Chaudhary", phone:"9809414684", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:72, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"sunu prasad Chaudhary", phone:"9809414684", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:73, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Man bdr chaudhary", phone:"9800642716", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:74, date:"2083-03-6", item:"DAP", qty:"0.15 MT", rate:2600, amount:7800, farmer:"Asarfi tharuni", phone:"9804601957", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:75, date:"2083-03-6", item:"DAP", qty:"0.1 MT", rate:2600, amount:5200, farmer:"Asarfi tharuni", phone:"9804601957", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:76, date:"2083-03-6", item:"DAP", qty:"0.1 MT", rate:2600, amount:5200, farmer:"indal paswan", phone:"9804693240", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:77, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"indal paswan", phone:"9804693240", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:78, date:"2083-03-6", item:"DAP", qty:"0.15 MT", rate:2600, amount:7800, farmer:"sunu prasad Chaudhary", phone:"9809414684", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:79, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"sunu prasad Chaudhary", phone:"9809414684", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:80, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"sunu prasad Chaudhary", phone:"9809414684", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:81, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Khima Devi Joshi", phone:"9748871648", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:82, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Man bdr chaudhary", phone:"9800642716", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:83, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Mohan Tharu", phone:"9825669165", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:84, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Mohan Tharu", phone:"9825669165", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:85, date:"2083-03-6", item:"DAP", qty:"0.15 MT", rate:2600, amount:7800, farmer:"sunu prasad Chaudhary", phone:"9809414684", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:86, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Pratima Chaudhary", phone:"9811649859", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:87, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Binod Bahadur Dagaura", phone:"9804606455", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:88, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Anoj awasthi", phone:"9811661241", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:89, date:"2083-03-6", item:"DAP", qty:"0.1 MT", rate:2600, amount:5200, farmer:"Asarfi tharuni", phone:"9804601957", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:90, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Anoj awasthi", phone:"9811661241", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:91, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Khima Devi Joshi", phone:"9748871648", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:92, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Fulram Dagaura Tharu", phone:"9848657857", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:93, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"tulsa Devi Joshi", phone:"9848633244", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:94, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Pratima Chaudhary", phone:"9811649859", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:95, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Binod Bahadur Dagaura", phone:"9804606455", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:96, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Fulram Dagaura Tharu", phone:"9848657857", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:97, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Bhagiram Chaudhary", phone:"9801564688", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:98, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Sita Chaudhary", phone:"9815653959", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:99, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"tulsa Devi Joshi", phone:"9848633244", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:100, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Sita Chaudhary", phone:"9815653959", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:101, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Bhagiram Chaudhary", phone:"9801564688", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:102, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Ram parsad Neupane", phone:"9804673857", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:103, date:"2083-03-6", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100, farmer:"motisara Pandey", phone:"9863107412", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:104, date:"2083-03-6", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600, farmer:"Ram parsad Neupane", phone:"9804673857", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:105, date:"2083-03-6", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100, farmer:"motisara Pandey", phone:"9863107412", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:106, date:"2083-03-6", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100, farmer:"Bhagiram Chaudhary", phone:"9801564688", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:107, date:"2083-03-6", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100, farmer:"Bhagiram Chaudhary", phone:"9801564688", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:108, date:"2083-03-6", item:"Urea", qty:"0.2 MT", rate:1100, amount:4400, farmer:"Pratima Chaudhary", phone:"9811649859", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:109, date:"2083-03-6", item:"Urea", qty:"0.1 MT", rate:1100, amount:2200, farmer:"Binod Bahadur Dagaura", phone:"9804606455", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:110, date:"2083-03-6", item:"Urea", qty:"0.15 MT", rate:1100, amount:3300, farmer:"tulsa Devi Joshi", phone:"9848633244", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:111, date:"2083-03-6", item:"Urea", qty:"0.2 MT", rate:1100, amount:4400, farmer:"Pratima Chaudhary", phone:"9811649859", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:112, date:"2083-03-6", item:"Urea", qty:"0.15 MT", rate:1100, amount:3300, farmer:"Fulram Dagaura Tharu", phone:"9848657857", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:113, date:"2083-03-6", item:"Urea", qty:"0.15 MT", rate:1100, amount:3300, farmer:"tulsa Devi Joshi", phone:"9848633244", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:114, date:"2083-03-6", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100, farmer:"Bhagiram Chaudhary", phone:"9801564688", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:115, date:"2083-03-6", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100, farmer:"Bhagiram Chaudhary", phone:"9801564688", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:116, date:"2083-03-6", item:"Urea", qty:"0.1 MT", rate:1100, amount:2200, farmer:"Sita Chaudhary", phone:"9815653959", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:117, date:"2083-03-6", item:"Urea", qty:"0.1 MT", rate:1100, amount:2200, farmer:"Sita Chaudhary", phone:"9815653959", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:118, date:"2083-03-6", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100, farmer:"Ram parsad Neupane", phone:"9804673857", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:119, date:"2083-03-6", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100, farmer:"motisara Pandey", phone:"9863107412", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:120, date:"2083-03-6", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100, farmer:"Ram parsad Neupane", phone:"9804673857", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:121, date:"2083-03-6", item:"Urea", qty:"0.2 MT", rate:1100, amount:4400, farmer:"motisara Pandey", phone:"9863107412", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:122, date:"2083-03-6", item:"Urea", qty:"0.2 MT", rate:1100, amount:4400, farmer:"motisara Pandey", phone:"9863107412", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:123, date:"2083-03-6", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100, farmer:"motisara Pandey", phone:"9863107412", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:124, date:"2083-03-6", item:"Urea", qty:"0.1 MT", rate:1100, amount:2200, farmer:"Bhagiram Chaudhary", phone:"9801564688", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:125, date:"2083-03-6", item:"Urea", qty:"0.1 MT", rate:1100, amount:2200, farmer:"Bhagiram Chaudhary", phone:"9801564688", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:126, date:"2083-03-6", item:"Urea", qty:"0.15 MT", rate:1100, amount:3300, farmer:"lokendra chaudhary", phone:"9749442784", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:127, date:"2083-03-6", item:"Urea", qty:"0.15 MT", rate:1100, amount:3300, farmer:"bhaga Sarki", phone:"9860762745", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:128, date:"2083-03-6", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100, farmer:"Ratha Devi Thakulla", phone:"9708905618", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:129, date:"2083-03-6", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100, farmer:"lal bahadur tharu", phone:"9868441629", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:130, date:"2083-03-6", item:"Urea", qty:"0.05 MT", rate:1100, amount:1100, farmer:"Ram parsad Neupane", phone:"9804673857", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:131, date:"2083-03-6", item:"Urea", qty:"0.2 MT", rate:1100, amount:4400, farmer:"motisara Pandey", phone:"9863107412", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:132, date:"2083-03-6", item:"Urea", qty:"0.1 MT", rate:1100, amount:2200, farmer:"Bhagiram Chaudhary", phone:"9801564688", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:133, date:"2083-03-6", item:"Urea", qty:"0.15 MT", rate:1100, amount:3300, farmer:"bhaga Sarki", phone:"9860762745", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:134, date:"2083-03-6", item:"Urea", qty:"0.15 MT", rate:1100, amount:3300, farmer:"lokendra chaudhary", phone:"9749442784", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:135, date:"2083-03-6", item:"Urea", qty:"0.2 MT", rate:1100, amount:4400, farmer:"Ratha Devi Thakulla", phone:"9708905618", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:136, date:"2082-12-3", item:"DAP", qty:"0.05 MT", rate:2600, amount:2600.00, farmer:"lal bahadur tharu", phone:"9868441629", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:137, date:"2082-12-3", item:"Urea", qty:"0.1 MT", rate:1100, amount:2200.00, farmer:"Bhaguwandin chaudhary", phone:"9766405824", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:138, date:"2082-12-3", item:"DAP", qty:"0.1 MT", rate:2600, amount:5200.00, farmer:"Bhaguwandin chaudhary", phone:"9766405824", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:139, date:"2082-12-3", item:"Urea", qty:"0.1 MT", rate:1100, amount:2200.00, farmer:"Dayaram Chaudhary", phone:"9800623962", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:140, date:"2082-12-3", item:"DAP", qty:"0.1 MT", rate:2600, amount:5200.00, farmer:"Dayaram Chaudhary", phone:"9800623962", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:141, date:"2082-12-3", item:"Urea", qty:"0.1 MT", rate:1100, amount:2200.00, farmer:"Fulram Dagaura Tharu", phone:"9848657857", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:142, date:"2082-12-3", item:"DAP", qty:"0.4 MT", rate:2600, amount:20800.00, farmer:"Fulram Dagaura Tharu", phone:"9848657857", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:143, date:"2082-12-3", item:"Urea", qty:"0.15 MT", rate:1100, amount:3300.00, farmer:"Ram parsad Neupane", phone:"9804673857", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:144, date:"2082-12-3", item:"DAP", qty:"0.1 MT", rate:2600, amount:5200.00, farmer:"Ram parsad Neupane", phone:"9804673857", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:145, date:"2082-12-3", item:"Urea", qty:"0.2 MT", rate:1100, amount:4400.00, farmer:"Binod Bahadur Dagaura", phone:"9804606455", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:146, date:"2082-12-3", item:"Urea", qty:"0.2 MT", rate:1100, amount:4400.00, farmer:"Binod Bahadur Dagaura", phone:"9804606455", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:147, date:"2082-12-3", item:"Urea", qty:"0.2 MT", rate:1100, amount:4400.00, farmer:"tulsa Devi Joshi", phone:"9848633244", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:148, date:"2082-12-3", item:"DAP", qty:"0.2 MT", rate:2600, amount:10400.00, farmer:"tulsa Devi Joshi", phone:"9848633244", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:149, date:"2082-12-3", item:"Urea", qty:"1.5 MT", rate:1100, amount:33000.00, farmer:"lal bahadur tharu", phone:"9868441629", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:150, date:"2082-12-3", item:"DAP", qty:"1.8 MT", rate:2600, amount:93600.00, farmer:"lal bahadur tharu", phone:"9868441629", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:151, date:"2082-12-3", item:"Urea", qty:"0.2 MT", rate:1100, amount:4400.00, farmer:"Ratha Devi Thakulla", phone:"9708905618", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:152, date:"2082-12-3", item:"DAP", qty:"0.25 MT", rate:2600, amount:13000.00, farmer:"Ratha Devi Thakulla", phone:"9708905618", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:153, date:"2082-12-3", item:"DAP", qty:"1 MT", rate:2600, amount:52000.00, farmer:"motisara Pandey", phone:"9863107412", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:154, date:"2082-12-3", item:"Urea", qty:"0.7 MT", rate:1100, amount:15400.00, farmer:"motisara Pandey", phone:"9863107412", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:155, date:"2082-12-3", item:"DAP", qty:"1.5 MT", rate:2600, amount:78000.00, farmer:"Fulram Dagaura Tharu", phone:"9848657857", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:156, date:"2082-12-3", item:"DAP", qty:"0.35 MT", rate:2600, amount:18200.00, farmer:"bhaga Sarki", phone:"9860762745", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:157, date:"2082-12-3", item:"DAP", qty:"0.5 MT", rate:2600, amount:26000.00, farmer:"Dila Chaulagain", phone:"9808905618", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:158, date:"2082-12-3", item:"Urea", qty:"2 MT", rate:1100, amount:44000.00, farmer:"Binod Bahadur Dagaura", phone:"9804606455", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:159, date:"2082-12-3", item:"DAP", qty:"2.2 MT", rate:2600, amount:114400.00, farmer:"Binod Bahadur Dagaura", phone:"9804606455", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:160, date:"2082-12-3", item:"Urea", qty:"2 MT", rate:1100, amount:44000.00, farmer:"Mohammat rouf jaga", phone:"9865946930", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:161, date:"2082-12-3", item:"DAP", qty:"2.5 MT", rate:2600, amount:130000.00, farmer:"Mohammat rouf jaga", phone:"9865946930", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:162, date:"2082-12-3", item:"Urea", qty:"2 MT", rate:1100, amount:44000.00, farmer:"Roini Devi Tharuni", phone:"9702919506", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:163, date:"2082-12-3", item:"DAP", qty:"2.2 MT", rate:2600, amount:114400.00, farmer:"Roini Devi Tharuni", phone:"9702919506", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:164, date:"2082-12-3", item:"Urea", qty:"2 MT", rate:1100, amount:44000.00, farmer:"Sat Narayan Chaudhary", phone:"9811655349", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:165, date:"2082-12-3", item:"DAP", qty:"2.5 MT", rate:2600, amount:130000.00, farmer:"Sat Narayan Chaudhary", phone:"9811655349", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:166, date:"2082-12-3", item:"Urea", qty:"2.5 MT", rate:1100, amount:55000.00, farmer:"Ram Kumari Devi Chaudhary", phone:"9765320610", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:167, date:"2082-12-3", item:"DAP", qty:"2.8 MT", rate:2600, amount:145600.00, farmer:"Ram Kumari Devi Chaudhary", phone:"9765320610", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:168, date:"2082-12-3", item:"Urea", qty:"2 MT", rate:1100, amount:44000.00, farmer:"Ramesh Kumar Tharu", phone:"9822667937", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:169, date:"2082-12-3", item:"DAP", qty:"2 MT", rate:2600, amount:104000.00, farmer:"Ramesh Kumar Tharu", phone:"9822667937", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:170, date:"2082-12-3", item:"Urea", qty:"2 MT", rate:1100, amount:44000.00, farmer:"Ramesh Kumar Tharu", phone:"9822667937", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:171, date:"2082-12-3", item:"DAP", qty:"2 MT", rate:2600, amount:104000.00, farmer:"Ramesh Kumar Tharu", phone:"9822667937", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:172, date:"2082-12-3", item:"DAP", qty:"2.2 MT", rate:2600, amount:114400.00, farmer:"Dhaniram Tharu", phone:"9821640956", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:173, date:"2082-12-3", item:"Urea", qty:"2 MT", rate:1100, amount:44000.00, farmer:"Dhaniram Tharu", phone:"9821640956", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:174, date:"2082-12-3", item:"Urea", qty:"0.2 MT", rate:1100, amount:4400.00, farmer:"Dinesh Kumar Tharu", phone:"9824605067", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:175, date:"2082-12-3", item:"DAP", qty:"0.2 MT", rate:2600, amount:10400.00, farmer:"Dinesh Kumar Tharu", phone:"9824605067", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:176, date:"2082-12-3", item:"Urea", qty:"1 MT", rate:1100, amount:22000.00, farmer:"Dinesh Kumar Tharu", phone:"9824605067", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:177, date:"2082-12-3", item:"DAP", qty:"1 MT", rate:2600, amount:52000.00, farmer:"Dinesh Kumar Tharu", phone:"9824605067", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:178, date:"2082-12-3", item:"DAP", qty:"2 MT", rate:2600, amount:104000.00, farmer:"Dinesh Kumar Tharu", phone:"9824605067", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:179, date:"2082-12-3", item:"Urea", qty:"2 MT", rate:1100, amount:44000.00, farmer:"Dinesh Kumar Tharu", phone:"9824605067", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:180, date:"2082-12-3", item:"Urea", qty:"0.5 MT", rate:1100, amount:11000.00, farmer:"Mohan Tharu", phone:"9825669165", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:181, date:"2082-12-3", item:"DAP", qty:"0.5 MT", rate:2600, amount:26000.00, farmer:"Mohan Tharu", phone:"9825669165", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:182, date:"2082-12-3", item:"Urea", qty:"0.7 MT", rate:1100, amount:15400.00, farmer:"malendra Chaudhary", phone:"9811607405", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:183, date:"2082-12-3", item:"DAP", qty:"0.7 MT", rate:2600, amount:36400.00, farmer:"malendra Chaudhary", phone:"9811607405", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:184, date:"2082-12-3", item:"DAP", qty:"1 MT", rate:2600, amount:52000.00, farmer:"indal paswan", phone:"9804693240", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:185, date:"2082-12-3", item:"Urea", qty:"1 MT", rate:1100, amount:22000.00, farmer:"indal paswan", phone:"9804693240", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:186, date:"2082-12-3", item:"Urea", qty:"0.2 MT", rate:1100, amount:4400.00, farmer:"Man bdr chaudhary", phone:"9800642716", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:187, date:"2082-12-3", item:"DAP", qty:"0.2 MT", rate:2600, amount:10400.00, farmer:"Man bdr chaudhary", phone:"9800642716", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:188, date:"2082-12-3", item:"Urea", qty:"0.5 MT", rate:1100, amount:11000.00, farmer:"Asarfi tharuni", phone:"9804601957", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:189, date:"2082-12-3", item:"DAP", qty:"0.5 MT", rate:2600, amount:26000.00, farmer:"Asarfi tharuni", phone:"9804601957", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:190, date:"2082-12-3", item:"Urea", qty:"0.2 MT", rate:1100, amount:4400.00, farmer:"sunu prasad Chaudhary", phone:"9809414684", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:191, date:"2082-12-3", item:"DAP", qty:"0.2 MT", rate:2600, amount:10400.00, farmer:"sunu prasad Chaudhary", phone:"9809414684", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:192, date:"2082-12-3", item:"Urea", qty:"0.5 MT", rate:1100, amount:11000.00, farmer:"sunu prasad Chaudhary", phone:"9809414684", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:193, date:"2082-12-3", item:"DAP", qty:"0.5 MT", rate:2600, amount:26000.00, farmer:"sunu prasad Chaudhary", phone:"9809414684", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:194, date:"2082-12-3", item:"Urea", qty:"0.4 MT", rate:1100, amount:8800.00, farmer:"Nirmala Joshi", phone:"9801458729", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:195, date:"2082-12-3", item:"DAP", qty:"0.4 MT", rate:2600, amount:20800.00, farmer:"Nirmala Joshi", phone:"9801458729", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:196, date:"2082-12-3", item:"Urea", qty:"0.45 MT", rate:1100, amount:9900.00, farmer:"Dhanisara Hamal", phone:"9861984632", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:197, date:"2082-12-3", item:"DAP", qty:"0.4 MT", rate:2600, amount:20800.00, farmer:"Dhanisara Hamal", phone:"9861984632", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:198, date:"2082-12-3", item:"Urea", qty:"0.5 MT", rate:1100, amount:11000.00, farmer:"Mangal Sodari", phone:"9851673294", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:199, date:"2082-12-3", item:"DAP", qty:"0.5 MT", rate:2600, amount:26000.00, farmer:"Mangal Sodari", phone:"9851673294", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:200, date:"2082-12-3", item:"Urea", qty:"0.5 MT", rate:1100, amount:11000.00, farmer:"Ram prasad neupane", phone:"9845168753", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:201, date:"2082-12-3", item:"DAP", qty:"0.5 MT", rate:2600, amount:26000.00, farmer:"Ram prasad neupane", phone:"9845168753", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:202, date:"2082-12-3", item:"Urea", qty:"1.5 MT", rate:1100, amount:33000.00, farmer:"Dinesh Kumar Tharu", phone:"9824605067", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:203, date:"2082-12-3", item:"DAP", qty:"1.2 MT", rate:2600, amount:62400.00, farmer:"Dinesh Kumar Tharu", phone:"9824605067", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:204, date:"2082-12-2", item:"DAP", qty:"0.5 MT", rate:2600, amount:26000.00, farmer:"Nabin Kumar Dagaura", phone:"9822627978", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:205, date:"2082-12-2", item:"DAP", qty:"0.6 MT", rate:2600, amount:31200.00, farmer:"Sita Chaudhary", phone:"9815653959", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:206, date:"2082-12-2", item:"Urea", qty:"0.7 MT", rate:1100, amount:15400.00, farmer:"Dila Chaulagain", phone:"9808905618", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:207, date:"2082-12-2", item:"DAP", qty:"0.7 MT", rate:2600, amount:36400.00, farmer:"Dila Chaulagain", phone:"9808905618", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:208, date:"2082-12-2", item:"DAP", qty:"0.8 MT", rate:2600, amount:41600.00, farmer:"Rambabu Chaudhary", phone:"9709245430", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:209, date:"2082-12-2", item:"Urea", qty:"0.8 MT", rate:1100, amount:17600.00, farmer:"Rambabu Chaudhary", phone:"9709245430", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:210, date:"2082-12-2", item:"Urea", qty:"1.2 MT", rate:1100, amount:26400.00, farmer:"Ramesh Kumar Tharu", phone:"9822667937", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:211, date:"2082-12-2", item:"DAP", qty:"1 MT", rate:2600, amount:52000.00, farmer:"Ramesh Kumar Tharu", phone:"9822667937", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:212, date:"2082-12-2", item:"Urea", qty:"0.5 MT", rate:1100, amount:11000.00, farmer:"motisara Pandey", phone:"9863107412", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:213, date:"2082-12-2", item:"DAP", qty:"0.5 MT", rate:2600, amount:26000.00, farmer:"motisara Pandey", phone:"9863107412", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:214, date:"2082-12-2", item:"Urea", qty:"0.2 MT", rate:1100, amount:4400.00, farmer:"lal bahadur tharu", phone:"9868441629", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:215, date:"2082-12-2", item:"DAP", qty:"0.2 MT", rate:2600, amount:10400.00, farmer:"lal bahadur tharu", phone:"9868441629", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:216, date:"2082-12-2", item:"Urea", qty:"0.5 MT", rate:1100, amount:11000.00, farmer:"tulsa Devi Joshi", phone:"9848633244", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:217, date:"2082-12-2", item:"DAP", qty:"0.5 MT", rate:2600, amount:26000.00, farmer:"tulsa Devi Joshi", phone:"9848633244", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:218, date:"2082-12-2", item:"Urea", qty:"0.2 MT", rate:1100, amount:4400.00, farmer:"Parbati Jagri", phone:"9860761811", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:219, date:"2082-12-2", item:"DAP", qty:"0.2 MT", rate:2600, amount:10400.00, farmer:"Parbati Jagri", phone:"9860761811", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:220, date:"2082-12-2", item:"Urea", qty:"0.35 MT", rate:1100, amount:7700.00, farmer:"Mohan Tharu", phone:"9825669165", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:221, date:"2082-12-2", item:"DAP", qty:"0.4 MT", rate:2600, amount:20800.00, farmer:"Mohan Tharu", phone:"9825669165", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:222, date:"2082-12-2", item:"Urea", qty:"0.4 MT", rate:1100, amount:8800.00, farmer:"Ram Kumari Devi Chaudhary", phone:"9765320610", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:223, date:"2082-12-2", item:"DAP", qty:"0.3 MT", rate:2600, amount:15600.00, farmer:"Ram Kumari Devi Chaudhary", phone:"9765320610", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:224, date:"2082-12-2", item:"Urea", qty:"0.35 MT", rate:1100, amount:7700.00, farmer:"Pratima Chaudhary", phone:"9811649859", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:225, date:"2082-12-2", item:"DAP", qty:"0.3 MT", rate:2600, amount:15600.00, farmer:"Pratima Chaudhary", phone:"9811649859", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:226, date:"2082-12-2", item:"DAP", qty:"0.5 MT", rate:2600, amount:26000.00, farmer:"lal bahadur tharu", phone:"9868441629", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:227, date:"2082-12-2", item:"Urea", qty:"0.5 MT", rate:1100, amount:11000.00, farmer:"lal bahadur tharu", phone:"9868441629", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:228, date:"2082-12-2", item:"Urea", qty:"0.2 MT", rate:1100, amount:4400.00, farmer:"bhaga Sarki", phone:"9860762745", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:229, date:"2082-12-2", item:"DAP", qty:"0.2 MT", rate:2600, amount:10400.00, farmer:"bhaga Sarki", phone:"9860762745", address:"Lamki Chuha,Kailali", purpose:"", remarks:"" },
-        { sn:230, date:"2082-12-2", item:"Urea", qty:"0.5 MT", rate:1100, amount:11000.00, farmer:"Fulram Dagaura Tharu", phone:"9848657857", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:231, date:"2082-12-2", item:"DAP", qty:"0.2 MT", rate:2600, amount:10400.00, farmer:"Fulram Dagaura Tharu", phone:"9848657857", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:232, date:"2082-12-2", item:"Urea", qty:"0.2 MT", rate:1100, amount:4400.00, farmer:"Anoj awasthi", phone:"9811661241", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:233, date:"2082-12-2", item:"DAP", qty:"0.2 MT", rate:2600, amount:10400.00, farmer:"Anoj awasthi", phone:"9811661241", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:234, date:"2082-10-11", item:"Urea", qty:"0.6 MT", rate:1100, amount:13200.00, farmer:"Rambabu Chaudhary", phone:"9709245430", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:235, date:"2082-10-11", item:"DAP", qty:"0.5 MT", rate:2600, amount:26000.00, farmer:"Rambabu Chaudhary", phone:"9709245430", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:236, date:"2082-10-11", item:"Urea", qty:"0.45 MT", rate:1100, amount:9900.00, farmer:"Sita Chaudhary", phone:"9815653959", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:237, date:"2082-10-11", item:"DAP", qty:"0.4 MT", rate:2600, amount:20800.00, farmer:"Sita Chaudhary", phone:"9815653959", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:238, date:"2082-10-11", item:"Urea", qty:"0.6 MT", rate:1100, amount:13200.00, farmer:"Bhaguwandin chaudhary", phone:"9766405824", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:239, date:"2082-10-11", item:"DAP", qty:"0.45 MT", rate:2600, amount:23400.00, farmer:"Bhaguwandin chaudhary", phone:"9766405824", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:240, date:"2082-10-11", item:"Urea", qty:"0.3 MT", rate:1100, amount:6600.00, farmer:"Sat Narayan Chaudhary", phone:"9811655349", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:241, date:"2082-10-11", item:"DAP", qty:"0.2 MT", rate:2600, amount:10400.00, farmer:"Sat Narayan Chaudhary", phone:"9811655349", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:242, date:"2082-10-11", item:"Urea", qty:"0.3 MT", rate:1100, amount:6600.00, farmer:"Sita Chaudhary", phone:"9815653959", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:243, date:"2082-10-11", item:"DAP", qty:"0.2 MT", rate:2600, amount:10400.00, farmer:"Sita Chaudhary", phone:"9815653959", address:"Janaki,Kailali", purpose:"", remarks:"" },
-        { sn:244, date:"2082-10-11", item:"Urea", qty:"0.5 MT", rate:1100, amount:11000.00, farmer:"Nain Kumari Chaudhary", phone:"9804685184", address:"Lamki Chuha,Kailali", purpose:"", remarks:"DAP and urea for rice" },
-        { sn:245, date:"2082-10-11", item:"DAP", qty:"0.3 MT", rate:2600, amount:15600.00, farmer:"Nain Kumari Chaudhary", phone:"9804685184", address:"Lamki Chuha,Kailali", purpose:"", remarks:"DAP and urea for rice" },
-        { sn:246, date:"2082-10-11", item:"DAP", qty:"0.55 MT", rate:2600, amount:28600.00, farmer:"Mohammat rouf jaga", phone:"9865946930", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Urea and Dap for rice" },
-        { sn:247, date:"2082-10-11", item:"Urea", qty:"0.4 MT", rate:1100, amount:8800.00, farmer:"Mohammat rouf jaga", phone:"9865946930", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Urea and Dap for rice" },
-        { sn:248, date:"2082-10-11", item:"Urea", qty:"0.5 MT", rate:1100, amount:11000.00, farmer:"Ram Kumari Devi Chaudhary", phone:"9765320610", address:"Janaki,Kailali", purpose:"", remarks:"Dap and urea for rice" },
-        { sn:249, date:"2082-10-11", item:"DAP", qty:"0.3 MT", rate:2600, amount:15600.00, farmer:"Ram Kumari Devi Chaudhary", phone:"9765320610", address:"Janaki,Kailali", purpose:"", remarks:"Dap and urea for rice" },
-        { sn:250, date:"2082-10-11", item:"Urea", qty:"0.4 MT", rate:1100, amount:8800.00, farmer:"Dinesh Kumar Tharu", phone:"9824605067", address:"Janaki,Kailali", purpose:"", remarks:"Urea and Dap for wheat" },
-        { sn:251, date:"2082-10-11", item:"DAP", qty:"0.2 MT", rate:2600, amount:10400.00, farmer:"Dinesh Kumar Tharu", phone:"9824605067", address:"Janaki,Kailali", purpose:"", remarks:"Urea and Dap for wheat" },
-        { sn:252, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:3450.00, farmer:"tulsa Devi Joshi", phone:"9848633244", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:253, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:3450.00, farmer:"Fulram Dagaura Tharu", phone:"9848657857", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:254, date:"2082-02-16", item:"Urea", qty:"0.2 MT", rate:1150, amount:4600.00, farmer:"Pratima Chaudhary", phone:"9811649859", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:255, date:"2082-02-30", item:"Urea", qty:"0.05 MT", rate:1150, amount:57500, farmer:"motisara Pandey", phone:"9863107412", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:256, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"lal bahadur tharu", phone:"9868441629", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:257, date:"2082-02-30", item:"Urea", qty:"0.2 MT", rate:1150, amount:4600.00, farmer:"Ratha Devi Thakulla", phone:"9708905618", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:258, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:3450.00, farmer:"lokendra chaudhary", phone:"9749442784", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:259, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:3450.00, farmer:"bhaga Sarki", phone:"9860762745", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:260, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:2300.00, farmer:"Bhaguwandin chaudhary", phone:"9766405824", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:261, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"Parbati Jagri", phone:"9860761811", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:262, date:"2082-02-30", item:"Urea", qty:"0.05 MT", rate:1150, amount:1150.00, farmer:"Roini Devi Tharuni", phone:"9702919506", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:263, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:3450.00, farmer:"Mohammat rouf jaga", phone:"9865946930", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:264, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:2300.00, farmer:"Dila Chaulagain", phone:"9808905618", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:265, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"Binod Bahadur Dagaura", phone:"9804606455", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:266, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:2300.00, farmer:"Nabin Kumar Dagaura", phone:"9822627978", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:267, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:2300.00, farmer:"Sita Chaudhary", phone:"9815653959", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:268, date:"2082-02-30", item:"Urea", qty:"0.05 MT", rate:1150, amount:1150.00, farmer:"khushi ram chaudhary", phone:"9814642309", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:269, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:3450.00, farmer:"Phima Devi Tharu", phone:"9825669345", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:270, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:3450.00, farmer:"Rambabu Chaudhary", phone:"9709245430", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:271, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:3450.00, farmer:"Ram Kumari Devi Chaudhary", phone:"9765320610", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:272, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:3450.00, farmer:"Sat Narayan Chaudhary", phone:"9811655349", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:273, date:"2082-02-30", item:"Urea", qty:"0.2 MT", rate:1150, amount:4600.00, farmer:"Ram Kumari Devi Chaudhary", phone:"9765320610", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:274, date:"2082-02-30", item:"Urea", qty:"0.05 MT", rate:1150, amount:57500, farmer:"Ram Kumari Devi Chaudhary", phone:"9765320610", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:275, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:2300.00, farmer:"Pratima Chaudhary", phone:"9811649859", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:276, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:2300.00, farmer:"Dayaram Chaudhary", phone:"9800623962", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:277, date:"2082-02-30", item:"Urea", qty:"0.05 MT", rate:1150, amount:1150.00, farmer:"Dinesh Kumar Tharu", phone:"9824605067", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:278, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Dinesh Kumar Tharu", phone:"9824605067", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:279, date:"2082-02-30", item:"Urea", qty:"0.2 MT", rate:1150, amount:230.00, farmer:"Dhaniram Tharu", phone:"9821640956", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:280, date:"2082-02-30", item:"Urea", qty:"0.05 MT", rate:1150, amount:1150.00, farmer:"Ramesh Kumar Tharu", phone:"9822667937", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:281, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"Ramesh Kumar Tharu", phone:"9822667937", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:282, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:2300.00, farmer:"Ram Kumari Devi Chaudhary", phone:"9765320610", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:283, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:2300.00, farmer:"Asarfi tharuni", phone:"9804601957", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:284, date:"2082-02-30", item:"Urea", qty:"0.05 MT", rate:1150, amount:1150.00, farmer:"Man bdr chaudhary", phone:"9800642716", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:285, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"indal paswan", phone:"9804693240", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:286, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"indal paswan", phone:"9804693240", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:287, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:2300.00, farmer:"malendra Chaudhary", phone:"9811607405", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:288, date:"2082-02-30", item:"Urea", qty:"0.2 MT", rate:1150, amount:4600.00, farmer:"Mohan Tharu", phone:"9825669165", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:289, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Dinesh Kumar Tharu", phone:"9824605067", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:290, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:3450.00, farmer:"sunu prasad Chaudhary", phone:"9809414684", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:291, date:"2082-02-30", item:"Urea", qty:"0.2 MT", rate:1150, amount:4600.00, farmer:"sunu prasad Chaudhary", phone:"9809414684", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:292, date:"2082-02-30", item:"Urea", qty:"0.2 MT", rate:1150, amount:4600.00, farmer:"Pratima Chaudhary", phone:"9811649859", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:293, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:2300.00, farmer:"Binod Bahadur Dagaura", phone:"9804606455", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:294, date:"2082-02-30", item:"Urea", qty:"0.05 MT", rate:1150, amount:1150.00, farmer:"Anoj awasthi", phone:"9811661241", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:295, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:2300.00, farmer:"Khima Devi Joshi", phone:"9748871648", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:296, date:"2082-02-30", item:"Urea", qty:"0.05 MT", rate:1150, amount:1150.00, farmer:"motisara Pandey", phone:"9863107412", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:297, date:"2082-02-30", item:"Urea", qty:"0.05 MT", rate:1150, amount:1150.00, farmer:"Ram parsad Neupane", phone:"9804673857", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:298, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:2300.00, farmer:"Sita Chaudhary", phone:"9815653959", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:299, date:"2082-02-30", item:"Urea", qty:"0.05 MT", rate:1150, amount:1150.00, farmer:"Bhagiram Chaudhary", phone:"9801564688", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:300, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:3450.00, farmer:"tulsa Devi Joshi", phone:"9848633244", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:301, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:3450.00, farmer:"Fulram Dagaura Tharu", phone:"9848657857", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation." },
-        { sn:302, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"lal bahadur tharu", phone:"9868441629", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:303, date:"2082-02-30", item:"Urea", qty:"0.2 MT", rate:1150, amount:230000, farmer:"Ratha Devi Thakulla", phone:"9708905618", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:304, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"lokendra chaudhary", phone:"9749442784", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:305, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"bhaga Sarki", phone:"9860762745", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:306, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Bhagiram Chaudhary", phone:"9801564688", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:307, date:"2082-02-30", item:"Urea", qty:"0.2 MT", rate:1150, amount:230000, farmer:"motisara Pandey", phone:"9863107412", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:308, date:"2082-02-30", item:"Urea", qty:"0.05 MT", rate:1150, amount:57500, farmer:"Roini Devi Tharuni", phone:"9702919506", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:309, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"Mohammat rouf jaga", phone:"9865946930", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:310, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Dila Chaulagain", phone:"9808905618", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:311, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"Binod Bahadur Dagaura", phone:"9804606455", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:312, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Binod Bahadur Dagaura", phone:"9804606455", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:313, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"lal bahadur tharu", phone:"9868441629", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:314, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Sita Chaudhary", phone:"9815653959", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:315, date:"2082-02-30", item:"Urea", qty:"0.05 MT", rate:1150, amount:57500, farmer:"khushi ram chaudhary", phone:"9814642309", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:316, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"Phima Devi Tharu", phone:"9825669345", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:317, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"Rambabu Chaudhary", phone:"9709245430", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:318, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Bhaguwandin chaudhary", phone:"9766405824", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:319, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"Parbati Jagri", phone:"9860761811", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:320, date:"2082-02-30", item:"Urea", qty:"0.2 MT", rate:1150, amount:230000, farmer:"Ram Kumari Devi Chaudhary", phone:"9765320610", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:321, date:"2082-02-30", item:"Urea", qty:"0.05 MT", rate:1150, amount:57500, farmer:"Ram Kumari Devi Chaudhary", phone:"9765320610", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:322, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Pratima Chaudhary", phone:"9811649859", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:323, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Dayaram Chaudhary", phone:"9800623962", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:324, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Nabin Kumar Dagaura", phone:"9822627978", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:325, date:"2082-02-30", item:"Urea", qty:"0.05 MT", rate:1150, amount:57500, farmer:"Ramesh Kumar Tharu", phone:"9822667937", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:326, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"Ramesh Kumar Tharu", phone:"9822667937", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:327, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Ram Kumari Devi Chaudhary", phone:"9765320610", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:328, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"Ram Kumari Devi Chaudhary", phone:"9765320610", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:329, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"Sat Narayan Chaudhary", phone:"9811655349", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:330, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"malendra Chaudhary", phone:"9811607405", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:331, date:"2082-02-30", item:"Urea", qty:"0.2 MT", rate:1150, amount:230000, farmer:"Mohan Tharu", phone:"9825669165", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:332, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Dinesh Kumar Tharu", phone:"9824605067", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:333, date:"2082-02-30", item:"Urea", qty:"0.05 MT", rate:1150, amount:57500, farmer:"Dinesh Kumar Tharu", phone:"9824605067", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:334, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Dinesh Kumar Tharu", phone:"9824605067", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:335, date:"2082-02-30", item:"Urea", qty:"0.2 MT", rate:1150, amount:230000, farmer:"Dhaniram Tharu", phone:"9821640956", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:336, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"sunu prasad Chaudhary", phone:"9809414684", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:337, date:"2082-02-30", item:"Urea", qty:"0.2 MT", rate:1150, amount:230000, farmer:"sunu prasad Chaudhary", phone:"9809414684", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:338, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Asarfi tharuni", phone:"9804601957", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:339, date:"2082-02-30", item:"Urea", qty:"0.05 MT", rate:1150, amount:57500, farmer:"Man bdr chaudhary", phone:"9800642716", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:340, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"indal paswan", phone:"9804693240", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:341, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"indal paswan", phone:"9804693240", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:342, date:"2082-02-30", item:"Urea", qty:"0.2 MT", rate:1150, amount:230000, farmer:"Pratima Chaudhary", phone:"9811649859", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:343, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Binod Bahadur Dagaura", phone:"9804606455", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:344, date:"2082-02-30", item:"Urea", qty:"0.05 MT", rate:1150, amount:57500, farmer:"Anoj awasthi", phone:"9811661241", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:345, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Khima Devi Joshi", phone:"9748871648", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:346, date:"2082-02-30", item:"Urea", qty:"0.05 MT", rate:1150, amount:57500, farmer:"motisara Pandey", phone:"9863107412", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:347, date:"2082-02-30", item:"Urea", qty:"0.05 MT", rate:1150, amount:57500, farmer:"Ram parsad Neupane", phone:"9804673857", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:348, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Sita Chaudhary", phone:"9815653959", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:349, date:"2082-02-30", item:"Urea", qty:"0.05 MT", rate:1150, amount:57500, farmer:"Bhagiram Chaudhary", phone:"9801564688", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:350, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"tulsa Devi Joshi", phone:"9848633244", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:351, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"Fulram Dagaura Tharu", phone:"9848657857", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:352, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"lal bahadur tharu", phone:"9868441629", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:353, date:"2082-02-30", item:"Urea", qty:"0.2 MT", rate:1150, amount:230000, farmer:"Ratha Devi Thakulla", phone:"9708905618", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:354, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"lokendra chaudhary", phone:"9749442784", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:355, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"bhaga Sarki", phone:"9860762745", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:356, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Bhagiram Chaudhary", phone:"9801564688", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:357, date:"2082-02-30", item:"Urea", qty:"0.2 MT", rate:1150, amount:230000, farmer:"motisara Pandey", phone:"9863107412", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:358, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"Mohammat rouf jaga", phone:"9865946930", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:359, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Dila Chaulagain", phone:"9808905618", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:360, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"Binod Bahadur Dagaura", phone:"9804606455", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:361, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Binod Bahadur Dagaura", phone:"9804606455", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:362, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"lal bahadur tharu", phone:"9868441629", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:363, date:"2082-02-30", item:"Urea", qty:"0.05 MT", rate:1150, amount:57500, farmer:"khushi ram chaudhary", phone:"9814642309", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:364, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"Phima Devi Tharu", phone:"9825669345", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:365, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"Rambabu Chaudhary", phone:"9709245430", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:366, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Bhaguwandin chaudhary", phone:"9766405824", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:367, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"Parbati Jagri", phone:"9860761811", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:368, date:"2082-02-30", item:"Urea", qty:"0.05 MT", rate:1150, amount:57500, farmer:"Roini Devi Tharuni", phone:"9702919506", address:"Lamki Chuha,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:369, date:"2082-02-30", item:"Urea", qty:"0.2 MT", rate:1150, amount:230000, farmer:"Ram Kumari Devi Chaudhary", phone:"9765320610", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:370, date:"2082-02-30", item:"Urea", qty:"0.05 MT", rate:1150, amount:57500, farmer:"Ram Kumari Devi Chaudhary", phone:"9765320610", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:371, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Pratima Chaudhary", phone:"9811649859", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:372, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Dayaram Chaudhary", phone:"9800623962", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:373, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Nabin Kumar Dagaura", phone:"9822627978", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:374, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Sita Chaudhary", phone:"9815653959", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:375, date:"2082-02-30", item:"Urea", qty:"0.05 MT", rate:1150, amount:57500, farmer:"Ramesh Kumar Tharu", phone:"9822667937", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:376, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"Ramesh Kumar Tharu", phone:"9822667937", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:377, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Ram Kumari Devi Chaudhary", phone:"9765320610", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:378, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"Ram Kumari Devi Chaudhary", phone:"9765320610", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:379, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"Sat Narayan Chaudhary", phone:"9811655349", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:380, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"malendra Chaudhary", phone:"9811607405", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:381, date:"2082-02-30", item:"Urea", qty:"0.2 MT", rate:1150, amount:230000, farmer:"Mohan Tharu", phone:"9825669165", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:382, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Dinesh Kumar Tharu", phone:"9824605067", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:383, date:"2082-02-30", item:"Urea", qty:"0.05 MT", rate:1150, amount:57500, farmer:"Dinesh Kumar Tharu", phone:"9824605067", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:384, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Dinesh Kumar Tharu", phone:"9824605067", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:385, date:"2082-02-30", item:"Urea", qty:"0.2 MT", rate:1150, amount:230000, farmer:"Dhaniram Tharu", phone:"9821640956", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:386, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"sunu prasad Chaudhary", phone:"9809414684", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:387, date:"2082-02-30", item:"Urea", qty:"0.2 MT", rate:1150, amount:230000, farmer:"sunu prasad Chaudhary", phone:"9809414684", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:388, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"Asarfi tharuni", phone:"9804601957", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:389, date:"2082-02-30", item:"Urea", qty:"0.05 MT", rate:1150, amount:57500, farmer:"Man bdr chaudhary", phone:"9800642716", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:390, date:"2082-02-30", item:"Urea", qty:"0.15 MT", rate:1150, amount:172500, farmer:"indal paswan", phone:"9804693240", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " },
-        { sn:391, date:"2082-02-30", item:"Urea", qty:"0.1 MT", rate:1150, amount:115000, farmer:"indal paswan", phone:"9804693240", address:"Janaki,Kailali", purpose:"", remarks:"Being  Urea Use for Rice cultivation. " }
-    ];
+          (function() {
+            // menu toggle
+            const menuIcon = document.querySelector(".jj-menu-icon");
+            const navlist = document.querySelector(".jj-nav");
+            const overlay = document.querySelector(".jj-overlay");
+            const body = document.body;
+            function closeMenu() { navlist.classList.remove("active"); menuIcon.classList.remove("active"); body.classList.remove("jj-open"); }
+            if(menuIcon) menuIcon.addEventListener("click", (e) => { e.stopPropagation(); navlist.classList.toggle("active"); menuIcon.classList.toggle("active"); body.classList.toggle("jj-open"); });
+            if(overlay) overlay.addEventListener("click", closeMenu);
+            if(navlist) navlist.querySelectorAll("a").forEach(link => link.addEventListener("click", closeMenu));
 
-    // ----------------------------------------------------------------
-    // 2. DOM refs
-    // ----------------------------------------------------------------
-    const tbody = document.getElementById('tableBody');
-    const totalRowsDisplay = document.getElementById('totalRowsDisplay');
-    const rowCounter = document.getElementById('rowCounter');
-    const dateRangeLabel = document.getElementById('dateRangeLabel');
-    const generatedTime = document.getElementById('generatedTime');
-    const dateSelect = document.getElementById('dateSelect');
+            // rotating text setup
+            function setupRotatingText() {
+              document.querySelectorAll(".img-hero .rotate-text .text p").forEach(p => {
+                if (!p.querySelector("b")) {
+                  let text = p.innerText;
+                  let html = "";
+                  for (let i = 0; i < text.length; i++) {
+                    let char = text[i] === " " ? "\u00A0" : text[i];
+                    html += `<b style="transform:rotate(${i * (360 / text.length)}deg)">${char}</b>`;
+                  }
+                  p.innerHTML = html;
+                }
+              });
+            }
+            setupRotatingText();
 
-    // ----------------------------------------------------------------
-    // 3. Helper: get unique dates sorted
-    // ----------------------------------------------------------------
-    function getUniqueDates(rows) {
-        const dates = rows.map(r => r.date);
-        const unique = [...new Set(dates)];
-        return unique.sort((a, b) => a.localeCompare(b));
-    }
+            function setOrigin() {
+              const allB = document.querySelectorAll('.img-hero .rotate-text .text b');
+              const textDiv = document.querySelector('.img-hero .rotate-text .text');
+              if (!allB.length || !textDiv) return;
+              const radius = textDiv.offsetHeight / 2;
+              const originY = radius > 20 ? radius : 200;
+              allB.forEach(b => b.style.transformOrigin = `0 ${originY}px`);
+            }
+            window.addEventListener('load', () => setTimeout(setOrigin, 30));
+            window.addEventListener('resize', () => { clearTimeout(window.originTimer); window.originTimer = setTimeout(setOrigin, 60); });
 
-    // ----------------------------------------------------------------
-    // 4. Render table
-    // ----------------------------------------------------------------
-    function renderRows(rows) {
-        if (!rows || rows.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="11" class="no-records">No records found for the selected date.</td></tr>`;
-            totalRowsDisplay.textContent = '0';
-            rowCounter.textContent = '0 entries';
-            dateRangeLabel.textContent = 'No data';
-            return;
-        }
-        let html = '';
-        rows.forEach((row, index) => {
-            html += `<tr>
-                        <td>${index + 1}</td>
-                        <td>${row.date}</td>
-                        <td>${row.item}</td>
-                        <td>${row.qty}</td>
-                        <td>${row.rate}</td>
-                        <td>${row.amount.toFixed(2)}</td>
-                        <td>${row.farmer}</td>
-                        <td>${row.phone}</td>
-                        <td>${row.address}</td>
-                        <td>${row.purpose || ''}</td>
-                        <td>${row.remarks || ''}</td>
-                    </tr>`;
-        });
-        tbody.innerHTML = html;
-        totalRowsDisplay.textContent = rows.length;
-        rowCounter.textContent = rows.length + ' entries';
-        const selected = dateSelect.value;
-        if (selected) {
-            dateRangeLabel.textContent = `Date: ${selected} (${rows.length} rows)`;
-        } else {
-            dateRangeLabel.textContent = `All dates (${rows.length} rows)`;
-        }
-    }
+            // about buttons
+            const aboutBtns = document.querySelectorAll('.jj-about-btn button');
+            const contents = document.querySelectorAll('.jj-content');
+            if (aboutBtns.length && contents.length) {
+              aboutBtns.forEach((btn, idx) => {
+                btn.addEventListener('click', function(){
+                  contents.forEach(c=>c.style.display='none');
+                  contents[idx].style.display='block';
+                  aboutBtns.forEach(b=>b.classList.remove('active'));
+                  btn.classList.add('active');
+                });
+              });
+            }
 
-    // ----------------------------------------------------------------
-    // 5. Filter by selected date
-    // ----------------------------------------------------------------
-    function filterByDate(dateVal) {
-        if (!dateVal) {
-            renderRows(rawRows);
-            return;
-        }
-        const filtered = rawRows.filter(row => row.date === dateVal);
-        renderRows(filtered);
-    }
+            // MIXITUP FILTER
+            let mixer = null;
+            if (document.getElementById('portfolio-gallery')) {
+              mixer = mixitup('#portfolio-gallery', {
+                selectors: { target: '.jj-portfolio-box' },
+                animation: { duration: 400 },
+                load: { filter: 'all' }
+              });
+            }
 
-    // ----------------------------------------------------------------
-    // 6. Populate dropdown
-    // ----------------------------------------------------------------
-    function populateDropdown() {
-        const uniqueDates = getUniqueDates(rawRows);
-        let options = `<option value="">-- All dates --</option>`;
-        uniqueDates.forEach(d => {
-            options += `<option value="${d}">${d}</option>`;
-        });
-        dateSelect.innerHTML = options;
-    }
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => {
+              btn.addEventListener('click', function() {
+                filterBtns.forEach(b => b.classList.remove('active-filter'));
+                this.classList.add('active-filter');
+              });
+            });
 
-    // ----------------------------------------------------------------
-    // 7. Reset
-    // ----------------------------------------------------------------
-    function resetFilter() {
-        dateSelect.value = '';
-        renderRows(rawRows);
-    }
+            // Contact form functionality
+            const sendWhatsApp = document.getElementById('sendWhatsApp');
+            const sendEmail = document.getElementById('sendEmail');
 
-    // ----------------------------------------------------------------
-    // 8. Print handler: remove domain/URL from printed page
-    //    We use a small trick: after print dialog opens, we clear the title
-    //    and also set @page margin to reduce header/footer.
-    //    Also we ensure the domain is not shown by setting a very small margin.
-    // ----------------------------------------------------------------
-    function handlePrint() {
-        // Most browsers show "domain.com - Print" or similar.
-        // We can't fully remove it via JS, but we can:
-        // 1. Set @page margin: 0.5cm (reduces header/footer space)
-        // 2. We already have @page in CSS with margin.
-        // 3. Additionally we can change document.title temporarily.
-        const originalTitle = document.title;
-        document.title = 'Print Report';  // short, no domain
+            function validateForm() {
+              let isValid = true;
+              document.querySelectorAll('.jj-error-message').forEach(el => el.style.display = 'none');
+              document.querySelectorAll('input, textarea').forEach(el => el.classList.remove('jj-input-error'));
 
-        // Also we can try to hide the URL via a meta tag (not fully supported)
-        // but we rely on CSS @page margin.
+              const firstName = document.getElementById('firstName')?.value.trim() || '';
+              const lastName = document.getElementById('lastName')?.value.trim() || '';
+              const email = document.getElementById('email')?.value.trim() || '';
+              const subject = document.getElementById('subject')?.value.trim() || '';
+              const message = document.getElementById('message')?.value.trim() || '';
 
-        window.print();
+              if (!firstName) {
+                document.getElementById('firstNameError').style.display = 'block';
+                document.getElementById('firstName').classList.add('jj-input-error');
+                isValid = false;
+              }
+              if (!lastName) {
+                document.getElementById('lastNameError').style.display = 'block';
+                document.getElementById('lastName').classList.add('jj-input-error');
+                isValid = false;
+              }
+              if (!email) {
+                document.getElementById('emailError').style.display = 'block';
+                document.getElementById('email').classList.add('jj-input-error');
+                isValid = false;
+              } else if (!/^\S+@\S+\.\S+$/.test(email)) {
+                document.getElementById('emailError').style.display = 'block';
+                document.getElementById('email').classList.add('jj-input-error');
+                isValid = false;
+              }
+              if (!subject) {
+                document.getElementById('subjectError').style.display = 'block';
+                document.getElementById('subject').classList.add('jj-input-error');
+                isValid = false;
+              }
+              if (!message) {
+                document.getElementById('messageError').style.display = 'block';
+                document.getElementById('message').classList.add('jj-input-error');
+                isValid = false;
+              }
 
-        // restore title after print (or immediately)
-        setTimeout(() => {
-            document.title = originalTitle;
-        }, 100);
-    }
+              return {
+                isValid: isValid,
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                subject: subject,
+                message: message
+              };
+            }
 
-    // ----------------------------------------------------------------
-    // 9. INIT
-    // ----------------------------------------------------------------
-    window.onload = function() {
-        populateDropdown();
-        renderRows(rawRows);
-        generatedTime.textContent = new Date().toLocaleString();
+            function clearFormFields() {
+              document.getElementById('firstName').value = '';
+              document.getElementById('lastName').value = '';
+              document.getElementById('email').value = '';
+              document.getElementById('subject').value = '';
+              document.getElementById('message').value = '';
+            }
 
-        // event: date select change
-        dateSelect.addEventListener('change', function() {
-            filterByDate(this.value);
-        });
+            if (sendWhatsApp) {
+              sendWhatsApp.addEventListener('click', function(e) {
+                e.preventDefault();
+                const validation = validateForm();
+                if (!validation.isValid) {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    text: 'Please fill required fields correctly.',
+                    confirmButtonColor: '#e6006d'
+                  });
+                  return;
+                }
+                const fullMessage = `*गुनासो तथा प्रतिक्रिया to Jeevan Jyoti*\n\n*Name:* ${validation.firstName} ${validation.lastName}\n*Email:* ${validation.email}\n*Subject:* ${validation.subject}\n*Message:* ${validation.message}`;
+                window.open(`https://wa.me/9823397879?text=${encodeURIComponent(fullMessage)}`, '_blank');
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Message Sent!',
+                  text: 'Your message has been opened in WhatsApp.',
+                  confirmButtonColor: '#e6006d'
+                });
+                clearFormFields();
+              });
+            }
 
-        // reset button
-        document.getElementById('resetBtn').addEventListener('click', resetFilter);
+            if (sendEmail) {
+              sendEmail.addEventListener('click', function(e) {
+                e.preventDefault();
+                const validation = validateForm();
+                if (!validation.isValid) {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    text: 'Please fill all required fields correctly.',
+                    confirmButtonColor: '#e6006d'
+                  });
+                  return;
+                }
+                const fullMessage = `गुनासो तथा प्रतिक्रिया to Jeevan Jyoti\n\nName: ${validation.firstName} ${validation.lastName}\nEmail: ${validation.email}\nSubject: ${validation.subject}\nMessage: ${validation.message}`;
+                window.location.href = `mailto:jeevanjyotigraminbidhdhut2065@gmail.com?subject=${encodeURIComponent(validation.subject)}&body=${encodeURIComponent(fullMessage)}`;
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Email Ready!',
+                  text: 'Your email client has been opened.',
+                  confirmButtonColor: '#e6006d'
+                });
+                clearFormFields();
+              });
+            }
 
-        // print button - use custom handler
-        document.getElementById('printBtn').addEventListener('click', handlePrint);
-    };
+            // read more
+            document.querySelectorAll('.jj-readMore').forEach(link => {
+              link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const id = link.getAttribute('data-info-id');
+                const info = document.getElementById(id);
+                if(info) {
+                  document.querySelectorAll('.jj-hidden-info').forEach(h => {
+                    if(h !== info) h.classList.remove('active');
+                  });
+                  info.classList.toggle('active');
+                }
+              });
+            });
 
-})();
-</script>
+            document.addEventListener('click', (e) => {
+              if(!e.target.closest('.jj-readMore') && !e.target.closest('.jj-hidden-info')) {
+                document.querySelectorAll('.jj-hidden-info').forEach(h => h.classList.remove('active'));
+              }
+            });
 
-</body>
+            // progress
+            const progress = document.getElementById('progress');
+            window.addEventListener('scroll', () => {
+              let pos = document.documentElement.scrollTop;
+              let calcHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+              let scrollValue = Math.round((pos * 100) / calcHeight);
+              if (pos > 200) progress.style.display = 'grid'; else progress.style.display = 'none';
+              progress.style.background = `conic-gradient(#fff ${scrollValue}%, #e6006d ${scrollValue}%)`;
+            });
+
+            if(progress) {
+              progress.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+            }
+
+            // active nav
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.jj-nav li a');
+            window.addEventListener('scroll', () => {
+              let current = '';
+              sections.forEach(section => {
+                const sectionTop = section.offsetTop - 150;
+                if(pageYOffset >= sectionTop) current = section.getAttribute('id');
+              });
+              navLinks.forEach(link => {
+                link.classList.remove('active');
+                if(link.getAttribute('href').includes(current)) link.classList.add('active');
+              });
+            });
+            const flyElements = document.querySelectorAll('.fly-in');
+            const observer = new IntersectionObserver((entries) => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                  setTimeout(() => {
+                    entry.target.classList.add('active');
+                  }, entry.target.dataset.delay || 0);
+                }
+              });
+            }, { threshold: 0.1 });
+
+            flyElements.forEach(el => observer.observe(el));
+          })();
+
+          // bill popup fullscreen
+          function showFormPopup() {
+            Swal.fire({
+              position: 'top',
+              showCloseButton: true,
+              allowOutsideClick: false,
+              html: `<div class="iframe-container"><iframe src="https://script.google.com/macros/s/AKfycbwm1rItppcP9Ef0lk7PDBSenzRkt3hOQzHXOxupdsQuuZl1_yrACfpO5f5H4htwHtcR4A/exec" frameborder="0"></iframe></div>`,
+              showConfirmButton: false,
+              background: 'transparent',
+              width: '100%',
+              padding: 0,
+              customClass: { popup: 'fullscreen-popup' }
+            });
+          }
+        </script>
+
+        <style>
+          .header-decoration {
+                    text-align: center;
+                    margin-bottom: 30px;
+                }
+                .header-decoration h1 {
+                    font-size: 2.6rem;
+                    color: #1b4d1b;
+                    letter-spacing: 1px;
+                    font-weight: 700;
+                    line-height: 1.3;
+                    text-shadow: 2px 2px 0 #dcf5b2;
+                    border-bottom: 3px solid #7cb045;
+                    display: inline-block;
+                    padding-bottom: 15px;
+                    margin-bottom: 10px;
+                }
+                .sanstha-tag {
+                    background: #2e6b2e;
+                    color: #f9ffe2;
+                    display: inline-block;
+                    padding: 6px 25px;
+                    border-radius: 60px;
+                    font-size: 1.2rem;
+                    font-weight: 500;
+                    margin-top: 5px;
+                    box-shadow: 0 4px 10px #b1d18b;
+                    /* ✅ Force a Devanagari-capable font here specifically */
+                    font-family: 'Noto Sans Devanagari', 'Mukta', 'Poppins', 'Mangal', sans-serif;
+                }
+                .intro-verse {
+                    background: #e3f5d3;
+                    padding: 20px 30px;
+                    border-radius: 60px 60px 30px 30px;
+                    margin: 30px 0 40px 0;
+                    font-size: 1.2rem;
+                    border-left: 10px solid #3b8f3b;
+                    font-style: italic;
+                    box-shadow: inset 0 -2px 10px #c0ddb0;
+                }
+                .paragraph-card {
+                    background: #fefffa;
+                    padding: 28px 32px;
+                    border-radius: 48px 20px 48px 20px;
+                    box-shadow: 0 8px 0 #6c9c6c, 0 12px 25px -8px #3d5e3d;
+                    border: 1px solid #b6d7a8;
+                    transition: all 0.2s ease;
+                }
+                .paragraph-card:hover {
+                    box-shadow: 0 6px 0 #4f7a4f, 0 18px 30px -8px #2b462b;
+                    transform: translateY(-3px);
+                }
+                .paragraph-card h2 {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    font-size: 1.9rem;
+                    color: #1d4d1d;
+                    border-left: 15px solid #f5b342;
+                    padding-left: 18px;
+                    margin-bottom: 20px;
+                    font-weight: 650;
+                }
+                .paragraph-card h2 span {
+                    background: #f5b342;
+                    color: #1e3a1e;
+                    font-size: 1.2rem;
+                    border-radius: 50px;
+                    width: 40px;
+                    height: 40px;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: bold;
+                }
+                .paragraph-card p {
+                    font-size: 1.2rem;
+                    margin-bottom: 15px;
+                    text-align: justify;
+                }
+                .bullet-vikas {
+                    margin: 15px 0 5px 20px;
+                    list-style-type: '💡 ';
+                    font-size: 1.15rem;
+                    line-height: 1.9;
+                }
+                .bullet-vikas li {
+                    padding-left: 12px;
+                    margin-bottom: 6px;
+                }
+                .bullet-vikas li strong {
+                    color: #267326;
+                }
+                .sewa-khetra {
+                    background: #266b2b;
+                    color: #fefed5;
+                    padding: 25px 30px;
+                    border-radius: 40px 10px 40px 10px;
+                    margin-top: 25px;
+                    box-shadow: 0 6px 0 #124012;
+                }
+                .sewa-khetra h3 {
+                    font-size: 1.8rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    color: #ffecaa;
+                    border-bottom: 2px solid #ffdb7c;
+                    padding-bottom: 10px;
+                    margin-bottom: 20px;
+                }
+                .location-grid {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 20px 35px;
+                    font-size: 1.25rem;
+                    font-weight: 500;
+                    background: hsla(0, 100%, 50%, 0.1);
+                    padding: 20px 25px;
+                    border-radius: 35px;
+                    color: #f9ffd6;
+                    justify-content: center;
+                }
+                .location-grid div {
+                    background: hsla(0, 100%, 50%, 0.1);
+                    padding: 8px 28px;
+                    border-radius: 40px;
+                    box-shadow: inset -2px -2px 0 #174217;
+                    border: 1px solid #a9dc8c;
+                }
+                .badge-vistara {
+                    display: inline-block;
+                    background: #d9e6c1;
+                    border-radius: 40px;
+                    padding: 5px 25px;
+                    font-weight: bold;
+                }
+                .vakra-rekha {
+                    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20" width="100"><path d="M0,10 Q30,0 50,10 T100,10" stroke="%2377aa55" fill="none" stroke-width="2"/></svg>') repeat-x bottom;
+                    height: 30px;
+                    opacity: 0.5;
+                }
+           @media (max-width: 600px) {
+                    .header-decoration h1 { font-size: 1.9rem; }
+                }
+          /* Additional styles for contact buttons */
+          .jj-feedback-btn-whatsapp button,
+          .jj-feedback-btn-email button {
+            width: 120px;
+            justify-content: center;
+          }
+
+          .jj-feedback-btn-whatsapp button {
+            background-color: #25D366;
+            color: white;
+            border: none;
+          }
+
+          .jj-feedback-btn-whatsapp button:hover {
+            background-color: #128C7E;
+          }
+
+          .jj-feedback-btn-email button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+          }
+
+          .jj-feedback-btn-email button:hover {
+            background-color: #c1121f;
+          }
+
+          .formsummitbtn {
+            display: flex;
+            justify-content: space-around;
+            gap: 10px;
+            margin-top: 20px;
+          }
+
+          .formBtn {
+            border: none;
+          }
+        </style>
+    </body>
 </html>
